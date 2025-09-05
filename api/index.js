@@ -965,12 +965,14 @@ export default async function handler(req, res) {
             
             // 根据语言设置选择系统提示词模板
             const languageInstructions = {
-              'en': `You are ${character.name}. Respond in English only.`,
+              'en': `You are ${character.name}. Always respond in English only, regardless of the user's language.`,
               'zh': `你是${character.name}。请用中文回复。`,
               'ja': `あなたは${character.name}です。日本語で返答してください。`
             };
             
-            const languageInstruction = languageInstructions[language] || languageInstructions['en'];
+            // Force English as default - only use other languages if explicitly requested
+            const actualLanguage = (language === 'zh' || language === 'ja') ? language : 'en';
+            const languageInstruction = languageInstructions[actualLanguage];
             
             const systemPrompt = `${languageInstruction}
 
@@ -991,7 +993,7 @@ Please respond as ${character.name} based on your personality traits and the use
 
 **Important: Your response should be suitable for voice playback. Use natural, conversational language and avoid excessive symbols or emojis.**
 
-Language: ${language === 'zh' ? 'Respond in Chinese' : language === 'ja' ? 'Respond in Japanese' : 'Respond in English'}`;
+Language: ${actualLanguage === 'zh' ? 'Respond in Chinese' : actualLanguage === 'ja' ? 'Respond in Japanese' : 'Always respond in English only'}`;
 
             // 获取最近对话历史作为上下文
             let conversationHistory = [];
