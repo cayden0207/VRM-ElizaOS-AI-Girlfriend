@@ -88,6 +88,11 @@ class I18n {
             'status.ai.smart': 'AI Smart Mode',
             'status.manual': 'Manual Mode',
 
+            // Wallet verification modal
+            'wallet.verification.title': '🔒 Wallet Verification Required',
+            'wallet.verification.message': 'Please connect your Solana wallet first to access the AI girlfriend chat room. Each wallet address will get a unique personalized experience!',
+            'wallet.verification.button': 'Back to Connect Wallet',
+            
             // ElizaOS messages
             'eliza.thinking': 'AI is thinking...',
             'eliza.initializing': 'Initializing ElizaOS chat system...',
@@ -218,6 +223,11 @@ class I18n {
             'status.ai.smart': 'AI智能模式',
             'status.manual': '手动模式',
 
+            // Wallet verification modal
+            'wallet.verification.title': '🔒 需要钱包验证',
+            'wallet.verification.message': '请先连接您的Solana钱包才能访问AI女友聊天室。每个钱包地址都会获得独特的个性化体验！',
+            'wallet.verification.button': '返回连接钱包',
+            
             // ElizaOS messages
             'eliza.thinking': 'AI正在思考...',
             'eliza.initializing': '初始化ElizaOS聊天系统...',

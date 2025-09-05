@@ -1708,10 +1708,10 @@
         <!-- 未授权访问提示 -->
         <div class="unauthorized-overlay" id="unauthorized-overlay" style="display: none;">
             <div class="unauthorized-content">
-                <h2>🔒 需要钱包验证</h2>
-                <p>请先连接您的Solana钱包才能访问AI女友聊天室。每个钱包地址都会获得独特的个性化体验！</p>
-                <button class="connect-wallet-btn" onclick="redirectToCharacterSelect()">
-                    返回连接钱包
+                <h2 data-i18n="wallet.verification.title">🔒 Wallet Verification Required</h2>
+                <p data-i18n="wallet.verification.message">Please connect your Solana wallet first to access the AI girlfriend chat room. Each wallet address will get a unique personalized experience!</p>
+                <button class="connect-wallet-btn" onclick="redirectToCharacterSelect()" data-i18n="wallet.verification.button">
+                    Back to Connect Wallet
                 </button>
             </div>
         </div>
