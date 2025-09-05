@@ -1,6 +1,6 @@
-/* AI女友聊天UI样式 */
+/* AI Girlfriend Chat UI Styles */
 
-/* 聊天窗口基础样式 */
+/* Chat window base styles */
 .floating-chat {
     position: absolute;
     bottom: 20px;
@@ -29,7 +29,7 @@
     box-shadow: 0 30px 100px rgba(0, 0, 0, 0.3);
 }
 
-/* 聊天窗口头部 */
+/* Chat window header */
 .chat-window-header {
     background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
     padding: 15px 20px;
@@ -68,7 +68,7 @@
     border-radius: 10px;
 }
 
-/* 聊天消息区域 */
+/* Chat message area */
 .chat-window-messages {
     flex: 1;
     padding: 20px;
@@ -95,7 +95,7 @@
     border-radius: 3px;
 }
 
-/* 消息气泡 */
+/* Message bubble */
 .message-bubble {
     margin-bottom: 15px;
     max-width: 85%;
@@ -117,7 +117,7 @@
     align-self: flex-start;
 }
 
-/* 消息头部 */
+/* Message header */
 .bubble-header {
     display: flex;
     align-items: center;
@@ -136,7 +136,7 @@
     color: #999;
 }
 
-/* 用户消息样式 */
+/* User message styles */
 .message-bubble.user .bubble-content {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -144,7 +144,7 @@
     border-radius: 20px 20px 5px 20px;
     position: relative;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    font-size: 14.4px; /* 原16px减少10% */
+    font-size: 14.4px; /* Original 16px reduced by 10% */
     word-wrap: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
@@ -168,7 +168,7 @@
     transform: rotate(45deg);
 }
 
-/* AI消息样式 */
+/* AI message styles */
 .message-bubble.ai .bubble-content {
     background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
     color: #2d3436;
@@ -176,7 +176,7 @@
     border-radius: 20px 20px 20px 5px;
     position: relative;
     box-shadow: 0 4px 15px rgba(255, 234, 167, 0.3);
-    font-size: 14.4px; /* 原16px减少10% */
+    font-size: 14.4px; /* Original 16px reduced by 10% */
     word-wrap: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
@@ -200,7 +200,7 @@
     transform: rotate(-45deg);
 }
 
-/* 消息情感指示器 */
+/* Message emotion indicator */
 .message-emotion {
     text-align: center;
     margin-top: 5px;
@@ -208,7 +208,7 @@
     opacity: 0.8;
 }
 
-/* 打字指示器 */
+/* Typing indicator */
 .typing-indicator {
     margin-bottom: 15px;
 }
@@ -252,7 +252,7 @@
     }
 }
 
-/* 输入区域 */
+/* Input area */
 .chat-window-input {
     padding: 20px;
     background: rgba(255, 255, 255, 0.98);
@@ -291,7 +291,7 @@
     font-style: italic;
 }
 
-/* 发送按钮 */
+/* Send button */
 .send-button {
     position: absolute;
     right: 8px;
@@ -320,7 +320,7 @@
     transform: translateY(-50%) scale(0.95);
 }
 
-/* 快速回复按钮 */
+/* Quick reply buttons */
 .quick-replies {
     display: flex;
     gap: 8px;
@@ -344,7 +344,7 @@
     transform: translateY(-1px);
 }
 
-/* 关系状态指示器 */
+/* Relationship status indicator */
 .relationship-status {
     position: absolute;
     top: -10px;
@@ -359,7 +359,7 @@
     border: 2px solid rgba(255, 255, 255, 0.8);
 }
 
-/* 动画效果 */
+/* Animation effects */
 @keyframes messageSlideIn {
     from {
         opacity: 0;
@@ -411,7 +411,7 @@
     }
 }
 
-/* 深色模式支持 */
+/* Dark mode support */
 @media (prefers-color-scheme: dark) {
     .floating-chat {
         background: rgba(30, 30, 30, 0.98);
@@ -437,7 +437,7 @@
     }
 }
 
-/* 特殊状态样式 */
+/* Special status styles */
 .chat-window.minimized {
     height: 60px;
     overflow: hidden;

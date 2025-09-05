@@ -1,6 +1,6 @@
-/* Solana钱包UI样式 */
+/* Solana Wallet UI Styles */
 
-/* 钱包连接按钮容器 - 右上角显示 */
+/* Wallet connection button container - displayed in top right corner */
 .wallet-connect-container {
     position: absolute;
     top: 20px;
@@ -8,7 +8,7 @@
     z-index: 1000;
 }
 
-/* 钱包连接按钮样式 */
+/* Wallet connection button styles */
 .wallet-connect-button {
     display: flex;
     align-items: center;
@@ -62,7 +62,7 @@
     font-weight: 600;
 }
 
-/* 钱包登录遮罩层 */
+/* Wallet login overlay */
 .wallet-login-overlay {
     position: fixed;
     top: 0;
@@ -129,7 +129,7 @@
     line-height: 1.5;
 }
 
-/* 钱包连接按钮 */
+/* Wallet connect button */
 .wallet-connect-btn {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -169,7 +169,7 @@
     left: 100%;
 }
 
-/* 钱包信息显示 */
+/* Wallet info display */
 .wallet-info {
     position: absolute;
     top: 20px;
@@ -218,7 +218,7 @@
     background: rgba(255, 255, 255, 0.3);
 }
 
-/* 钱包选择选项 */
+/* Wallet selection options */
 .wallet-options {
     display: flex;
     gap: 20px;
@@ -257,7 +257,7 @@
     font-size: 14px;
 }
 
-/* 钱包错误弹窗 */
+/* Wallet error popup */
 .wallet-error-overlay {
     position: fixed;
     top: 0;
@@ -314,7 +314,7 @@
     transform: translateY(-1px);
 }
 
-/* 钱包消息提示 */
+/* Wallet message notification */
 .wallet-message {
     position: fixed;
     top: 20px;
@@ -352,7 +352,7 @@
     background: #2196F3;
 }
 
-/* 加载动画 */
+/* Loading animation */
 .wallet-loading {
     display: inline-flex;
     align-items: center;
@@ -375,7 +375,7 @@
     }
 }
 
-/* 响应式设计 */
+/* Responsive design */
 @media (max-width: 768px) {
     .wallet-login-panel {
         padding: 30px 20px;
@@ -406,7 +406,7 @@
     }
 }
 
-/* 深色模式适配 */
+/* Dark mode adaptation */
 @media (prefers-color-scheme: dark) {
     .wallet-login-panel {
         background: linear-gradient(135deg, rgba(30, 30, 30, 0.95), rgba(20, 20, 20, 0.95));
@@ -432,7 +432,7 @@
     }
 }
 
-/* 用户资料注册面板 */
+/* User profile registration panel */
 .user-profile-overlay {
     position: fixed;
     top: 0;
@@ -671,7 +671,7 @@
     box-shadow: 0 0 10px rgba(70, 130, 180, 0.2);
 }
 
-/* 响应式设计 - 用户资料面板 */
+/* Responsive design - user profile panel */
 @media (max-width: 768px) {
     .profile-panel {
         padding: 30px 20px;

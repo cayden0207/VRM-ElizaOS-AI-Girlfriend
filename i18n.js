@@ -120,6 +120,10 @@ class I18n {
             'profile.favorites': 'Favorites',
             
             // Profile field labels
+            'profile.personality': 'Personality',
+            'profile.interests': 'Daily Interests',
+            'profile.personality.value': 'Lively, outgoing, playful and cute',
+            'profile.interests.value': 'Dancing, singing',
             'profile.likes.label': 'Likes',
             'profile.dislikes.label': 'Dislikes', 
             'profile.food.label': 'Food',
@@ -255,6 +259,8 @@ class I18n {
             'profile.favorites': '最爱',
             
             // Profile field labels
+            'profile.personality.value': '活泼外向，调皮可爱',
+            'profile.interests.value': '跳舞、唱歌',
             'profile.likes.label': '喜欢',
             'profile.dislikes.label': '讨厌', 
             'profile.food.label': '食物',
