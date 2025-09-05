@@ -1,7 +1,10 @@
 // 国际化配置文件
 class I18n {
     constructor() {
-        this.currentLang = localStorage.getItem('language') || 'en';
+        // Force clear any old language settings and default to English
+        localStorage.removeItem('language');
+        this.currentLang = 'en';
+        localStorage.setItem('language', 'en');
         this.init();
     }
 
