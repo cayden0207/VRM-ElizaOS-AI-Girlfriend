@@ -129,36 +129,7 @@ class ElizaOSChatSystem {
         this.createContextDisplay();
     }
     
-    createMemoryIndicator() {
-        const chatContainer = document.getElementById('chat-container') || document.body;
-        
-        this.memoryIndicator = document.createElement('div');
-        this.memoryIndicator.id = 'memory-indicator';
-        this.memoryIndicator.className = 'memory-indicator';
-        this.memoryIndicator.innerHTML = `
-            <div class="memory-status">
-                <span class="memory-icon">🧠</span>
-                <span class="memory-text">记忆系统就绪</span>
-            </div>
-        `;
-        
-        // 添加样式
-        this.memoryIndicator.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            z-index: 1000;
-            transition: all 0.3s ease;
-            opacity: 0.7;
-        `;
-        
-        chatContainer.appendChild(this.memoryIndicator);
-    }
+    // createMemoryIndicator 函数已移除
     
     createRelationshipIndicator() {
         const chatHeader = document.querySelector('.chat-header') || document.body;
