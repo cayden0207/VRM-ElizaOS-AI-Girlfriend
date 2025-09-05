@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: http://localhost:3000 https://api.elevenlabs.io https://api.openai.com https://*.supabase.co wss://*.supabase.co https://infragrid.v.network https://*.v.network https://vrm-eliza-ai-girlfriend.vercel.app; media-src 'self' blob: data:; object-src 'none'; base-uri 'self'; form-action 'self';">
-    <title>AI女友聊天游戏 🌸</title>
+    <title data-i18n-title="app.title">AI Girlfriend Chat Game 🌸</title>
     <link rel="stylesheet" href="chat-ui.css">
     <link rel="stylesheet" href="wallet-ui.css">
     
     <!-- 配置文件 -->
     <script src="config.js"></script>
+    <!-- 国际化支持 -->
+    <script src="i18n.js"></script>
     <!-- Memory system handled by ElizaOS backend -->
     <style>
         * {
@@ -261,6 +263,46 @@
             min-width: 25px;
             font-weight: bold;
             text-align: right;
+        }
+
+        /* 语言切换器 */
+        .language-toggle {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            background: linear-gradient(135deg, #ff9a56 0%, #ffad56 50%, #ffc056 100%);
+            border-radius: 10px;
+            border: 4px solid #4a2c5a;
+            padding: 8px 15px;
+            z-index: 1002;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #2d1b3d;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .language-btn {
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid #4a2c5a;
+            border-radius: 6px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: bold;
+            color: #2d1b3d;
+            transition: all 0.2s ease;
+        }
+
+        .language-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.05);
+        }
+
+        .language-btn.active {
+            background: #4a2c5a;
+            color: white;
         }
 
 
@@ -1482,6 +1524,13 @@
                         <span class="volume-label" id="volume-label">50</span>
                     </div>
                 </div>
+            </div>
+
+            <!-- 语言切换器 -->
+            <div class="language-toggle" id="language-toggle">
+                <span data-i18n="char.select.language">Language: </span>
+                <button class="language-btn" id="lang-en" onclick="switchLanguage('en')">EN</button>
+                <button class="language-btn" id="lang-zh" onclick="switchLanguage('zh')">中文</button>
             </div>
             
 
@@ -3092,10 +3141,10 @@
 
         function toggleAutoMode() {
             aiModeEnabled = !aiModeEnabled;
-            document.getElementById('ai-mode-status').textContent = aiModeEnabled ? '开启' : '关闭';
+            document.getElementById('ai-mode-status').textContent = aiModeEnabled ? i18n.t('status.enabled') : i18n.t('status.disabled');
             document.getElementById('ai-status').innerHTML = aiModeEnabled ?
-                '<span class="online-indicator"></span>AI智能模式' :
-                '<span class="online-indicator"></span>手动模式';
+                '<span class="online-indicator"></span>' + i18n.t('status.ai.smart') :
+                '<span class="online-indicator"></span>' + i18n.t('status.manual');
         }
 
         function toggleDebugMode() {
@@ -3192,10 +3241,31 @@
             }
         }
 
+        // 语言切换函数
+        function switchLanguage(lang) {
+            if (window.i18n) {
+                window.i18n.switchLanguage(lang);
+            }
+        }
+
+        // 初始化语言切换器
+        function initLanguageToggle() {
+            if (window.i18n) {
+                const currentLang = window.i18n.getCurrentLanguage();
+                const enBtn = document.getElementById('lang-en');
+                const zhBtn = document.getElementById('lang-zh');
+                
+                if (enBtn && zhBtn) {
+                    enBtn.classList.toggle('active', currentLang === 'en');
+                    zhBtn.classList.toggle('active', currentLang === 'zh');
+                }
+            }
+        }
+
         function initAnimationSelector() {
             const selector = document.getElementById('animation-selector');
             // 清空现有选项
-            selector.innerHTML = '<option value="">选择动画...</option>';
+            selector.innerHTML = '<option value="">' + i18n.t('panel.select.animation') + '</option>';
 
             // 添加所有动画选项
             Object.keys(animationMap).sort().forEach(animationName => {
@@ -3209,7 +3279,7 @@
         function initCharacterSelector() {
             const selector = document.getElementById('character-selector');
             // 清空现有选项
-            selector.innerHTML = '<option value="">选择角色...</option>';
+            selector.innerHTML = '<option value="">' + i18n.t('panel.select.character') + '</option>';
 
             // 添加所有角色选项
             Object.keys(vrmCharacters).sort().forEach(characterName => {
@@ -3969,6 +4039,9 @@
             // 初始化拖拽功能
             initDragAndDrop();
 
+            // 初始化语言切换器
+            initLanguageToggle();
+
             // 延迟初始化背景音乐，确保DOM完全加载
             setTimeout(() => {
                 initBackgroundMusic();
@@ -3977,7 +4050,7 @@
             // 初始状态 - 检查元素是否存在
             const aiStatusElement = document.getElementById('ai-status');
             if (aiStatusElement) {
-                aiStatusElement.innerHTML = '<span class="online-indicator"></span>AI智能模式';
+                aiStatusElement.innerHTML = '<span class="online-indicator"></span>' + i18n.t('status.ai.smart');
             }
             
             console.log('🎉 AI Companion 初始化完成');

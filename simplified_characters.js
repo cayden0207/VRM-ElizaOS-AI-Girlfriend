@@ -1,29 +1,65 @@
-// 简化的角色定义 - 只包含UI需要的信息
-// Personality和AI特征由ElizaOS后端管理
+// Character definitions with internationalization support
+// Personality and AI features managed by ElizaOS backend
 const characters = [
-    { id: "alice", name: "Alice", file: "Main VRM/Alice.vrm", voiceId: "rEJAAHKQqr6yTNCh8xS0", description: "活泼可爱的AI女友" },
-    { id: "ash", name: "Ash", file: "Main VRM/Ash.vrm", voiceId: "bY4cOgafbv5vatmokfg0", description: "冷静理性的AI伙伴" },
-    { id: "bobo", name: "Bobo", file: "Main VRM/Bobo.vrm", voiceId: "default", description: "温柔敏感的AI少女" },
-    { id: "elinyaa", name: "Elinyaa", file: "Main VRM/Elinyaa.vrm", voiceId: "4cxHntmhK38NT4QMBr9m", description: "神秘优雅的精灵" },
-    { id: "fliza", name: "Fliza", file: "Main VRM/Fliza VRM.vrm", voiceId: "s9lrHYk7TIJ2UO7UNbje", description: "温暖体贴的农家女" },
-    { id: "imeris", name: "Imeris", file: "Main VRM/IMERIS.vrm", voiceId: "eVItLK1UvXctxuaRV2Oq", description: "高贵优雅的贵族" },
-    { id: "kyoko", name: "Kyoko", file: "Main VRM/Kyoko.vrm", voiceId: "ATSlMe1wEISLjgGhZEKK", description: "独立自信的现代女性" },
-    { id: "lena", name: "Lena", file: "Main VRM/Lena.vrm", voiceId: "uEn2ClE3OziJMlhQS91c", description: "优雅迷人的设计师" },
-    { id: "lilium", name: "Lilium", file: "Main VRM/Lilium.vrm", voiceId: "yRRXNdbFeQpIK5MAhenr", description: "热情大胆的舞者" },
-    { id: "maple", name: "Maple", file: "Main VRM/Maple.vrm", voiceId: "B8gJV1IhpuegLxdpXFOE", description: "温暖治愈的居家女孩" },
-    { id: "miru", name: "Miru", file: "Main VRM/Miru.vrm", voiceId: "eVJCDcwCTZBLNdQdbdmd", description: "梦幻可爱的少女" },
-    { id: "miumiu", name: "Miumiu", file: "Main VRM/Miumiu.vrm", voiceId: "SU7BtMmgc7KhQiC6G24B", description: "古怪创意的艺术家" },
-    { id: "neco", name: "Neco", file: "Main VRM/Neco.vrm", voiceId: "t9ZwnJtpA3lWrJ4W7pAl", description: "冷静优雅的摄影师" },
-    { id: "nekona", name: "Nekona", file: "Main VRM/NEKONA.vrm", voiceId: "kcg1KQQGuCGzH6FUjsZQ", description: "神秘慵懒的猫娘" },
-    { id: "notia", name: "Notia", file: "Main VRM/Notia.vrm", voiceId: "abz2RylgxmJx76xNpaj1", description: "知性冷静的研究者" },
-    { id: "ququ", name: "QuQu", file: "Main VRM/QuQu.vrm", voiceId: "tfQFvzjodQp63340jz2r", description: "活泼热情的冒险家" },
-    { id: "rainy", name: "Rainy", file: "Main VRM/Rainy.vrm", voiceId: "1ghrzLZQ7Dza7Xs9OkhY", description: "宁静内敛的文青" },
-    { id: "rindo", name: "Rindo", file: "Main VRM/RINDO.vrm", voiceId: "nclQ39ewSlJMu5Nidnsf", description: "坚毅果敢的武者" },
-    { id: "sikirei", name: "Sikirei", file: "Main VRM/Sikirei.vrm", voiceId: "n263mAk9k8VWEuZSmuMl", description: "神秘魅力的占星师" },
-    { id: "vivi", name: "Vivi", file: "Main VRM/Vivi.vrm", voiceId: "4lWJNy00PxQAOMgQTiIS", description: "开朗外向的主播" },
-    { id: "wolf", name: "Wolf", file: "Main VRM/Wolf.vrm", voiceId: "WW3EvqkXGmu65ga8TYqa", description: "野性直觉的原始少女" },
-    { id: "wolferia", name: "Wolferia", file: "Main VRM/Wolferia.vrm", voiceId: "3SeVwPUl5aO6J2GETjox", description: "自由冒险的狼族" },
-    { id: "yawl", name: "Yawl", file: "Main VRM/Yawl.vrm", voiceId: "c6wjO0u66VyvwAC4UTqx", description: "优雅知性的学者" },
-    { id: "yuuyii", name: "Yuuyii", file: "Main VRM/Yuuyii.vrm", voiceId: "UPwKM85l2CG7nbF2u1or", description: "甜美可爱的少女" },
-    { id: "zwei", name: "Zwei", file: "Main VRM/Zwei.vrm", voiceId: "0EzDWfDZDlAIeQQOjhoC", description: "坚定忠诚的守护者" }
+    { id: "alice", name: "Alice", file: "Main VRM/Alice.vrm", voiceId: "rEJAAHKQqr6yTNCh8xS0", descriptionKey: "char.alice.desc" },
+    { id: "ash", name: "Ash", file: "Main VRM/Ash.vrm", voiceId: "bY4cOgafbv5vatmokfg0", descriptionKey: "char.ash.desc" },
+    { id: "bobo", name: "Bobo", file: "Main VRM/Bobo.vrm", voiceId: "default", descriptionKey: "char.bobo.desc" },
+    { id: "elinyaa", name: "Elinyaa", file: "Main VRM/Elinyaa.vrm", voiceId: "4cxHntmhK38NT4QMBr9m", descriptionKey: "char.elinyaa.desc" },
+    { id: "fliza", name: "Fliza", file: "Main VRM/Fliza VRM.vrm", voiceId: "s9lrHYk7TIJ2UO7UNbje", descriptionKey: "char.fliza.desc" },
+    { id: "imeris", name: "Imeris", file: "Main VRM/IMERIS.vrm", voiceId: "eVItLK1UvXctxuaRV2Oq", descriptionKey: "char.imeris.desc" },
+    { id: "kyoko", name: "Kyoko", file: "Main VRM/Kyoko.vrm", voiceId: "ATSlMe1wEISLjgGhZEKK", descriptionKey: "char.kyoko.desc" },
+    { id: "lena", name: "Lena", file: "Main VRM/Lena.vrm", voiceId: "uEn2ClE3OziJMlhQS91c", descriptionKey: "char.lena.desc" },
+    { id: "lilium", name: "Lilium", file: "Main VRM/Lilium.vrm", voiceId: "yRRXNdbFeQpIK5MAhenr", descriptionKey: "char.lilium.desc" },
+    { id: "maple", name: "Maple", file: "Main VRM/Maple.vrm", voiceId: "B8gJV1IhpuegLxdpXFOE", descriptionKey: "char.maple.desc" },
+    { id: "miru", name: "Miru", file: "Main VRM/Miru.vrm", voiceId: "eVJCDcwCTZBLNdQdbdmd", descriptionKey: "char.miru.desc" },
+    { id: "miumiu", name: "Miumiu", file: "Main VRM/Miumiu.vrm", voiceId: "SU7BtMmgc7KhQiC6G24B", descriptionKey: "char.miumiu.desc" },
+    { id: "neco", name: "Neco", file: "Main VRM/Neco.vrm", voiceId: "t9ZwnJtpA3lWrJ4W7pAl", descriptionKey: "char.neco.desc" },
+    { id: "nekona", name: "Nekona", file: "Main VRM/NEKONA.vrm", voiceId: "kcg1KQQGuCGzH6FUjsZQ", descriptionKey: "char.nekona.desc" },
+    { id: "notia", name: "Notia", file: "Main VRM/Notia.vrm", voiceId: "abz2RylgxmJx76xNpaj1", descriptionKey: "char.notia.desc" },
+    { id: "ququ", name: "QuQu", file: "Main VRM/QuQu.vrm", voiceId: "tfQFvzjodQp63340jz2r", descriptionKey: "char.ququ.desc" },
+    { id: "rainy", name: "Rainy", file: "Main VRM/Rainy.vrm", voiceId: "1ghrzLZQ7Dza7Xs9OkhY", descriptionKey: "char.rainy.desc" },
+    { id: "rindo", name: "Rindo", file: "Main VRM/RINDO.vrm", voiceId: "nclQ39ewSlJMu5Nidnsf", descriptionKey: "char.rindo.desc" },
+    { id: "sikirei", name: "Sikirei", file: "Main VRM/Sikirei.vrm", voiceId: "n263mAk9k8VWEuZSmuMl", descriptionKey: "char.sikirei.desc" },
+    { id: "vivi", name: "Vivi", file: "Main VRM/Vivi.vrm", voiceId: "4lWJNy00PxQAOMgQTiIS", descriptionKey: "char.vivi.desc" },
+    { id: "wolf", name: "Wolf", file: "Main VRM/Wolf.vrm", voiceId: "WW3EvqkXGmu65ga8TYqa", descriptionKey: "char.wolf.desc" },
+    { id: "wolferia", name: "Wolferia", file: "Main VRM/Wolferia.vrm", voiceId: "3SeVwPUl5aO6J2GETjox", descriptionKey: "char.wolferia.desc" },
+    { id: "yawl", name: "Yawl", file: "Main VRM/Yawl.vrm", voiceId: "c6wjO0u66VyvwAC4UTqx", descriptionKey: "char.yawl.desc" },
+    { id: "yuuyii", name: "Yuuyii", file: "Main VRM/Yuuyii.vrm", voiceId: "UPwKM85l2CG7nbF2u1or", descriptionKey: "char.yuuyii.desc" },
+    { id: "zwei", name: "Zwei", file: "Main VRM/Zwei.vrm", voiceId: "0EzDWfDZDlAIeQQOjhoC", descriptionKey: "char.zwei.desc" }
 ];
+
+// Function to get character description using i18n
+function getCharacterDescription(character) {
+    if (window.i18n && character.descriptionKey) {
+        return window.i18n.t(character.descriptionKey);
+    }
+    // Fallback to English description if i18n is not available
+    const fallbackDescriptions = {
+        "alice": "Lively and cute AI girlfriend",
+        "ash": "Calm and rational AI companion",
+        "bobo": "Gentle and sensitive AI girl",
+        "elinyaa": "Mysterious and elegant elf",
+        "fliza": "Warm and caring farm girl",
+        "imeris": "Noble and elegant aristocrat",
+        "kyoko": "Independent and confident modern woman",
+        "lena": "Elegant and charming designer",
+        "lilium": "Passionate and bold dancer",
+        "maple": "Warm and healing homebody",
+        "miru": "Dreamy and cute girl",
+        "miumiu": "Quirky creative artist",
+        "neco": "Cool and elegant photographer",
+        "nekona": "Mysterious and lazy cat girl",
+        "notia": "Intellectual and calm researcher",
+        "ququ": "Lively and passionate adventurer",
+        "rainy": "Quiet and introverted literary girl",
+        "rindo": "Resolute and determined warrior",
+        "sikirei": "Mysterious and charming astrologer",
+        "vivi": "Cheerful and outgoing streamer",
+        "wolf": "Wild and instinctive primitive girl",
+        "wolferia": "Free-spirited wolf clan adventurer",
+        "yawl": "Elegant and intellectual scholar",
+        "yuuyii": "Sweet and lovely girl",
+        "zwei": "Steadfast and loyal guardian"
+    };
+    return fallbackDescriptions[character.id] || "AI Character";
+}

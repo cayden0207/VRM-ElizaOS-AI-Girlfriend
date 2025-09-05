@@ -35,7 +35,7 @@ class ElizaOSChatSystem {
     }
     
     async initializeSystem() {
-        console.log('🤖 初始化ElizaOS聊天系统...');
+        console.log('🤖 ' + (window.i18n ? window.i18n.t('eliza.initializing') : '初始化ElizaOS聊天系统...'));
         
         try {
             // 检查ElizaOS API健康状态
@@ -50,9 +50,9 @@ class ElizaOSChatSystem {
             // 设置事件监听器
             this.setupEventListeners();
             
-            console.log('✅ ElizaOS聊天系统初始化完成');
+            console.log('✅ ' + (window.i18n ? window.i18n.t('eliza.init.complete') : 'ElizaOS聊天系统初始化完成'));
         } catch (error) {
-            console.error('❌ ElizaOS系统初始化失败:', error);
+            console.error('❌ ' + (window.i18n ? window.i18n.t('eliza.init.failed') : 'ElizaOS系统初始化失败') + ':', error);
             // 静默处理初始化失败，系统会自动使用后备模式
         }
     }
@@ -60,10 +60,10 @@ class ElizaOSChatSystem {
     async checkElizaOSHealth() {
         try {
             const response = await fetch(`${this.apiBaseURL}/api/health`);
-            if (!response.ok) throw new Error('ElizaOS API连接失败');
+            if (!response.ok) throw new Error(window.i18n ? window.i18n.t('eliza.connection.failed') : 'ElizaOS API连接失败');
             
             const data = await response.json();
-            console.log('🔗 ElizaOS连接正常:', data);
+            console.log('🔗 ' + (window.i18n ? window.i18n.t('eliza.connection.normal') : 'ElizaOS连接正常') + ':', data);
             
             // 显示系统状态
             if (data.agents) {
@@ -364,7 +364,7 @@ class ElizaOSChatSystem {
             this.updateChatUI(userMessage);
             
             // 显示记忆状态
-            this.showMemoryStatus('AI正在思考...');
+            this.showMemoryStatus(window.i18n ? window.i18n.t('eliza.thinking') : 'AI正在思考...');
             this.showTypingIndicator();
             
             // 发送到ElizaOS后端
