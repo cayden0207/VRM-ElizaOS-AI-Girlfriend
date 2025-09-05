@@ -1,0 +1,50 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/health",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/metrics",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/",
+      "destination": "/character-select.html"
+    },
+    {
+      "source": "/chat",
+      "destination": "/index.html"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "ELIZA_ENABLED": "true",
+    "ELIZA_FALLBACK_ENABLED": "true",
+    "MAX_CONCURRENT_REQUESTS": "100",
+    "REQUEST_TIMEOUT": "30000",
+    "HEALTH_CHECK_INTERVAL": "60000",
+    "MEMORY_LIMIT": "1024",
+    "LOG_LEVEL": "INFO"
+  },
+  "regions": ["hkg1", "sin1"],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' blob: data: https://api.elevenlabs.io https://api.openai.com https://*.supabase.co wss://*.supabase.co https://infragrid.v.network https://*.v.network; media-src 'self' blob: data:; object-src 'none'; base-uri 'self'; form-action 'self';"
+        }
+      ]
+    }
+  ],
+  "github": {
+    "silent": true
+  }
+}

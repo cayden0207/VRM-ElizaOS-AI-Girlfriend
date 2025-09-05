@@ -1,0 +1,1221 @@
+import express from 'express';
+import cors from 'cors';
+import compression from 'compression';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import { createServer } from 'http';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { createClient } from '@supabase/supabase-js';
+import OpenAI from 'openai';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Production-optimized ElizaOS Bridge
+class ProductionElizaBridge {
+  constructor() {
+    this.app = express();
+    this.server = createServer(this.app);
+    this.characters = new Map();
+    this.responseCache = new Map();
+    
+    // Initialize Supabase client
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_ANON_KEY;
+    
+    if (supabaseUrl && supabaseKey) {
+      this.supabase = createClient(supabaseUrl, supabaseKey);
+      console.log('✅ Supabase client initialized for permanent storage');
+    } else {
+      this.supabase = null;
+      this.userProfiles = new Map(); // Fallback to memory storage
+      console.warn('⚠️ Supabase credentials missing, falling back to memory storage');
+    }
+    
+    // Initialize OpenAI client
+    if (process.env.OPENAI_API_KEY) {
+      this.openai = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+      });
+      console.log('✅ OpenAI client initialized for AI responses');
+    } else {
+      this.openai = null;
+      console.warn('⚠️ OPENAI_API_KEY missing, falling back to template responses');
+    }
+    
+    this.startTime = Date.now();
+    this.errors = [];
+    this.metrics = {
+      totalRequests: 0,
+      successfulRequests: 0,
+      failedRequests: 0,
+      averageResponseTime: 0,
+      characterUsage: {},
+      cacheHits: 0,
+      cacheMisses: 0
+    };
+    
+    this.setupProductionMiddleware();
+    this.setupRoutes();
+    this.setupCacheCleanup();
+  }
+
+  setupProductionMiddleware() {
+    // Trust proxy for rate limiting on Vercel
+    this.app.set('trust proxy', 1);
+    
+    // Security headers - Allow WebAssembly
+    this.app.use(helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          styleSrc: ["'self'", "'unsafe-inline'"],
+          scriptSrc: ["'self'", "'unsafe-eval'", "'wasm-unsafe-eval'"],
+          imgSrc: ["'self'", "data:", "https:", "blob:"],
+          connectSrc: ["'self'", "https:", "wss:", "ws:"],
+          fontSrc: ["'self'", "data:"],
+          objectSrc: ["'none'"],
+          mediaSrc: ["'self'"],
+          frameSrc: ["'self'"],
+          workerSrc: ["'self'", "blob:"]
+        }
+      },
+      crossOriginEmbedderPolicy: false
+    }));
+
+    // Compression
+    this.app.use(compression({
+      filter: (req, res) => {
+        if (req.headers['x-no-compression']) return false;
+        return compression.filter(req, res);
+      },
+      level: 6,
+      threshold: 1024
+    }));
+
+    // CORS with production settings
+    this.app.use(cors({
+      origin: process.env.NODE_ENV === 'production' 
+        ? [
+            'https://vrm-ai-girlfriend.vercel.app',
+            'https://vrm-frontend-new.vercel.app',
+            'https://vrm-ai-girlfriend-frontend.vercel.app',
+            /^https:\/\/.*\.vercel\.app$/
+          ]
+        : '*',
+      methods: ['GET', 'POST', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-User-Id', 'X-Character-Id', 'X-Request-ID'],
+      credentials: false,
+      maxAge: 86400 // 24 hours
+    }));
+
+    // Rate limiting
+    const limiter = rateLimit({
+      windowMs: 60 * 1000, // 1 minute
+      max: process.env.NODE_ENV === 'production' ? 60 : 1000,
+      message: {
+        success: false,
+        error: 'Too many requests, please try again later',
+        retryAfter: 60
+      },
+      standardHeaders: true,
+      legacyHeaders: false,
+      skip: (req) => {
+        // Skip rate limiting for health checks
+        return req.path === '/health' || req.path.startsWith('/metrics');
+      }
+    });
+    this.app.use('/api/', limiter);
+
+    // Body parsing with limits
+    this.app.use(express.json({ 
+      limit: '1mb',
+      verify: (req, res, buf) => {
+        req.rawBody = buf;
+      }
+    }));
+
+    // Request ID and logging
+    this.app.use((req, res, next) => {
+      req.requestId = req.headers['x-request-id'] || 
+        `req_${Date.now()}_${Math.random().toString(36).substr(2, 6)}`;
+      req.startTime = Date.now();
+      
+      res.setHeader('X-Request-ID', req.requestId);
+      res.setHeader('X-Service-Version', '3.0.0');
+      res.setHeader('X-Powered-By', 'ElizaOS-VRM-AI');
+
+      // Response completion logging
+      res.on('finish', () => {
+        const duration = Date.now() - req.startTime;
+        this.updateMetrics(req, res, duration);
+        
+        if (process.env.NODE_ENV !== 'production' || res.statusCode >= 400) {
+          console.log(`${req.method} ${req.path} - ${res.statusCode} (${duration}ms) [${req.requestId}]`);
+        }
+      });
+
+      next();
+    });
+
+    // Error handling
+    this.app.use((error, req, res, next) => {
+      console.error('Unhandled error:', error);
+      
+      res.status(500).json({
+        success: false,
+        error: process.env.NODE_ENV === 'production' 
+          ? 'Internal server error' 
+          : error.message,
+        requestId: req.requestId,
+        timestamp: new Date().toISOString()
+      });
+    });
+  }
+
+  setupRoutes() {
+    // Root endpoint - API documentation
+    this.app.get('/', (req, res) => {
+      res.json({
+        success: true,
+        service: 'VRM ElizaOS AI Girlfriend API',
+        version: '3.0.0',
+        description: '25个AI女友角色的智能对话系统',
+        availableEndpoints: [
+          {
+            path: '/health',
+            method: 'GET',
+            description: '健康检查端点'
+          },
+          {
+            path: '/api/chat',
+            method: 'POST',
+            description: '与AI角色对话',
+            body: {
+              userId: 'string (required)',
+              characterId: 'string (required)',
+              message: 'string (required)'
+            }
+          },
+          {
+            path: '/api/characters',
+            method: 'GET',
+            description: '获取所有可用的AI角色列表'
+          },
+          {
+            path: '/api/character/:characterId',
+            method: 'GET',
+            description: '获取特定角色的详细信息'
+          },
+          {
+            path: '/metrics',
+            method: 'GET',
+            description: 'Prometheus格式的系统指标'
+          }
+        ],
+        availableCharacters: [
+          'alice', 'ash', 'bobo', 'elinyaa', 'fliza',
+          'imeris', 'kyoko', 'lena', 'lilium', 'maple',
+          'miru', 'nekona', 'notia', 'ququ', 'rainy',
+          'rika', 'rindo', 'ruan', 'vivi', 'whisper',
+          'wolferia', 'xinyan', 'yawl', 'yuuyii', 'zwei'
+        ],
+        documentation: 'https://github.com/your-repo/vrm-eliza-ai-girlfriend',
+        frontend: '请将您的VRM前端连接到这个API',
+        exampleRequest: {
+          url: 'POST /api/chat',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: {
+            userId: 'user123',
+            characterId: 'alice',
+            message: '你好！'
+          }
+        }
+      });
+    });
+
+    // Favicon handler
+    this.app.get('/favicon.ico', (req, res) => {
+      res.status(204).end();
+    });
+
+    // Health check with detailed info
+    this.app.get('/health', async (req, res) => {
+      const healthStatus = await this.getHealthStatus();
+      const isHealthy = healthStatus.status === 'healthy';
+      
+      res.status(isHealthy ? 200 : 503).json({
+        success: isHealthy,
+        service: 'vrm-eliza-production',
+        version: '3.0.0',
+        timestamp: new Date().toISOString(),
+        uptime: {
+          ms: Date.now() - this.startTime,
+          human: this.formatUptime(Date.now() - this.startTime)
+        },
+        environment: process.env.NODE_ENV || 'development',
+        elizaOS: healthStatus,
+        cache: {
+          size: this.responseCache.size,
+          hitRate: this.getCacheHitRate()
+        },
+        system: {
+          memory: process.memoryUsage(),
+          platform: process.platform,
+          nodeVersion: process.version
+        }
+      });
+    });
+
+    // Production optimized chat endpoint
+    this.app.post('/api/chat', async (req, res) => {
+      try {
+        const { userId, characterId, message, options = {} } = req.body;
+
+        // Input validation
+        if (!userId || !characterId || !message || typeof message !== 'string') {
+          return res.status(400).json({
+            success: false,
+            error: 'Missing or invalid required parameters: userId, characterId, message',
+            requestId: req.requestId
+          });
+        }
+
+        // Message length validation
+        if (message.length > 1000) {
+          return res.status(400).json({
+            success: false,
+            error: 'Message too long (max 1000 characters)',
+            requestId: req.requestId
+          });
+        }
+
+        // Check cache first
+        const cacheKey = this.getCacheKey(userId, characterId, message);
+        if (options.useCache !== false && this.responseCache.has(cacheKey)) {
+          this.metrics.cacheHits++;
+          const cached = this.responseCache.get(cacheKey);
+          
+          return res.json({
+            success: true,
+            data: {
+              ...cached.data,
+              cached: true,
+              cacheAge: Date.now() - cached.timestamp
+            },
+            responseTime: Date.now() - req.startTime,
+            requestId: req.requestId
+          });
+        }
+
+        this.metrics.cacheMisses++;
+        const response = await this.processMessage(userId, characterId, message, options, req.requestId);
+        
+        // Cache successful responses
+        if (response.confidence > 0.7) {
+          this.responseCache.set(cacheKey, {
+            data: response,
+            timestamp: Date.now()
+          });
+        }
+
+        res.json({
+          success: true,
+          data: response,
+          responseTime: Date.now() - req.startTime,
+          requestId: req.requestId
+        });
+
+      } catch (error) {
+        console.error('Chat processing error:', error);
+        
+        res.status(500).json({
+          success: false,
+          error: process.env.NODE_ENV === 'production' 
+            ? 'Unable to process message at this time' 
+            : error.message,
+          requestId: req.requestId,
+          timestamp: new Date().toISOString()
+        });
+      }
+    });
+
+    // Optimized characters endpoint
+    this.app.get('/api/characters', async (req, res) => {
+      try {
+        const characterIds = await this.getAllCharacters();
+        const characters = await Promise.all(
+          characterIds.map(async (characterId) => {
+            const status = await this.getCharacterStatus(characterId);
+            return {
+              characterId,
+              name: status.name,
+              status: status.status,
+              available: status.status === 'active',
+              model: status.model,
+              personality: status.personality,
+              interests: status.interests?.slice(0, 3) || [],
+              usage: this.metrics.characterUsage[characterId] || 0
+            };
+          })
+        );
+
+        // Cache headers
+        res.set({
+          'Cache-Control': 'public, max-age=300', // 5 minutes
+          'ETag': `"characters-${this.characters.size}-${Date.now()}"`
+        });
+
+        res.json({
+          success: true,
+          data: {
+            total: characters.length,
+            active: characters.filter(c => c.status === 'active').length,
+            characters: characters.sort((a, b) => b.usage - a.usage) // Sort by popularity
+          }
+        });
+      } catch (error) {
+        console.error('Characters list error:', error);
+        res.status(500).json({
+          success: false,
+          error: 'Failed to retrieve characters list'
+        });
+      }
+    });
+
+    // Character status with caching
+    this.app.get('/api/characters/:characterId/status', async (req, res) => {
+      try {
+        const { characterId } = req.params;
+        const status = await this.getCharacterStatus(characterId);
+
+        if (status.status === 'not_found') {
+          return res.status(404).json({
+            success: false,
+            error: `Character '${characterId}' not found`
+          });
+        }
+
+        res.set('Cache-Control', 'public, max-age=60'); // 1 minute
+        res.json({
+          success: true,
+          data: status
+        });
+      } catch (error) {
+        console.error('Character status error:', error);
+        res.status(500).json({
+          success: false,
+          error: 'Failed to get character status'
+        });
+      }
+    });
+
+    // Production metrics endpoint
+    this.app.get('/metrics', (req, res) => {
+      const metrics = this.getProductionMetrics();
+      
+      // Prometheus format
+      const prometheusFormat = `
+# HELP vrm_eliza_requests_total Total number of requests
+# TYPE vrm_eliza_requests_total counter
+vrm_eliza_requests_total ${metrics.totalRequests}
+
+# HELP vrm_eliza_success_rate Success rate of requests
+# TYPE vrm_eliza_success_rate gauge
+vrm_eliza_success_rate ${(metrics.successfulRequests / Math.max(1, metrics.totalRequests)).toFixed(3)}
+
+# HELP vrm_eliza_response_time_ms Average response time in milliseconds
+# TYPE vrm_eliza_response_time_ms gauge
+vrm_eliza_response_time_ms ${metrics.averageResponseTime}
+
+# HELP vrm_eliza_cache_hit_rate Cache hit rate
+# TYPE vrm_eliza_cache_hit_rate gauge
+vrm_eliza_cache_hit_rate ${this.getCacheHitRate()}
+
+# HELP vrm_eliza_characters_loaded Number of loaded characters
+# TYPE vrm_eliza_characters_loaded gauge
+vrm_eliza_characters_loaded ${this.characters.size}
+      `.trim();
+
+      res.set('Content-Type', 'text/plain');
+      res.send(prometheusFormat);
+    });
+
+    // User profiles endpoints
+    this.app.get('/api/profiles/:userId', async (req, res) => {
+      try {
+        const { userId } = req.params;
+        console.log('🔍 查找用户资料:', userId);
+        
+        let profile = null;
+        
+        if (this.supabase) {
+          // Use Supabase for permanent storage - try both id formats
+          let { data, error } = await this.supabase
+            .from('users')
+            .select('*')
+            .eq('id', userId)
+            .single();
+            
+          // If not found by direct id, try by wallet_address
+          if (error && error.code === 'PGRST116') {
+            const result = await this.supabase
+              .from('users')
+              .select('*')
+              .eq('wallet_address', userId)
+              .single();
+            data = result.data;
+            error = result.error;
+          }
+            
+          if (error) {
+            if (error.code !== 'PGRST116') { // Not found is okay
+              console.error('❌ Supabase查询失败:', error);
+            }
+            profile = null;
+          } else {
+            profile = data;
+          }
+        } else {
+          // Fallback to memory storage
+          profile = this.userProfiles.get(userId) || null;
+        }
+        
+        console.log('📄 找到用户资料:', profile ? '存在' : '不存在');
+        
+        res.json({
+          success: true,
+          profile: profile
+        });
+      } catch (error) {
+        console.error('获取用户资料失败:', error);
+        res.status(500).json({
+          success: false,
+          error: 'Internal server error'
+        });
+      }
+    });
+
+    this.app.post('/api/profiles', async (req, res) => {
+      try {
+        const profileData = req.body;
+        console.log('💾 保存用户资料:', profileData);
+        
+        // 生成用户ID（从钱包地址）
+        const userId = `wallet_${profileData.walletAddress}`;
+        
+        let savedProfile;
+        
+        if (this.supabase) {
+          // Use Supabase for permanent storage
+          const mappedData = {
+            id: userId,
+            username: profileData.nickname,
+            first_name: profileData.nickname,
+            last_name: '',
+            location: profileData.location,
+            language: profileData.language || 'zh-CN',
+            birth_month: profileData.birthday ? parseInt(profileData.birthday.split('-')[1]) : null,
+            birth_day: profileData.birthday ? parseInt(profileData.birthday.split('-')[2]) : null
+          };
+          
+          // Try to insert, if user exists, update instead
+          const { data: existingUser } = await this.supabase
+            .from('users')
+            .select('id')
+            .eq('id', userId)
+            .single();
+            
+          if (existingUser) {
+            // Update existing user
+            const { data, error } = await this.supabase
+              .from('users')
+              .update(mappedData)
+              .eq('id', userId)
+              .select()
+              .single();
+              
+            if (error) {
+              console.error('❌ Supabase更新失败:', error);
+              throw error;
+            }
+            savedProfile = data;
+            console.log('✅ 用户资料已更新到Supabase:', userId);
+          } else {
+            // Insert new user
+            const { data, error } = await this.supabase
+              .from('users')
+              .insert([mappedData])
+              .select()
+              .single();
+              
+            if (error) {
+              console.error('❌ Supabase插入失败:', error);
+              throw error;
+            }
+            savedProfile = data;
+            console.log('✅ 用户资料已保存到Supabase:', userId);
+          }
+        } else {
+          // Fallback to memory storage
+          savedProfile = {
+            ...profileData,
+            userId: userId,
+            id: Date.now(),
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          };
+          this.userProfiles.set(userId, savedProfile);
+          console.log('⚠️ 用户资料已保存到内存（临时存储）:', userId);
+        }
+        
+        res.json({
+          success: true,
+          profile: savedProfile,
+          message: '用户资料保存成功'
+        });
+      } catch (error) {
+        console.error('保存用户资料失败:', error);
+        res.status(500).json({
+          success: false,
+          error: 'Supabase保存失败'
+        });
+      }
+    });
+
+    // TTS (Text-to-Speech) endpoint
+    this.app.post('/api/tts', async (req, res) => {
+      try {
+        const { text, voice = 'alloy', characterId } = req.body;
+        
+        if (!text) {
+          return res.status(400).json({
+            success: false,
+            error: 'Text is required'
+          });
+        }
+        
+        console.log('🔊 TTS请求:', { text: text.substring(0, 50) + '...', voice, characterId });
+        
+        // For now, return a success response indicating TTS is available
+        // In production, this would integrate with a TTS service like ElevenLabs or OpenAI
+        res.json({
+          success: true,
+          message: 'TTS endpoint available but not implemented',
+          audioUrl: null, // Would contain audio URL in real implementation
+          voice,
+          characterId,
+          textLength: text.length
+        });
+        
+      } catch (error) {
+        console.error('TTS失败:', error);
+        res.status(500).json({
+          success: false,
+          error: 'TTS service error'
+        });
+      }
+    });
+
+    // API info endpoint
+    this.app.get('/api/info', (req, res) => {
+      res.json({
+        success: true,
+        service: 'VRM ElizaOS AI Girlfriend',
+        version: '3.0.0',
+        phase: 3,
+        features: [
+          'production_optimized',
+          'response_caching', 
+          'enhanced_dialogue',
+          'emotion_detection',
+          'personality_adaptation',
+          'performance_monitoring'
+        ],
+        endpoints: {
+          health: '/health',
+          chat: '/api/chat',
+          characters: '/api/characters',
+          status: '/api/characters/:id/status',
+          profiles: '/api/profiles',
+          tts: '/api/tts',
+          metrics: '/metrics'
+        },
+        rateLimit: {
+          window: '1 minute',
+          max: process.env.NODE_ENV === 'production' ? 60 : 1000
+        }
+      });
+    });
+
+    // 404 handler
+    this.app.use('*', (req, res) => {
+      res.status(404).json({
+        success: false,
+        error: 'Endpoint not found',
+        path: req.originalUrl,
+        availableEndpoints: ['/health', '/api/chat', '/api/characters', '/metrics']
+      });
+    });
+  }
+
+  setupCacheCleanup() {
+    // Clean cache every 10 minutes
+    setInterval(() => {
+      const now = Date.now();
+      const maxAge = 10 * 60 * 1000; // 10 minutes
+      
+      for (const [key, value] of this.responseCache.entries()) {
+        if (now - value.timestamp > maxAge) {
+          this.responseCache.delete(key);
+        }
+      }
+      
+      // Limit cache size
+      if (this.responseCache.size > 1000) {
+        const entries = Array.from(this.responseCache.entries());
+        const sorted = entries.sort((a, b) => b[1].timestamp - a[1].timestamp);
+        
+        this.responseCache.clear();
+        sorted.slice(0, 500).forEach(([key, value]) => {
+          this.responseCache.set(key, value);
+        });
+      }
+    }, 10 * 60 * 1000);
+  }
+
+  getCacheKey(userId, characterId, message) {
+    // Create a simple hash for caching
+    const input = `${userId}-${characterId}-${message.toLowerCase().trim()}`;
+    let hash = 0;
+    for (let i = 0; i < input.length; i++) {
+      const char = input.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return `cache_${Math.abs(hash)}`;
+  }
+
+  getCacheHitRate() {
+    const total = this.metrics.cacheHits + this.metrics.cacheMisses;
+    return total > 0 ? (this.metrics.cacheHits / total).toFixed(3) : '0.000';
+  }
+
+  async initialize() {
+    console.log('🚀 Production ElizaOS Bridge initializing...');
+    await this.loadCharacters();
+    console.log(`✅ Production ready with ${this.characters.size} characters`);
+  }
+
+  async loadCharacters() {
+    const charactersDir = path.join(__dirname, '../agents');
+    
+    try {
+      const files = fs.readdirSync(charactersDir).filter(f => f.endsWith('.json'));
+      
+      for (const file of files) {
+        try {
+          const filePath = path.join(charactersDir, file);
+          const characterData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+          
+          const character = {
+            name: characterData.name,
+            bio: characterData.bio || [],
+            lore: characterData.lore || [],
+            messageExamples: characterData.messageExamples || [],
+            postExamples: characterData.postExamples || [],
+            topics: characterData.topics || [],
+            adjectives: characterData.adjectives || [],
+            settings: {
+              model: characterData.settings?.model || "openai:gpt-3.5-turbo",
+              voice: characterData.settings?.voice || {}
+            },
+            style: characterData.style || { all: [], chat: [], post: [] }
+          };
+
+          // Use lowercase ID for consistent lookup
+          const characterId = characterData.name.toLowerCase();
+          this.characters.set(characterId, character);
+          this.metrics.characterUsage[characterId] = 0;
+        } catch (error) {
+          console.error(`❌ Failed to load character ${file}:`, error.message);
+          this.errors.push(`Failed to load character ${file}: ${error.message}`);
+        }
+      }
+    } catch (error) {
+      console.error('❌ Failed to read characters directory:', error);
+      this.errors.push(`Failed to read characters directory: ${error.message}`);
+    }
+  }
+
+  // Enhanced message processing with production optimizations
+  async processMessage(userId, characterId, message, options = {}, requestId) {
+    const startTime = Date.now();
+    
+    try {
+      const character = this.characters.get(characterId);
+      
+      if (!character) {
+        throw new Error(`Character ${characterId} not found`);
+      }
+
+      // Update usage metrics
+      this.metrics.characterUsage[characterId] = (this.metrics.characterUsage[characterId] || 0) + 1;
+
+      // Production-optimized response generation
+      const response = await this.generateOptimizedResponse(character, message, userId, options);
+      
+      const processingTime = Date.now() - startTime;
+
+      return {
+        response,
+        confidence: 0.9,
+        memoryUpdated: options.enableMemory !== false,
+        characterId,
+        userId,
+        emotion: this.detectEmotion(response),
+        enhanced: true,
+        cached: false,
+        metadata: {
+          processingTime,
+          model: character.settings.model,
+          tokenCount: Math.ceil(message.length / 4),
+          responseLength: response.length,
+          requestId,
+          timestamp: new Date().toISOString()
+        }
+      };
+
+    } catch (error) {
+      // Only log non-test errors in production
+      if (process.env.NODE_ENV === 'production' && !userId.includes('test')) {
+        console.error(`❌ Error processing message for ${characterId}:`, error);
+      } else if (process.env.NODE_ENV !== 'production') {
+        console.error(`❌ Error processing message for ${characterId}:`, error);
+      }
+      
+      return {
+        response: this.getFallbackResponse(characterId),
+        confidence: 0.3,
+        memoryUpdated: false,
+        characterId,
+        userId,
+        emotion: 'apologetic',
+        enhanced: false,
+        cached: false,
+        metadata: {
+          error: error.message,
+          processingTime: Date.now() - startTime,
+          fallback: true,
+          requestId,
+          timestamp: new Date().toISOString()
+        }
+      };
+    }
+  }
+
+  async generateOptimizedResponse(character, message, userId, options) {
+    // Use OpenAI API if available
+    if (this.openai) {
+      try {
+        const systemPrompt = this.buildSystemPrompt(character);
+        // 使用角色配置的模型，默认为gpt-4o
+        const modelName = character.settings?.model?.replace('openai:', '') || 'gpt-4o';
+        
+        // 调试：输出系统提示词长度和模型
+        console.log(`🤖 Using model: ${modelName}, Prompt length: ${systemPrompt.length} chars`);
+        
+        const completion = await this.openai.chat.completions.create({
+          model: modelName,
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user", content: message }
+          ],
+          max_tokens: 300,  // 增加到300以获得更完整的回复
+          temperature: 0.85, // 稍微提高创造性
+        });
+        
+        return completion.choices[0]?.message?.content || this.getFallbackTemplateResponse(character, message);
+      } catch (error) {
+        console.error('OpenAI API error:', error);
+        return this.getFallbackTemplateResponse(character, message);
+      }
+    }
+    
+    // Fallback to template responses if no OpenAI API
+    return this.getFallbackTemplateResponse(character, message);
+  }
+  
+  buildSystemPrompt(character) {
+    const personality = character.adjectives.slice(0, 5).join(', ');
+    const interests = character.topics.slice(0, 5).join(', ');
+    const bio = Array.isArray(character.bio) ? character.bio.join(' ') : character.bio;
+    const lore = character.lore ? character.lore.slice(0, 3).join(' ') : '';
+    
+    // Extract style rules for chat
+    const styleRules = [];
+    if (character.style?.all) {
+      styleRules.push(...character.style.all);
+    }
+    if (character.style?.chat) {
+      styleRules.push(...character.style.chat);
+    }
+    
+    // 添加对话示例来训练AI
+    let messageExamples = '';
+    if (character.messageExamples && character.messageExamples.length > 0) {
+      messageExamples = '\n\n对话示例（学习这种回复风格）：';
+      character.messageExamples.slice(0, 3).forEach(example => {
+        if (example.length >= 2) {
+          const userMsg = example[0].content.text;
+          const aiMsg = example[1].content.text;
+          messageExamples += `\n用户：${userMsg}\n${character.name}：${aiMsg}`;
+        }
+      });
+    }
+    
+    let prompt = `你是${character.name}，${bio}
+
+性格特点：${personality}
+兴趣爱好：${interests}`;
+
+    if (lore) {
+      prompt += `\n背景设定：${lore}`;
+    }
+
+    if (styleRules.length > 0) {
+      prompt += `\n\n语言风格要求：\n${styleRules.map((rule, i) => `${i + 1}. ${rule}`).join('\n')}`;
+    }
+
+    if (messageExamples) {
+      prompt += messageExamples;
+    }
+
+    prompt += `\n\n重要：
+1. 完全沉浸在${character.name}的角色中
+2. 使用角色特有的语言风格和表情符号
+3. 根据角色的兴趣爱好展开话题
+4. 保持角色的性格一致性
+5. 像真正的女友一样自然、亲密地交流`;
+    
+    return prompt;
+  }
+  
+  getFallbackTemplateResponse(character, message) {
+    // Production-optimized response generation with better performance
+    const messageAnalysis = this.analyzeMessage(message);
+    const personality = character.adjectives.slice(0, 3).join(', ');
+    const interests = character.topics.slice(0, 3);
+    
+    // More sophisticated response selection
+    let responseTemplate;
+    
+    if (messageAnalysis.isQuestion) {
+      responseTemplate = this.getAdvancedQuestionResponse(character, messageAnalysis, interests);
+    } else if (messageAnalysis.isEmotional) {
+      responseTemplate = this.getAdvancedEmotionalResponse(character, messageAnalysis, personality);
+    } else if (messageAnalysis.isGreeting) {
+      responseTemplate = this.getAdvancedGreetingResponse(character, personality);
+    } else {
+      responseTemplate = this.getAdvancedGenericResponse(character, messageAnalysis, interests);
+    }
+    
+    // Enhanced personalization
+    const personalizedResponse = this.enhancedPersonalization(responseTemplate, character, userId, messageAnalysis);
+    
+    return personalizedResponse;
+  }
+
+  getAdvancedQuestionResponse(character, analysis, interests) {
+    const responses = [
+      `这真是个深刻的问题！作为${character.name}，我从${interests[0]}的经验来看...`,
+      `让我仔细想想这个问题。根据我对${interests[1]}的理解...`,
+      `这个问题让我想到了很多。我觉得从${character.adjectives[0]}的角度来说...`,
+      `有趣的问题！我在${interests[0]}中学到的是...`
+    ];
+    return responses[Math.floor(Math.random() * responses.length)];
+  }
+
+  getAdvancedEmotionalResponse(character, analysis, personality) {
+    if (analysis.sentiment === 'positive') {
+      return `太好了！你的快乐感染了我。作为${personality}的${character.name}，我也感到很开心...`;
+    } else if (analysis.sentiment === 'negative') {
+      return `我理解你现在的感受。${personality}的我想说，每个人都会有低谷期...`;
+    } else {
+      return `我感受到了你内心的情绪波动。让我们一起面对，好吗？`;
+    }
+  }
+
+  getAdvancedGreetingResponse(character, personality) {
+    const timeOfDay = this.getTimeOfDay();
+    const greetings = [
+      `${timeOfDay}好！我是${character.name}，${personality}是我的特点。今天想聊什么呢？`,
+      `嗨！很高兴见到你！我是${personality}的${character.name}，准备好聊天了吗？`,
+      `${timeOfDay}好呀！${character.name}在这里，带着${personality}的心情迎接你！`
+    ];
+    return greetings[Math.floor(Math.random() * greetings.length)];
+  }
+
+  getAdvancedGenericResponse(character, analysis, interests) {
+    const responses = [
+      `你说的让我想到了${interests[0]}的一些经历。${character.name}觉得...`,
+      `这个话题很有意思！从我对${interests[1]}的了解来说...`,
+      `作为一个${character.adjectives[0]}的人，我想分享一下我的看法...`,
+      `你的话触动了我。让我从${interests[0]}的角度来聊聊...`
+    ];
+    return responses[Math.floor(Math.random() * responses.length)];
+  }
+
+  enhancedPersonalization(template, character, userId, analysis) {
+    const userHash = this.hashUserId(userId);
+    const personalityIndex = userHash % character.adjectives.length;
+    const topicIndex = userHash % character.topics.length;
+    
+    // Add more contextual elements
+    const timeContext = this.getTimeContext();
+    const emotionalContext = analysis.sentiment === 'positive' ? '积极' : 
+                            analysis.sentiment === 'negative' ? '温暖' : '平静';
+    
+    return template
+      .replace('{personality}', character.adjectives[personalityIndex])
+      .replace('{interest}', character.topics[topicIndex])
+      .replace('{name}', character.name)
+      .replace('{time}', timeContext)
+      .replace('{emotion}', emotionalContext);
+  }
+
+  getTimeOfDay() {
+    const hour = new Date().getHours();
+    if (hour < 12) return '早上';
+    if (hour < 18) return '下午';
+    return '晚上';
+  }
+
+  getTimeContext() {
+    const hour = new Date().getHours();
+    if (hour < 6) return '夜深人静的时候';
+    if (hour < 12) return '清晨的阳光中';
+    if (hour < 18) return '午后的时光里';
+    return '夜晚的宁静中';
+  }
+
+  getFallbackResponse(characterId) {
+    const fallbacks = [
+      `抱歉，我现在思绪有点乱，不过我很想继续和你聊天。`,
+      `让我重新整理一下思路，然后我们继续聊吧。`,
+      `我需要一点时间思考，但请不要停止和我对话。`,
+      `技术上遇到了小问题，但我的心依然想和你交流。`
+    ];
+    return fallbacks[Math.floor(Math.random() * fallbacks.length)];
+  }
+
+  analyzeMessage(message) {
+    const lowerMessage = message.toLowerCase();
+    
+    return {
+      isQuestion: /[？?]/.test(message) || /^(什么|怎么|为什么|哪里|谁|when|what|how|why|where|who)/.test(lowerMessage),
+      isEmotional: /开心|难过|生气|兴奋|紧张|害怕|happy|sad|angry|excited|nervous|scared/.test(lowerMessage),
+      isGreeting: /你好|hi|hello|嗨|morning|afternoon|evening|早上好|下午好|晚上好/.test(lowerMessage),
+      sentiment: this.getSentiment(message),
+      keywords: this.extractKeywords(message),
+      complexity: message.length > 50 ? 'high' : message.length > 20 ? 'medium' : 'low'
+    };
+  }
+
+  getSentiment(message) {
+    const positive = /开心|高兴|兴奋|好|棒|amazing|great|good|happy|excited|喜欢|爱/.test(message.toLowerCase());
+    const negative = /难过|生气|不好|糟糕|bad|sad|angry|terrible|讨厌|恨/.test(message.toLowerCase());
+    
+    if (positive) return 'positive';
+    if (negative) return 'negative';
+    return 'neutral';
+  }
+
+  extractKeywords(message) {
+    const words = message.split(/\s+/);
+    return words.filter(word => word.length > 2 && !/^(的|了|是|在|有|我|你|他)$/.test(word));
+  }
+
+  detectEmotion(response) {
+    const emotions = {
+      happy: /开心|高兴|兴奋|哈哈|😊|😄|太好了|很棒/,
+      sad: /难过|悲伤|😢|😭|遗憾|可惜/,
+      surprised: /惊讶|哇|！！|😲|真的吗/,
+      thoughtful: /想想|思考|认为|觉得|分析|理解/,
+      friendly: /朋友|聊天|很好|不错|欢迎|高兴/,
+      caring: /关心|在乎|理解|温暖|陪伴|支持/
+    };
+
+    for (const [emotion, pattern] of Object.entries(emotions)) {
+      if (pattern.test(response)) {
+        return emotion;
+      }
+    }
+    return 'neutral';
+  }
+
+  hashUserId(userId) {
+    let hash = 0;
+    for (let i = 0; i < userId.length; i++) {
+      const char = userId.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+    }
+    return Math.abs(hash);
+  }
+
+  async getCharacterStatus(characterId) {
+    const character = this.characters.get(characterId);
+    
+    if (!character) {
+      return { status: 'not_found', characterId };
+    }
+
+    return {
+      status: 'active',
+      characterId,
+      name: character.name,
+      model: character.settings.model,
+      personality: character.adjectives.slice(0, 3).join(', '),
+      interests: character.topics.slice(0, 3),
+      usage: this.metrics.characterUsage[characterId] || 0,
+      memoryEnabled: true,
+      uptime: Date.now() - this.startTime,
+      lastActivity: Date.now()
+    };
+  }
+
+  async getHealthStatus() {
+    return {
+      status: this.errors.length === 0 ? 'healthy' : (this.errors.length < 3 ? 'degraded' : 'unhealthy'),
+      uptime: Date.now() - this.startTime,
+      charactersLoaded: this.characters.size,
+      memoryConnected: false,
+      cacheEnabled: true,
+      cacheSize: this.responseCache.size,
+      lastHealthCheck: new Date().toISOString(),
+      errors: this.errors.slice(-3),
+      phase: 3,
+      features: ['production_optimized', 'response_caching', 'enhanced_dialogue']
+    };
+  }
+
+  async getAllCharacters() {
+    return Array.from(this.characters.keys());
+  }
+
+  getProductionMetrics() {
+    const uptime = Date.now() - this.startTime;
+    
+    return {
+      ...this.metrics,
+      uptime,
+      cacheSize: this.responseCache.size,
+      cacheHitRate: this.getCacheHitRate(),
+      charactersLoaded: this.characters.size,
+      memoryUsage: Math.round(process.memoryUsage().rss / 1024 / 1024),
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  updateMetrics(req, res, duration) {
+    this.metrics.totalRequests++;
+    
+    if (res.statusCode < 400) {
+      this.metrics.successfulRequests++;
+    } else {
+      this.metrics.failedRequests++;
+    }
+
+    // Update average response time
+    const totalTime = this.metrics.averageResponseTime * (this.metrics.totalRequests - 1);
+    this.metrics.averageResponseTime = Math.round((totalTime + duration) / this.metrics.totalRequests);
+  }
+
+  formatUptime(ms) {
+    const seconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) return `${days}d ${hours % 24}h ${minutes % 60}m`;
+    if (hours > 0) return `${hours}h ${minutes % 60}m ${seconds % 60}s`;
+    if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
+    return `${seconds}s`;
+  }
+
+  async start(port = 3001) {
+    try {
+      await this.initialize();
+      
+      // For Vercel, we don't need to listen to a port
+      if (process.env.NODE_ENV === 'production' && process.env.VERCEL) {
+        console.log('🌐 Production ElizaOS Bridge ready for Vercel deployment');
+        return;
+      }
+      
+      this.server.listen(port, () => {
+        console.log('');
+        console.log('🎉 Production ElizaOS 集成服务就绪！');
+        console.log(`📡 HTTP API: http://localhost:${port}`);
+        console.log(`🏥 健康检查: http://localhost:${port}/health`);
+        console.log(`📊 监控指标: http://localhost:${port}/metrics`);
+        console.log(`🤖 角色数量: ${this.characters.size} 个`);
+        console.log(`⚡ 生产优化: 响应缓存、安全防护、性能监控`);
+        console.log('');
+      });
+    } catch (error) {
+      console.error('❌ Production bridge startup failed:', error);
+      throw error;
+    }
+  }
+
+  async shutdown() {
+    console.log('🔄 Shutting down production bridge...');
+    if (this.server) {
+      this.server.close();
+    }
+    this.characters.clear();
+    this.responseCache.clear();
+    console.log('✅ Production bridge shutdown complete');
+  }
+}
+
+// Export for Vercel
+let bridge;
+
+// Vercel serverless handler
+export default async function handler(req, res) {
+  if (!bridge) {
+    bridge = new ProductionElizaBridge();
+    await bridge.initialize();
+  }
+  
+  return bridge.app(req, res);
+}
+
+// For local development
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  const bridge = new ProductionElizaBridge();
+
+  process.on('SIGINT', async () => {
+    console.log('\n收到退出信号...');
+    await bridge.shutdown();
+    process.exit(0);
+  });
+
+  process.on('SIGTERM', async () => {
+    console.log('\n收到终止信号...');
+    await bridge.shutdown();
+    process.exit(0);
+  });
+
+  bridge.start().catch(error => {
+    console.error('启动失败:', error);
+    process.exit(1);
+  });
+}
