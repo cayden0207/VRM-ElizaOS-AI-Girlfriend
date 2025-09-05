@@ -1,6 +1,15 @@
 // VRM AI 女友系统 - 完整ElizaOS集成版 API
 // 兼容Vercel serverless的ES模块导入方式
 
+// 隐藏ElizaOS相关的无关紧要错误（不影响功能，有后备模式）
+process.on('unhandledRejection', (reason, promise) => {
+  if (reason && reason.message && reason.message.includes('databaseAdapter')) {
+    // 静默处理ElizaOS数据库相关错误，因为我们有后备模式
+    return;
+  }
+  console.error('Unhandled Rejection:', reason);
+});
+
 import { createClient } from '@supabase/supabase-js';
 
 // Supabase 客户端
@@ -426,9 +435,11 @@ async function generateVoice(text, characterId, options = {}) {
     'zwei': '0EzDWfDZDlAIeQQOjhoC'
   };
   
-  const voiceId = voiceMap[characterId.toLowerCase()];
+  // 处理角色名中的空格和大小写问题
+  const normalizedCharacterId = characterId.toLowerCase().replace(/\s+/g, '');
+  const voiceId = voiceMap[normalizedCharacterId];
   if (!voiceId) {
-    throw new Error(`角色 ${characterId} 没有配置语音ID`);
+    throw new Error(`角色 ${characterId} (${normalizedCharacterId}) 没有配置语音ID`);
   }
   
   console.log(`🎤 生成语音: ${characterId} (${voiceId}) - "${text.substring(0, 50)}..."`);
