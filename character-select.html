@@ -4047,7 +4047,7 @@
                     // 更新UI
                     this.updateUI();
                     this.hideDropdown();
-                    this.showToast('钱包已断开连接', 'success');
+                    this.showToast(i18n.t('wallet.disconnected'), 'success');
 
                     // 触发全局事件
                     window.dispatchEvent(new CustomEvent('walletDisconnected'));
@@ -4781,7 +4781,7 @@
                     font-size: 16px;
                     z-index: 10001;
                 `;
-                successMsg.textContent = '🎉 注册完成！请选择你的AI女友角色';
+                successMsg.textContent = i18n.t('registration.success');
                 document.body.appendChild(successMsg);
                 
                 setTimeout(() => {
@@ -4793,7 +4793,7 @@
             }
             } catch (error) {
                 console.error('❌ 表单提交过程中发生错误:', error);
-                alert('提交失败：' + error.message);
+                alert(i18n.t('error.save') + ': ' + error.message);
             }
         }
         
@@ -5217,7 +5217,7 @@ window.handleProfileSubmit = async function(event) {
                         font-size: 16px;
                         z-index: 10001;
                     `;
-                    successMsg.textContent = '🎉 注册完成！请选择你的AI女友角色';
+                    successMsg.textContent = i18n.t('registration.success');
                     document.body.appendChild(successMsg);
                     
                     setTimeout(() => {

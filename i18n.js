@@ -180,7 +180,11 @@ class I18n {
             'registration.favorite.color.placeholder': 'e.g.: Blue, pink, green',
             'registration.hobbies': 'Hobbies',
             'registration.hobbies.placeholder': 'e.g.: Reading, listening to music, gaming',
-            'registration.submit': 'OK'
+            'registration.submit': 'OK',
+
+            // Success and action messages
+            'registration.success': '🎉 Registration Complete! Please choose your AI girlfriend character',
+            'wallet.disconnected': 'Wallet disconnected'
         },
         
         zh: {
@@ -344,7 +348,11 @@ class I18n {
             'registration.favorite.color.placeholder': '例：蓝色、粉色、绿色',
             'registration.hobbies': '兴趣爱好',
             'registration.hobbies.placeholder': '例：读书、听音乐、游戏',
-            'registration.submit': 'OK'
+            'registration.submit': 'OK',
+
+            // Success and action messages
+            'registration.success': '🎉 注册完成！请选择你的AI女友角色',
+            'wallet.disconnected': '钱包已断开连接'
         }
     };
 
