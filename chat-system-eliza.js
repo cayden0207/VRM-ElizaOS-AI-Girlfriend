@@ -654,6 +654,9 @@ class ElizaOSChatSystem {
         }
         
         try {
+            // 获取当前UI语言设置
+            const currentLanguage = window.i18n ? window.i18n.getCurrentLanguage() : 'en';
+            
             // 调用ElizaOS聊天API
             const response = await fetch(`${this.apiBaseURL}/api/chat`, {
                 method: 'POST',
@@ -661,7 +664,8 @@ class ElizaOSChatSystem {
                 body: JSON.stringify({
                     userId: this.currentUser.id,
                     characterId: this.currentCharacter.id,
-                    message: message
+                    message: message,
+                    language: currentLanguage // 添加语言参数
                 })
             });
             
