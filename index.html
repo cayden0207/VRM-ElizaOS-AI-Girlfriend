@@ -1550,8 +1550,8 @@
                         </g>
                     </svg>
                 </div>
-                <span class="wallet-address" id="wallet-address">连接中...</span>
-                <button class="wallet-disconnect" onclick="disconnectWallet()">登出</button>
+                <span class="wallet-address" id="wallet-address">Connecting...</span>
+                <button class="wallet-disconnect" onclick="disconnectWallet()">Logout</button>
             </div>
 
         </div>
@@ -3680,9 +3680,9 @@
             walletAuth.redirectToCharacterSelect();
         };
         
-        // 测试函数 - 强制登出
+        // Test function - force logout
         window.forceDisconnect = function() {
-            console.log('🧪 强制登出测试');
+            console.log('🧪 Force logout test');
             localStorage.clear();
             location.href = 'character-select.html';
         };
