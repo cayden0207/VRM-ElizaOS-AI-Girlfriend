@@ -114,6 +114,14 @@ class I18n {
             'profile.likes.dislikes': 'Likes & Dislikes',
             'profile.favorites': 'Favorites',
             
+            // Profile field labels
+            'profile.likes.label': 'Likes',
+            'profile.dislikes.label': 'Dislikes', 
+            'profile.food.label': 'Food',
+            'profile.music.label': 'Music',
+            'profile.movies.label': 'Movies',
+            'profile.games.label': 'Games',
+            
             // Character profiles
             'character.alice.age': '22',
             'character.alice.birthday': 'June 5',
@@ -235,6 +243,14 @@ class I18n {
             // Profile section headers
             'profile.likes.dislikes': '喜好 & 讨厌',
             'profile.favorites': '最爱',
+            
+            // Profile field labels
+            'profile.likes.label': '喜欢',
+            'profile.dislikes.label': '讨厌', 
+            'profile.food.label': '食物',
+            'profile.music.label': '音乐',
+            'profile.movies.label': '电影',
+            'profile.games.label': '游戏',
             
             // Character profiles
             'character.alice.age': '22',
