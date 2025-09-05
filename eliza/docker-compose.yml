@@ -1,0 +1,130 @@
+# ElizaOS 集成开发环境 Docker Compose 配置
+version: '3.8'
+
+services:
+  eliza-bridge:
+    build: .
+    container_name: vrm-eliza-bridge
+    ports:
+      - "3001:3001"
+      - "9090:9090"  # Metrics port
+    environment:
+      - NODE_ENV=development
+      - ELIZA_ENABLED=true
+      - ELIZA_FALLBACK_ENABLED=true
+      - MODEL_PROVIDER=openai
+      - ELIZA_BRIDGE_PORT=3001
+      - LOG_LEVEL=DEBUG
+      - DEBUG_MODE=true
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - ./logs:/app/logs
+      - ./characters:/app/characters:ro
+    networks:
+      - eliza-network
+    depends_on:
+      - redis
+      - postgres-local
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  # 本地 PostgreSQL (可选 - 仅用于开发测试)
+  postgres-local:
+    image: pgvector/pgvector:pg16
+    container_name: vrm-postgres-dev
+    ports:
+      - "5433:5432"  # 避免与系统 PostgreSQL 冲突
+    environment:
+      POSTGRES_DB: eliza_dev
+      POSTGRES_USER: eliza_user
+      POSTGRES_PASSWORD: eliza_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - eliza-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eliza_user -d eliza_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # Redis (用于缓存和会话管理)
+  redis:
+    image: redis:7-alpine
+    container_name: vrm-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --requirepass eliza_redis_pass
+    volumes:
+      - redis_data:/data
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf
+    networks:
+      - eliza-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+
+  # Nginx 反向代理 (可选)
+  nginx:
+    image: nginx:alpine
+    container_name: vrm-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./logs/nginx:/var/log/nginx
+    networks:
+      - eliza-network
+    depends_on:
+      - eliza-bridge
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    restart: unless-stopped
+
+  # 监控服务 (可选)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: vrm-prometheus
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - eliza-network
+    restart: unless-stopped
+
+networks:
+  eliza-network:
+    driver: bridge
+    name: vrm-eliza-network
+
+volumes:
+  postgres_data:
+    name: vrm-postgres-data
+  redis_data:
+    name: vrm-redis-data
+  prometheus_data:
+    name: vrm-prometheus-data

@@ -1,0 +1,44 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.js",
+      "use": "@vercel/node",
+      "config": {
+        "maxLambdaSize": "50mb"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/health",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/metrics",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/api/index.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "ELIZA_ENABLED": "true",
+    "ELIZA_FALLBACK_ENABLED": "true",
+    "MAX_CONCURRENT_REQUESTS": "100",
+    "REQUEST_TIMEOUT": "30000",
+    "HEALTH_CHECK_INTERVAL": "60000",
+    "MEMORY_LIMIT": "1024",
+    "LOG_LEVEL": "INFO"
+  },
+  "regions": ["hkg1", "sin1"],
+  "github": {
+    "silent": true
+  }
+}
