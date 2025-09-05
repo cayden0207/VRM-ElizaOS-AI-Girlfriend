@@ -2397,37 +2397,57 @@
         function updateCharacterProfile(character) {
             // 获取角色详细信息，如果没有则使用默认值
             const profile = getCharacterProfile(character.name);
+            const characterKey = character.name.toLowerCase();
             
             document.getElementById('character-name').textContent = character.name;
+            
             // 使用国际化数据
             if (window.i18n) {
-                const characterKey = character.name.toLowerCase();
                 document.getElementById('character-age').textContent = window.i18n.t(`character.${characterKey}.age`);
-            } else {
-                document.getElementById('character-age').textContent = profile.age;
-            }
-            if (window.i18n) {
                 document.getElementById('character-birthday').textContent = window.i18n.t(`character.${characterKey}.birthday`);
-            } else {
-                document.getElementById('character-birthday').textContent = profile.birthday;
-            }
-            if (window.i18n) {
                 document.getElementById('character-zodiac').textContent = window.i18n.t(`character.${characterKey}.zodiac`);
-            } else {
-                document.getElementById('character-zodiac').textContent = profile.zodiac;
-            }
-            if (window.i18n) {
                 document.getElementById('character-personality').textContent = window.i18n.t(`character.${characterKey}.personality`);
             } else {
+                document.getElementById('character-age').textContent = profile.age;
+                document.getElementById('character-birthday').textContent = profile.birthday;
+                document.getElementById('character-zodiac').textContent = profile.zodiac;
                 document.getElementById('character-personality').textContent = profile.personality;
             }
-            document.getElementById('character-interests').textContent = profile.dailyInterests;
-            document.getElementById('character-likes').textContent = profile.likes;
-            document.getElementById('character-dislikes').textContent = profile.dislikes;
-            document.getElementById('character-food').textContent = profile.favoriteFood;
-            document.getElementById('character-music').textContent = profile.favoriteMusic;
-            document.getElementById('character-movies').textContent = profile.favoriteMovies;
-            document.getElementById('character-games').textContent = profile.favoriteGames;
+            // 更新其他信息（如果元素存在）
+            const interestsEl = document.getElementById('character-interests');
+            if (interestsEl) {
+                interestsEl.textContent = window.i18n ? window.i18n.t(`character.${characterKey}.interests`) : profile.dailyInterests;
+            }
+            
+            const likesEl = document.getElementById('character-likes');
+            if (likesEl) {
+                likesEl.textContent = window.i18n ? window.i18n.t(`character.${characterKey}.likes`) : profile.likes;
+            }
+            
+            const dislikesEl = document.getElementById('character-dislikes');
+            if (dislikesEl) {
+                dislikesEl.textContent = window.i18n ? window.i18n.t(`character.${characterKey}.dislikes`) : profile.dislikes;
+            }
+            
+            const foodEl = document.getElementById('character-food');
+            if (foodEl) {
+                foodEl.textContent = window.i18n ? window.i18n.t(`character.${characterKey}.food`) : profile.favoriteFood;
+            }
+            
+            const musicEl = document.getElementById('character-music');
+            if (musicEl) {
+                musicEl.textContent = window.i18n ? window.i18n.t(`character.${characterKey}.music`) : profile.favoriteMusic;
+            }
+            
+            const moviesEl = document.getElementById('character-movies');
+            if (moviesEl) {
+                moviesEl.textContent = window.i18n ? window.i18n.t(`character.${characterKey}.movies`) : profile.favoriteMovies;
+            }
+            
+            const gamesEl = document.getElementById('character-games');
+            if (gamesEl) {
+                gamesEl.textContent = window.i18n ? window.i18n.t(`character.${characterKey}.games`) : profile.favoriteGames;
+            }
             
             // 更新语音选择器
             updateVoiceSelector();
