@@ -3183,13 +3183,10 @@
                     console.log('🎵 背景音乐开始播放');
                     // 移除固定的背景音乐消息
                 }).catch(error => {
-                    console.log('🎵 自动播放被浏览器阻止，需要用户交互后播放');
+                    console.log('🎵 Auto-play blocked by browser, requires user interaction');
                     isMusicPlaying = false;
                     updateMusicButton();
-                    // 在聊天中显示音乐提示
-                    setTimeout(() => {
-                        addMessage('🎵 点击右上角音乐按钮开启温馨的背景音乐吧~ 💕', false);
-                    }, 2000);
+                    // Music tip removed to reduce notifications
                 });
             }
         }

@@ -153,7 +153,34 @@ class I18n {
             'character.alice.food': 'Strawberry cake, macarons',
             'character.alice.music': 'Pop dance music, K-Pop',
             'character.alice.movies': 'Romantic comedies',
-            'character.alice.games': 'Rhythm dance games'
+            'character.alice.games': 'Rhythm dance games',
+
+            // User registration form
+            'registration.title': 'User Registration',
+            'registration.edit.title': 'Edit Profile',
+            'registration.username': 'Username',
+            'registration.username.placeholder': 'Maximum 12 characters',
+            'registration.username.note': 'Other users can see this (maximum 12 characters)',
+            'registration.display.name': 'Your Name',
+            'registration.display.name.placeholder': 'Name',
+            'registration.display.name.note': '"Your Name" is what the AI girlfriend will call you in chat, not visible to other users<br>"Username" and "Your Name" can be modified later in personal profile.',
+            'registration.birthday': 'Your Birthday',
+            'registration.birthday.year': 'Year',
+            'registration.birthday.month': 'Month',
+            'registration.birthday.day': 'Day',
+            'registration.birthday.note': '※Birthday cannot be changed after setting',
+            'registration.location': 'Location',
+            'registration.location.placeholder': 'e.g.: Beijing, Shanghai, New York',
+            'registration.language': 'Language Setting',
+            'registration.language.select': 'Select Language',
+            'registration.preferences': 'Personal Preference Memory',
+            'registration.favorite.food': 'Favorite Food',
+            'registration.favorite.food.placeholder': 'e.g.: Hot pot, pasta, sushi',
+            'registration.favorite.color': 'Favorite Color',
+            'registration.favorite.color.placeholder': 'e.g.: Blue, pink, green',
+            'registration.hobbies': 'Hobbies',
+            'registration.hobbies.placeholder': 'e.g.: Reading, listening to music, gaming',
+            'registration.submit': 'OK'
         },
         
         zh: {
@@ -290,7 +317,34 @@ class I18n {
             'character.alice.food': '草莓蛋糕、马卡龙',
             'character.alice.music': '流行舞曲、K-Pop',
             'character.alice.movies': '浪漫喜剧',
-            'character.alice.games': '节奏舞蹈游戏'
+            'character.alice.games': '节奏舞蹈游戏',
+
+            // User registration form
+            'registration.title': '用户注册',
+            'registration.edit.title': '编辑资料',
+            'registration.username': '用户名',
+            'registration.username.placeholder': '最多12个字符',
+            'registration.username.note': '其他用户可以看到（最多12个字符）',
+            'registration.display.name': '你的名字',
+            'registration.display.name.placeholder': '姓名',
+            'registration.display.name.note': '「你的名字」是AI女友在聊天中称呼你的名字，对其他用户不可见<br>「用户名」和「你的名字」以后可以在个人资料中修改。',
+            'registration.birthday': '你的生日',
+            'registration.birthday.year': '年',
+            'registration.birthday.month': '月',
+            'registration.birthday.day': '日',
+            'registration.birthday.note': '※生日设置后无法更改',
+            'registration.location': '居住地',
+            'registration.location.placeholder': '例：北京、上海、纽约',
+            'registration.language': '语言设置',
+            'registration.language.select': '选择语言',
+            'registration.preferences': '个人偏好记忆',
+            'registration.favorite.food': '喜欢的食物',
+            'registration.favorite.food.placeholder': '例：火锅、意面、寿司',
+            'registration.favorite.color': '喜欢的颜色',
+            'registration.favorite.color.placeholder': '例：蓝色、粉色、绿色',
+            'registration.hobbies': '兴趣爱好',
+            'registration.hobbies.placeholder': '例：读书、听音乐、游戏',
+            'registration.submit': 'OK'
         }
     };
 
