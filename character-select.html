@@ -32,7 +32,7 @@
             position: relative;
         }
 
-        /* 顶部标题 */
+        /* Top title */
         .heroes-title {
             position: absolute;
             top: 12px;
@@ -44,7 +44,7 @@
             z-index: 100;
         }
 
-        /* 语言切换器 */
+        /* Language switcher */
         .language-toggle {
             position: absolute;
             bottom: 20px;
@@ -84,7 +84,7 @@
             color: white;
         }
 
-        /* 角色信息面板 - 日式档案卡设计 */
+        /* Character info panel - Japanese style profile card design */
         .character-info {
             position: absolute;
             top: 50px;
@@ -204,10 +204,10 @@
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
         }
 
-        /* 浮动语音选择器样式 - 基于参考截图 */
+        /* Floating voice selector styles - based on reference screenshot */
         .voice-selector-floating {
             position: absolute;
-            top: 20%; /* 从40%调整为20%，向上移动50% */
+            top: 20%; /* Adjusted from 40% to 20%, moved up by 50% */
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 100;
@@ -277,7 +277,7 @@
             }
         }
 
-        /* 中央角色名称显示 */
+        /* Central character name display */
         .character-display-name {
             position: absolute;
             bottom: 100px;
@@ -291,7 +291,7 @@
             opacity: 0.9;
         }
 
-        /* VRM展示区域 - 中央 */
+        /* VRM display area - central */
         .vrm-display {
             flex: 1;
             position: relative;
@@ -306,7 +306,7 @@
             display: block;
         }
 
-        /* 简化的加载动画样式 */
+        /* Simplified loading animation styles */
         .character-loader {
             position: absolute;
             top: 50%;
@@ -361,7 +361,7 @@
 
 
 
-        /* 角色选择器 - 底部 - 模仿截图样式 */
+        /* Character selector - bottom - mimicking screenshot style */
         .character-selector {
             position: absolute;
             bottom: 15px;
@@ -379,7 +379,7 @@
             box-shadow: 0 1px 7px rgba(0, 0, 0, 0.1);
         }
 
-        /* 导航按钮 - 左右箭头 */
+        /* Navigation buttons - left/right arrows */
         .nav-button {
             width: 42px;
             height: 42px;
@@ -419,14 +419,14 @@
             background: white;
         }
 
-        /* 当前选中的角色 */
+        /* Currently selected character */
         .character-thumb.active {
             border-color: #FFD700;
             transform: scale(1.15);
             box-shadow: 0 0 7px rgba(255, 215, 0, 0.6);
         }
 
-        /* 中心的选中指示器 - 模仿截图设计 */
+        /* Center selection indicator - mimicking screenshot design */
         .selected-indicator {
             width: 75px;
             height: 105px;
@@ -535,7 +535,7 @@
         }
 
 
-        /* 右上角钱包连接区域 */
+        /* Top right wallet connection area */
         .wallet-connect-area {
             position: absolute;
             top: 20px;
@@ -543,7 +543,7 @@
             z-index: 1000;
         }
 
-        /* 现代化连接按钮 - 基于UI参考 */
+        /* Modern connect button - based on UI reference */
         .wallet-connect-button {
             background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 100%);
             border: none;
@@ -582,7 +582,7 @@
             animation: spin 1s linear infinite;
         }
 
-        /* 已连接状态显示 */
+        /* Connected status display */
         .wallet-info {
             background: rgba(26, 26, 26, 0.95);
             border: 1px solid #333333;
@@ -698,7 +698,7 @@
             background: rgba(239, 68, 68, 0.1);
         }
 
-        /* 钱包连接模态框 - 基于UI参考设计 */
+        /* Wallet connection modal - based on UI reference design */
         .wallet-modal {
             display: none;
             position: fixed;
@@ -779,7 +779,7 @@
             color: #ffffff;
         }
 
-        /* 钱包选项列表 */
+        /* Wallet options list */
         .wallet-list {
             display: flex;
             flex-direction: column;
@@ -812,7 +812,7 @@
             transform: translateY(0);
         }
 
-        /* Phantom钱包特殊高亮效果 */
+        /* Phantom wallet special highlight effect */
         .wallet-option[data-provider="phantom"]:hover {
             background: linear-gradient(135deg, rgba(171, 159, 242, 0.1), rgba(171, 159, 242, 0.05));
             border-color: rgba(171, 159, 242, 0.3);
@@ -849,7 +849,7 @@
             transform: translateX(4px);
         }
 
-        /* 页脚 */
+        /* Footer */
         .wallet-modal-footer {
             text-align: center;
             padding-top: 24px;
@@ -872,7 +872,7 @@
             color: #6366f1;
         }
 
-        /* 动画 */
+        /* Animations */
         @keyframes modalFadeIn {
             from {
                 opacity: 0;
@@ -889,7 +889,7 @@
             to { transform: rotate(360deg); }
         }
 
-        /* 消息提示 */
+        /* Message notification */
         .wallet-toast {
             position: fixed;
             top: 80px;
@@ -925,7 +925,7 @@
         }
 
 
-        /* 开始按钮 - 现代渐变设计 */
+        /* Start button - modern gradient design */
         .start-button {
             --h-button: 100px;
             --w-button: 280px;
@@ -1124,7 +1124,7 @@
         }
 
 
-        /* 响应式设计 */
+        /* Responsive design */
         @media (max-width: 768px) {
             .heroes-title {
                 font-size: 32px;
@@ -1160,7 +1160,7 @@
             }
         }
 
-        /* 用户资料面板样式 - 精确复刻设计 */
+        /* User profile panel styles - precise replica design */
         .user-profile-overlay {
             position: fixed;
             top: 0;
@@ -1178,10 +1178,10 @@
         .profile-panel {
             background: white;
             border-radius: 25px;
-            padding: 8px; /* 添加白色边框效果 */
+            padding: 8px; /* Add white border effect */
             max-width: 416px; /* 320px * 1.3 = 416px */
             width: 85%;
-            max-height: 85vh; /* 添加最大高度 */
+            max-height: 85vh; /* Add maximum height */
             position: relative;
             box-shadow: 0 12px 35px rgba(0,0,0,0.2);
             border: 3px solid #F0F0F0;
@@ -1193,34 +1193,34 @@
         .profile-panel-header {
             background: linear-gradient(180deg, #B3E5FC 0%, #81D4FA 50%, #4FC3F7 100%);
             text-align: center;
-            padding: 25px 0; /* 更大的内边距 */
+            padding: 25px 0; /* Larger padding */
             margin: 0;
             position: relative;
-            flex-shrink: 0; /* 防止头部被压缩 */
-            border-radius: 20px 20px 0 0; /* 只有顶部圆角 */
+            flex-shrink: 0; /* Prevent header from being compressed */
+            border-radius: 20px 20px 0 0; /* Only top rounded corners */
             box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 
                         0 2px 4px rgba(0,0,0,0.1);
         }
 
         .profile-panel-title {
-            font-size: 24px; /* 更大的字体 */
+            font-size: 24px; /* Larger font size */
             margin: 0;
-            font-weight: 600; /* 更粗的字重 */
-            color: #2E3A47; /* 更深的颜色 */
+            font-weight: 600; /* Bolder font weight */
+            color: #2E3A47; /* Darker color */
             text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-            letter-spacing: 1px; /* 增加字间距 */
+            letter-spacing: 1px; /* Increase letter spacing */
         }
 
         .profile-form {
-            padding: 30px; /* 调整内边距 */
+            padding: 30px; /* Adjust padding */
             display: flex;
             flex-direction: column;
             gap: 30px; 
-            overflow-y: auto; /* 启用垂直滚动 */
-            flex: 1; /* 占据剩余空间 */
-            max-height: calc(85vh - 90px); /* 减去头部和边框高度 */
+            overflow-y: auto; /* Enable vertical scrolling */
+            flex: 1; /* Take up remaining space */
+            max-height: calc(85vh - 90px); /* Subtract header and border height */
             background: white;
-            border-radius: 0 0 17px 17px; /* 底部圆角，配合外层边框 */
+            border-radius: 0 0 17px 17px; /* Bottom rounded corners, matching outer border */
         }
 
         .profile-field {
@@ -1230,7 +1230,7 @@
             position: relative;
         }
 
-        /* 金色装饰线条 */
+        /* Gold decorative lines */
         .field-label {
             font-size: 18px; /* 14px * 1.3 ≈ 18px */
             font-weight: 500;
@@ -1279,7 +1279,7 @@
             color: rgba(0,0,0,0.5);
         }
 
-        /* 输入框羽毛笔图标 */
+        /* Input box quill icon */
         .profile-field::after {
             content: '🪶';
             position: absolute;
@@ -1337,16 +1337,16 @@
             transform: translateY(0px);
         }
 
-        /* 特殊样式调整 */
+        /* Special style adjustments */
         .birthday-inputs .profile-field::after {
-            display: none; /* 生日选择框不显示编辑图标 */
+            display: none; /* Birthday selector doesn't show edit icon */
         }
 
         .profile-field.has-multiple-inputs::after {
-            display: none; /* 多个输入框的字段不显示编辑图标 */
+            display: none; /* Fields with multiple inputs don't show edit icon */
         }
 
-        /* 记忆系统样式 */
+        /* Memory system styles */
         .memory-section {
             background: rgba(255,255,255,0.2);
             border-radius: 16px; /* 12px * 1.3 ≈ 16px */
@@ -1406,7 +1406,7 @@
         }
 
         .memory-field::after {
-            content: '🪶'; /* 改为羽毛笔图标 */
+            content: '🪶'; /* Changed to quill icon */
             position: absolute;
             right: 10px; /* 8px * 1.3 ≈ 10px */
             top: 36px; /* 28px * 1.3 ≈ 36px */
@@ -1414,7 +1414,7 @@
             pointer-events: none;
         }
 
-        /* 动画效果 */
+        /* Animation effects */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -1449,7 +1449,7 @@
 
 <body>
     <div class="container">
-        <!-- 顶部标题 -->
+        <!-- Top title -->
         <div class="heroes-title" data-i18n="char.select.header">WAIFU</div>
 
         <!-- 语言切换器 -->
