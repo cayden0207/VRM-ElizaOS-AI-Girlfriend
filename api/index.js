@@ -436,7 +436,20 @@ async function generateVoice(text, characterId, options = {}) {
   };
   
   // 处理角色名中的空格和大小写问题
-  const normalizedCharacterId = characterId.toLowerCase().replace(/\s+/g, '');
+  let normalizedCharacterId = characterId.toLowerCase().replace(/\s+/g, '');
+  
+  // 特殊名称映射处理
+  const nameMapping = {
+    'yuuyii': 'yuuyii',
+    'yuuYii': 'yuuyii', 
+    'miumiu': 'miumiu',
+    'miuMiu': 'miumiu'
+  };
+  
+  if (nameMapping[normalizedCharacterId]) {
+    normalizedCharacterId = nameMapping[normalizedCharacterId];
+  }
+  
   const voiceId = voiceMap[normalizedCharacterId];
   if (!voiceId) {
     throw new Error(`角色 ${characterId} (${normalizedCharacterId}) 没有配置语音ID`);
