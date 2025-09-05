@@ -13,7 +13,7 @@ class I18n {
             
             // Character selection page
             'char.select.header': 'WAIFU',
-            'char.select.start': 'START CHATTING',
+            'char.select.start': 'START',
             'char.select.voice.sample': 'Sample Voice',
             'char.select.language': 'Language: ',
             'char.select.loading': 'Loading character...',
@@ -95,7 +95,20 @@ class I18n {
             'eliza.init.failed': 'ElizaOS system initialization failed',
             'eliza.connection.failed': 'ElizaOS API connection failed',
             'eliza.connection.normal': 'ElizaOS connection is normal',
-            'eliza.send.failed': 'Message sending failed'
+            'eliza.send.failed': 'Message sending failed',
+
+            // Character profile
+            'profile.header': 'Basic Info',
+            'profile.age': 'Age',
+            'profile.birthday': 'Birthday',
+            'profile.zodiac': 'Zodiac',
+            'profile.personality': 'Personality',
+            'profile.interests': 'Interests',
+            'profile.likes': 'Likes',
+            'profile.dislikes': 'Dislikes',
+            'profile.food': 'Favorite Food',
+            'profile.music': 'Music',
+            'profile.movies': 'Movies'
         },
         
         zh: {
@@ -105,7 +118,7 @@ class I18n {
             
             // Character selection page
             'char.select.header': 'WAIFU',
-            'char.select.start': '开始聊天',
+            'char.select.start': '开始',
             'char.select.voice.sample': '试听语音',
             'char.select.language': '语言: ',
             'char.select.loading': '加载角色中...',
@@ -187,7 +200,20 @@ class I18n {
             'eliza.init.failed': 'ElizaOS系统初始化失败',
             'eliza.connection.failed': 'ElizaOS API连接失败',
             'eliza.connection.normal': 'ElizaOS连接正常',
-            'eliza.send.failed': '发送消息失败'
+            'eliza.send.failed': '发送消息失败',
+
+            // Character profile
+            'profile.header': '基本信息',
+            'profile.age': '年龄',
+            'profile.birthday': '诞生日',
+            'profile.zodiac': '星座',
+            'profile.personality': '性格',
+            'profile.interests': '兴趣',
+            'profile.likes': '喜欢',
+            'profile.dislikes': '不喜欢',
+            'profile.food': '喜欢的食物',
+            'profile.music': '音乐',
+            'profile.movies': '电影'
         }
     };
 
