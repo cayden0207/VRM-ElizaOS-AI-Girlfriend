@@ -358,9 +358,12 @@ export default async function handler(req, res) {
 
     // 🎵 语音示范接口
     if (method === 'POST' && (url === '/voice-sample' || url === '/api/voice-sample' || url.endsWith('voice-sample'))) {
+      console.log(`🎵 语音示范接口匹配成功: ${method} ${url}`);
+      
       const { text, voiceId } = req.body;
       
       if (!text || !voiceId) {
+        console.error(`❌ 缺少参数: text=${text}, voiceId=${voiceId}`);
         return res.status(400).json({
           success: false,
           error: '缺少必要参数: text 和 voiceId'
@@ -371,11 +374,15 @@ export default async function handler(req, res) {
         console.error('❌ ElevenLabs API Key 未配置');
         return res.status(500).json({
           success: false,
-          error: 'ElevenLabs API Key 未配置'
+          error: 'ElevenLabs API Key 未配置',
+          debug: {
+            hasKey: !!process.env.ELEVENLABS_API_KEY,
+            keyLength: process.env.ELEVENLABS_API_KEY ? process.env.ELEVENLABS_API_KEY.length : 0
+          }
         });
       }
 
-      console.log(`🎤 生成语音示范: (${voiceId}) - "${text}"`);
+      console.log(`🎤 生成语音示范: (${voiceId}) - "${text.substring(0, 50)}..."`);
       
       try {
         // 直接调用 ElevenLabs API
@@ -400,6 +407,7 @@ export default async function handler(req, res) {
 
         if (!response.ok) {
           const errorText = await response.text();
+          console.error(`❌ ElevenLabs API 错误: ${response.status} - ${errorText}`);
           throw new Error(`ElevenLabs API 错误: ${response.status} - ${errorText}`);
         }
 
@@ -409,7 +417,8 @@ export default async function handler(req, res) {
         // 返回音频数据
         res.set({
           'Content-Type': 'audio/mpeg',
-          'Content-Length': audioBuffer.byteLength
+          'Content-Length': audioBuffer.byteLength,
+          'Access-Control-Allow-Origin': '*'
         });
         return res.send(Buffer.from(audioBuffer));
 
@@ -417,7 +426,8 @@ export default async function handler(req, res) {
         console.error('❌ 语音示范生成失败:', error);
         return res.status(500).json({
           success: false,
-          error: error.message
+          error: error.message,
+          stack: error.stack
         });
       }
     }
