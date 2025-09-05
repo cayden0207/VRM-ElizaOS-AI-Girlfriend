@@ -2399,10 +2399,28 @@
             const profile = getCharacterProfile(character.name);
             
             document.getElementById('character-name').textContent = character.name;
-            document.getElementById('character-age').textContent = profile.age + "歳";
-            document.getElementById('character-birthday').textContent = profile.birthday;
-            document.getElementById('character-zodiac').textContent = profile.zodiac;
-            document.getElementById('character-personality').textContent = profile.personality;
+            // 使用国际化数据
+            if (window.i18n) {
+                const characterKey = character.name.toLowerCase();
+                document.getElementById('character-age').textContent = window.i18n.t(`character.${characterKey}.age`);
+            } else {
+                document.getElementById('character-age').textContent = profile.age;
+            }
+            if (window.i18n) {
+                document.getElementById('character-birthday').textContent = window.i18n.t(`character.${characterKey}.birthday`);
+            } else {
+                document.getElementById('character-birthday').textContent = profile.birthday;
+            }
+            if (window.i18n) {
+                document.getElementById('character-zodiac').textContent = window.i18n.t(`character.${characterKey}.zodiac`);
+            } else {
+                document.getElementById('character-zodiac').textContent = profile.zodiac;
+            }
+            if (window.i18n) {
+                document.getElementById('character-personality').textContent = window.i18n.t(`character.${characterKey}.personality`);
+            } else {
+                document.getElementById('character-personality').textContent = profile.personality;
+            }
             document.getElementById('character-interests').textContent = profile.dailyInterests;
             document.getElementById('character-likes').textContent = profile.likes;
             document.getElementById('character-dislikes').textContent = profile.dislikes;
@@ -3156,6 +3174,14 @@
 
         // 在DOM加载完成后初始化语言切换器
         document.addEventListener('DOMContentLoaded', initLanguageToggle);
+
+        // 监听语言切换事件，更新角色信息
+        window.addEventListener('languageChanged', function(event) {
+            // 如果当前有选中的角色，重新更新其信息
+            if (typeof currentCharacterIndex !== 'undefined' && characters[currentCharacterIndex]) {
+                updateCharacterProfile(characters[currentCharacterIndex]);
+            }
+        });
     </script>
     
     <!-- React 和 Solana Web3 -->

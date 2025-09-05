@@ -108,7 +108,20 @@ class I18n {
             'profile.dislikes': 'Dislikes',
             'profile.food': 'Favorite Food',
             'profile.music': 'Music',
-            'profile.movies': 'Movies'
+            'profile.movies': 'Movies',
+
+            // Character profiles
+            'character.alice.age': '22',
+            'character.alice.birthday': 'June 5',
+            'character.alice.zodiac': 'Gemini',
+            'character.alice.personality': 'Lively, outgoing, playful and cute',
+            'character.alice.interests': 'Dancing, singing',
+            'character.alice.likes': 'Flowers and colorful sweets',
+            'character.alice.dislikes': 'Quiet and overly serious occasions',
+            'character.alice.food': 'Strawberry cake, macarons',
+            'character.alice.music': 'Pop dance music, K-Pop',
+            'character.alice.movies': 'Romantic comedies',
+            'character.alice.games': 'Rhythm dance games'
         },
         
         zh: {
@@ -213,7 +226,20 @@ class I18n {
             'profile.dislikes': '不喜欢',
             'profile.food': '喜欢的食物',
             'profile.music': '音乐',
-            'profile.movies': '电影'
+            'profile.movies': '电影',
+
+            // Character profiles
+            'character.alice.age': '22',
+            'character.alice.birthday': '6月5日',
+            'character.alice.zodiac': '双子座',
+            'character.alice.personality': '活泼外向，调皮可爱',
+            'character.alice.interests': '跳舞、唱歌',
+            'character.alice.likes': '鲜花和彩色甜点',
+            'character.alice.dislikes': '安静和过于严肃的场合',
+            'character.alice.food': '草莓蛋糕、马卡龙',
+            'character.alice.music': '流行舞曲、K-Pop',
+            'character.alice.movies': '浪漫喜剧',
+            'character.alice.games': '节奏舞蹈游戏'
         }
     };
 
