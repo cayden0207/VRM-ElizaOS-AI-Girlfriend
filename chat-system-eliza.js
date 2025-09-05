@@ -53,7 +53,7 @@ class ElizaOSChatSystem {
             console.log('✅ ElizaOS聊天系统初始化完成');
         } catch (error) {
             console.error('❌ ElizaOS系统初始化失败:', error);
-            this.showError('ElizaOS系统初始化失败，请刷新页面重试');
+            // 静默处理初始化失败，系统会自动使用后备模式
         }
     }
     
