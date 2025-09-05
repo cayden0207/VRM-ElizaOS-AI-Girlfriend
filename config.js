@@ -1,53 +1,53 @@
 /**
- * 应用配置文件
- * 生产环境部署时只需修改此文件
+ * Application Configuration File
+ * Only need to modify this file when deploying to production
  */
 
 const AppConfig = {
-    // API服务器配置
+    // API server configuration
     API: {
-        // 开发环境
+        // Development environment
         development: {
             baseURL: 'http://localhost:3001',
             timeout: 10000
         },
-        // 生产环境 - 使用相对路径（同一个Vercel应用）
+        // Production environment - use relative path (same Vercel app)
         production: {
-            baseURL: '',  // 使用相对路径，API在同一个域名下
+            baseURL: '',  // Use relative path, API is on the same domain
             timeout: 15000
         }
     },
     
-    // 当前环境 - 自动检测
+    // Current environment - auto detection
     environment: (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) ? 'development' : 'production',
     
-    // 获取API基础URL
+    // Get API base URL
     getApiUrl() {
         const baseURL = this.API[this.environment].baseURL;
-        // 生产环境返回空字符串表示使用相对路径
+        // Production environment returns empty string to use relative path
         return baseURL;
     },
     
-    // 注意：Supabase访问已迁移到后端，前端不再需要直接访问
-    // supabase配置已移除以提高安全性
+    // Note: Supabase access has been migrated to backend, frontend no longer needs direct access
+    // Supabase configuration removed for better security
     
-    // 功能开关
+    // Feature toggles
     features: {
-        enableLocalStorage: false,  // 生产环境应设为false
-        enableDebugLogs: (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')), // 自动检测
-        requireWalletSignature: false, // TODO: 生产环境应设为true
+        enableLocalStorage: false,  // Should be false in production
+        enableDebugLogs: (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')), // Auto detection
+        requireWalletSignature: false, // TODO: Should be true in production
     },
     
-    // 错误消息
+    // Error messages
     messages: {
-        networkError: '网络连接失败，请检查网络后刷新页面',
-        saveError: '保存失败，请重试',
-        deleteError: '删除失败，请重试',
-        loadError: '加载失败，请刷新页面'
+        networkError: 'Network connection failed, please check your network and refresh the page',
+        saveError: 'Save failed, please try again',
+        deleteError: 'Delete failed, please try again',
+        loadError: 'Loading failed, please refresh the page'
     }
 };
 
-// 导出配置
+// Export configuration
 window.AppConfig = AppConfig;
 
-console.log(`📋 应用配置已加载 - 环境: ${AppConfig.environment}`);
+console.log(`📋 App configuration loaded - Environment: ${AppConfig.environment}`);
