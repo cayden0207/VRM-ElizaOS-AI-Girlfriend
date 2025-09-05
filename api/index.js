@@ -785,7 +785,7 @@ export default async function handler(req, res) {
 
     // ElizaOS Chat API  
     if (method === 'POST' && (url === '/chat' || url === '/api/chat')) {
-      const { userId, characterId, message } = req.body;
+      const { userId, characterId, message, language = 'en' } = req.body;
       
       if (!userId || !characterId || !message) {
         return res.status(400).json({
@@ -859,8 +859,9 @@ export default async function handler(req, res) {
             occupation: userProfile.occupation,
             interests: userProfile.interests,
             bio: userProfile.bio,
-            language: userProfile.language || 'zh-CN'
-          } : null
+            language: userProfile.language || language // 使用前端传递的语言设置，或用户profile中的语言
+          } : { language: language }, // 如果没有用户profile，至少传递语言信息
+          requestLanguage: language // 明确指定请求的响应语言
         };
         
         // 使用ElizaOS Agent处理消息
@@ -961,21 +962,36 @@ export default async function handler(req, res) {
             
             // 构建角色系统提示
             const character = await loadCharacter(characterId);
-            const systemPrompt = `你是${character.name}，${character.bio.join('，')}。
             
-用户资料：
-- 姓名：${userName}
-- 年龄：${userProfile?.age || '未知'}
-- 生日：${userProfile?.birthday || '未知'}
-- 兴趣：${userProfile?.interests || '未知'}
-- 职业：${userProfile?.occupation || '未知'}
+            // 根据语言设置选择系统提示词模板
+            const languageInstructions = {
+              'en': `You are ${character.name}. Respond in English only.`,
+              'zh': `你是${character.name}。请用中文回复。`,
+              'ja': `あなたは${character.name}です。日本語で返答してください。`
+            };
+            
+            const languageInstruction = languageInstructions[language] || languageInstructions['en'];
+            
+            const systemPrompt = `${languageInstruction}
 
-对话历史上下文：
-${supabase ? '(会从数据库加载最近对话)' : '(首次对话)'}
+Character: ${character.name}
+Bio: ${character.bio ? character.bio.join(', ') : 'AI girlfriend character'}
 
-请以${character.name}的身份，根据你的性格特点，结合用户资料，自然地回复用户的消息。保持角色一致性，体现个性化。
+User Profile:
+- Name: ${userName}
+- Age: ${userProfile?.age || 'Unknown'}
+- Birthday: ${userProfile?.birthday || 'Unknown'}
+- Interests: ${userProfile?.interests || 'Unknown'}
+- Occupation: ${userProfile?.occupation || 'Unknown'}
 
-**重要：回复要适合语音播放，使用自然的口语化表达，避免过多的符号和表情符号。**`;
+Conversation Context:
+${supabase ? '(Recent conversation history will be loaded from database)' : '(First conversation)'}
+
+Please respond as ${character.name} based on your personality traits and the user's profile. Maintain character consistency and show personalization.
+
+**Important: Your response should be suitable for voice playback. Use natural, conversational language and avoid excessive symbols or emojis.**
+
+Language: ${language === 'zh' ? 'Respond in Chinese' : language === 'ja' ? 'Respond in Japanese' : 'Respond in English'}`;
 
             // 获取最近对话历史作为上下文
             let conversationHistory = [];
