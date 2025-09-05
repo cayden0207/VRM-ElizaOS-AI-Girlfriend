@@ -47,7 +47,7 @@
         /* 语言切换器 */
         .language-toggle {
             position: absolute;
-            top: 12px;
+            top: 60px;
             right: 12px;
             background: linear-gradient(135deg, #ff9a56 0%, #ffad56 50%, #ffc056 100%);
             border-radius: 10px;
@@ -87,9 +87,9 @@
         /* 角色信息面板 - 日式档案卡设计 */
         .character-info {
             position: absolute;
-            top: 40px;
+            top: 50px;
             left: 12px;
-            width: 190px;
+            width: 170px;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(200, 200, 200, 0.5);
@@ -1465,21 +1465,21 @@
             
             <div class="profile-section">
                 <div class="profile-header">
-                    プロフィール/Basic Info
+                    <span data-i18n="profile.header">Basic Info</span>
                     <button class="expand-button">↗</button>
                 </div>
                 <div class="profile-content">
                     <div class="profile-row">
-                        <span class="profile-label">年龄/Age</span>
-                        <span class="profile-value" id="character-age">22歳</span>
+                        <span class="profile-label" data-i18n="profile.age">Age</span>
+                        <span class="profile-value" id="character-age">22</span>
                     </div>
                     <div class="profile-row">
-                        <span class="profile-label">诞生日/Birthday</span>
-                        <span class="profile-value" id="character-birthday">6月5日</span>
+                        <span class="profile-label" data-i18n="profile.birthday">Birthday</span>
+                        <span class="profile-value" id="character-birthday">June 5</span>
                     </div>
                     <div class="profile-row">
-                        <span class="profile-label">星座/Zodiac</span>
-                        <span class="profile-value" id="character-zodiac">双子座</span>
+                        <span class="profile-label" data-i18n="profile.zodiac">Zodiac</span>
+                        <span class="profile-value" id="character-zodiac">Gemini</span>
                     </div>
                 </div>
             </div>
@@ -3161,6 +3161,7 @@
     <!-- React 和 Solana Web3 -->
     <script src="config.js"></script>
     <script src="i18n.js"></script>
+    <script src="simplified_characters.js"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
