@@ -3241,12 +3241,12 @@
             }
         }
 
-        // 语言切换函数
-        function switchLanguage(lang) {
+        // 语言切换函数 - 全局可访问
+        window.switchLanguage = function(lang) {
             if (window.i18n) {
                 window.i18n.switchLanguage(lang);
             }
-        }
+        };
 
         // 初始化语言切换器
         function initLanguageToggle() {
