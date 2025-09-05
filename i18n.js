@@ -1,10 +1,18 @@
 // 国际化配置文件
 class I18n {
     constructor() {
-        // Force clear any old language settings and default to English
-        localStorage.removeItem('language');
-        this.currentLang = 'en';
-        localStorage.setItem('language', 'en');
+        // Check if user has existing language preference
+        const existingLang = localStorage.getItem('language');
+        
+        // Only force English if no preference exists (first visit)
+        if (!existingLang) {
+            this.currentLang = 'en';
+            localStorage.setItem('language', 'en');
+        } else {
+            // Respect user's language choice
+            this.currentLang = existingLang;
+        }
+        
         this.init();
     }
 
