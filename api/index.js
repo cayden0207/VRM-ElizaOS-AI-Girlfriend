@@ -338,6 +338,11 @@ export default async function handler(req, res) {
   
   console.log(`📋 ${method} ${url}`);
   console.log(`📊 Request body:`, req.body);
+  
+  // 🔍 调试语音示范请求
+  if (url.includes('voice-sample')) {
+    console.log(`🎵 语音示范请求匹配检测: ${method} ${url}`);
+  }
 
   try {
     // 健康检查
@@ -352,7 +357,7 @@ export default async function handler(req, res) {
     }
 
     // 🎵 语音示范接口
-    if (method === 'POST' && url.includes('voice-sample')) {
+    if (method === 'POST' && (url === '/voice-sample' || url === '/api/voice-sample' || url.endsWith('voice-sample'))) {
       const { text, voiceId } = req.body;
       
       if (!text || !voiceId) {
@@ -363,6 +368,7 @@ export default async function handler(req, res) {
       }
 
       if (!process.env.ELEVENLABS_API_KEY) {
+        console.error('❌ ElevenLabs API Key 未配置');
         return res.status(500).json({
           success: false,
           error: 'ElevenLabs API Key 未配置'
