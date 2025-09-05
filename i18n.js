@@ -110,6 +110,10 @@ class I18n {
             'profile.music': 'Music',
             'profile.movies': 'Movies',
 
+            // Profile section headers
+            'profile.likes.dislikes': 'Likes & Dislikes',
+            'profile.favorites': 'Favorites',
+            
             // Character profiles
             'character.alice.age': '22',
             'character.alice.birthday': 'June 5',
@@ -228,6 +232,10 @@ class I18n {
             'profile.music': '音乐',
             'profile.movies': '电影',
 
+            // Profile section headers
+            'profile.likes.dislikes': '喜好 & 讨厌',
+            'profile.favorites': '最爱',
+            
             // Character profiles
             'character.alice.age': '22',
             'character.alice.birthday': '6月5日',
