@@ -356,36 +356,48 @@ export default async function handler(req, res) {
       });
     }
 
-    // 🎵 语音示范接口
+    // 🧪 语音 API 测试端点
+    if (method === 'GET' && (url === '/voice-test' || url === '/api/voice-test')) {
+      return res.json({
+        success: true,
+        message: '语音 API 路由正常',
+        elevenlabsConfigured: !!process.env.ELEVENLABS_API_KEY,
+        keyLength: process.env.ELEVENLABS_API_KEY ? process.env.ELEVENLABS_API_KEY.length : 0,
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    // 🎵 语音示范接口 - 简化版本
     if (method === 'POST' && (url === '/voice-sample' || url === '/api/voice-sample' || url.endsWith('voice-sample'))) {
       console.log(`🎵 语音示范接口匹配成功: ${method} ${url}`);
       
-      const { text, voiceId } = req.body;
-      
-      if (!text || !voiceId) {
-        console.error(`❌ 缺少参数: text=${text}, voiceId=${voiceId}`);
-        return res.status(400).json({
-          success: false,
-          error: '缺少必要参数: text 和 voiceId'
-        });
-      }
-
-      if (!process.env.ELEVENLABS_API_KEY) {
-        console.error('❌ ElevenLabs API Key 未配置');
-        return res.status(500).json({
-          success: false,
-          error: 'ElevenLabs API Key 未配置',
-          debug: {
-            hasKey: !!process.env.ELEVENLABS_API_KEY,
-            keyLength: process.env.ELEVENLABS_API_KEY ? process.env.ELEVENLABS_API_KEY.length : 0
-          }
-        });
-      }
-
-      console.log(`🎤 生成语音示范: (${voiceId}) - "${text.substring(0, 50)}..."`);
-      
       try {
-        // 直接调用 ElevenLabs API
+        const { text, voiceId } = req.body || {};
+        
+        if (!text || !voiceId) {
+          console.error(`❌ 缺少参数: text=${text}, voiceId=${voiceId}`);
+          return res.status(400).json({
+            success: false,
+            error: '缺少必要参数: text 和 voiceId',
+            received: { text: !!text, voiceId: !!voiceId }
+          });
+        }
+
+        if (!process.env.ELEVENLABS_API_KEY) {
+          console.error('❌ ElevenLabs API Key 未配置');
+          return res.status(500).json({
+            success: false,
+            error: 'ElevenLabs API Key 未配置'
+          });
+        }
+
+        console.log(`🎤 开始生成语音: voiceId=${voiceId}, text="${text.substring(0, 30)}..."`);
+        
+        // 设置较短的超时时间
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000); // 8秒超时
+
+        // 调用 ElevenLabs API
         const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
           method: 'POST',
           headers: {
@@ -397,37 +409,49 @@ export default async function handler(req, res) {
             text: text,
             model_id: 'eleven_multilingual_v2',
             voice_settings: {
-              stability: 0.7,
-              similarity_boost: 0.8,
-              style: 0.3,
-              use_speaker_boost: true
+              stability: 0.5,
+              similarity_boost: 0.7
             }
-          })
+          }),
+          signal: controller.signal
         });
+
+        clearTimeout(timeoutId);
 
         if (!response.ok) {
           const errorText = await response.text();
           console.error(`❌ ElevenLabs API 错误: ${response.status} - ${errorText}`);
-          throw new Error(`ElevenLabs API 错误: ${response.status} - ${errorText}`);
+          return res.status(502).json({
+            success: false,
+            error: `ElevenLabs API 错误: ${response.status}`,
+            details: errorText.substring(0, 200)
+          });
         }
 
         const audioBuffer = await response.arrayBuffer();
-        console.log(`✅ 语音示范生成成功: ${audioBuffer.byteLength} bytes`);
+        console.log(`✅ 语音生成成功: ${audioBuffer.byteLength} bytes`);
 
         // 返回音频数据
-        res.set({
-          'Content-Type': 'audio/mpeg',
-          'Content-Length': audioBuffer.byteLength,
-          'Access-Control-Allow-Origin': '*'
-        });
-        return res.send(Buffer.from(audioBuffer));
+        res.setHeader('Content-Type', 'audio/mpeg');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Content-Length', audioBuffer.byteLength.toString());
+        
+        return res.end(Buffer.from(audioBuffer));
 
       } catch (error) {
-        console.error('❌ 语音示范生成失败:', error);
+        if (error.name === 'AbortError') {
+          console.error('❌ 请求超时');
+          return res.status(408).json({
+            success: false,
+            error: '请求超时，请重试'
+          });
+        }
+        
+        console.error('❌ 语音生成失败:', error.message);
         return res.status(500).json({
           success: false,
-          error: error.message,
-          stack: error.stack
+          error: '服务器内部错误',
+          message: error.message
         });
       }
     }
