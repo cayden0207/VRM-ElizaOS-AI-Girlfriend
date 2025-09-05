@@ -1179,7 +1179,7 @@
             background: white;
             border-radius: 25px;
             padding: 8px; /* Add white border effect */
-            max-width: 416px; /* 320px * 1.3 = 416px */
+            max-width: 541px; /* 416px * 1.3 = 541px - increased by 30% */
             width: 85%;
             max-height: 85vh; /* Add maximum height */
             position: relative;
@@ -3827,12 +3827,12 @@
                         this.fillFormWithProfile(existingProfile);
                         // 更改标题为编辑模式
                         const title = overlay.querySelector('.profile-panel-title');
-                        if (title) title.textContent = '编辑资料';
+                        if (title) title.textContent = i18n.t('registration.edit.title');
                     } else {
                         // 重置表单
                         this.resetForm();
                         const title = overlay.querySelector('.profile-panel-title');
-                        if (title) title.textContent = '用户注册';
+                        if (title) title.textContent = i18n.t('registration.title');
                     }
                     
                     overlay.style.display = 'flex';
@@ -4230,12 +4230,12 @@
                         this.fillFormWithProfile(existingProfile);
                         // 更改标题为编辑模式
                         const title = overlay.querySelector('.profile-panel-title');
-                        if (title) title.textContent = '编辑资料';
+                        if (title) title.textContent = i18n.t('registration.edit.title');
                     } else {
                         // 重置表单
                         this.resetForm();
                         const title = overlay.querySelector('.profile-panel-title');
-                        if (title) title.textContent = '用户注册';
+                        if (title) title.textContent = i18n.t('registration.title');
                     }
                     
                     overlay.style.display = 'flex';
@@ -4489,12 +4489,12 @@
                         this.fillFormWithProfile(existingProfile);
                         // 更改标题为编辑模式
                         const title = overlay.querySelector('.profile-panel-title');
-                        if (title) title.textContent = '编辑资料';
+                        if (title) title.textContent = i18n.t('registration.edit.title');
                     } else {
                         // 重置表单
                         this.resetForm();
                         const title = overlay.querySelector('.profile-panel-title');
-                        if (title) title.textContent = '用户注册';
+                        if (title) title.textContent = i18n.t('registration.title');
                     }
                     
                     // 初始化月份和日期选择器
@@ -4921,30 +4921,30 @@
     <div class="user-profile-overlay" id="user-profile-overlay" style="display: none;">
         <div class="profile-panel">
             <div class="profile-panel-header">
-                <h2 class="profile-panel-title">用户注册</h2>
+                <h2 class="profile-panel-title" data-i18n="registration.title">User Registration</h2>
             </div>
             
             <form class="profile-form">
                 <!-- 用户名 -->
                 <div class="profile-field">
-                    <label class="field-label">用户名</label>
-                    <input type="text" class="profile-input" id="username" placeholder="最多12个字符" maxlength="12" required>
-                    <div class="field-note">其他用户可以看到（最多12个字符）</div>
+                    <label class="field-label" data-i18n="registration.username">Username</label>
+                    <input type="text" class="profile-input" id="username" data-i18n-placeholder="registration.username.placeholder" placeholder="Maximum 12 characters" maxlength="12" required>
+                    <div class="field-note" data-i18n="registration.username.note">Other users can see this (maximum 12 characters)</div>
                 </div>
                 
                 <!-- 昵称（姓名） -->
                 <div class="profile-field">
-                    <label class="field-label">你的名字</label>
-                    <input type="text" class="profile-input" id="displayName" placeholder="姓名" required>
-                    <div class="field-note">「你的名字」是AI女友在聊天中称呼你的名字，对其他用户不可见<br>「用户名」和「你的名字」以后可以在个人资料中修改。</div>
+                    <label class="field-label" data-i18n="registration.display.name">Your Name</label>
+                    <input type="text" class="profile-input" id="displayName" data-i18n-placeholder="registration.display.name.placeholder" placeholder="Name" required>
+                    <div class="field-note" data-i18n="registration.display.name.note">"Your Name" is what the AI girlfriend will call you in chat, not visible to other users<br>"Username" and "Your Name" can be modified later in personal profile.</div>
                 </div>
                 
                 <!-- 生日 -->
                 <div class="profile-field has-multiple-inputs">
-                    <label class="field-label">你的生日</label>
+                    <label class="field-label" data-i18n="registration.birthday">Your Birthday</label>
                     <div class="birthday-inputs">
                         <select class="profile-select" id="birthYear" required>
-                            <option value="">年</option>
+                            <option value="" data-i18n="registration.birthday.year">Year</option>
                             <option value="2010">2010</option>
                             <option value="2009">2009</option>
                             <option value="2008">2008</option>
@@ -5008,7 +5008,7 @@
                             <option value="1950">1950</option>
                         </select>
                         <select class="profile-select" id="birthMonth" required>
-                            <option value="">月</option>
+                            <option value="" data-i18n="registration.birthday.month">Month</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -5023,7 +5023,7 @@
                             <option value="12">12</option>
                         </select>
                         <select class="profile-select" id="birthDay" required>
-                            <option value="">日</option>
+                            <option value="" data-i18n="registration.birthday.day">Day</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -5057,20 +5057,20 @@
                             <option value="31">31</option>
                         </select>
                     </div>
-                    <div class="field-note">※生日设置后无法更改</div>
+                    <div class="field-note" data-i18n="registration.birthday.note">※Birthday cannot be changed after setting</div>
                 </div>
                 
                 <!-- 国家/城市 -->
                 <div class="profile-field">
-                    <label class="field-label">居住地</label>
-                    <input type="text" class="profile-input" id="location" placeholder="例：北京、上海、纽约" required>
+                    <label class="field-label" data-i18n="registration.location">Location</label>
+                    <input type="text" class="profile-input" id="location" data-i18n-placeholder="registration.location.placeholder" placeholder="e.g.: Beijing, Shanghai, New York" required>
                 </div>
                 
                 <!-- 语言偏好 -->
                 <div class="profile-field">
-                    <label class="field-label">语言设置</label>
+                    <label class="field-label" data-i18n="registration.language">Language Setting</label>
                     <select class="profile-select" id="language" required>
-                        <option value="">选择语言</option>
+                        <option value="" data-i18n="registration.language.select">Select Language</option>
                         <option value="中文">中文</option>
                         <option value="English">English</option>
                         <option value="日本語">日本語</option>
@@ -5082,26 +5082,26 @@
                 
                 <!-- 记忆系统 -->
                 <div class="memory-section">
-                    <div class="memory-title">个人偏好记忆</div>
+                    <div class="memory-title" data-i18n="registration.preferences">Personal Preference Memory</div>
                     
                     <div class="memory-field">
-                        <label class="memory-label">喜欢的食物</label>
-                        <input type="text" class="memory-input" id="favoriteFood" placeholder="例：火锅、意面、寿司">
+                        <label class="memory-label" data-i18n="registration.favorite.food">Favorite Food</label>
+                        <input type="text" class="memory-input" id="favoriteFood" data-i18n-placeholder="registration.favorite.food.placeholder" placeholder="e.g.: Hot pot, pasta, sushi">
                     </div>
                     
                     <div class="memory-field">
-                        <label class="memory-label">喜欢的颜色</label>
-                        <input type="text" class="memory-input" id="favoriteColor" placeholder="例：蓝色、粉色、绿色">
+                        <label class="memory-label" data-i18n="registration.favorite.color">Favorite Color</label>
+                        <input type="text" class="memory-input" id="favoriteColor" data-i18n-placeholder="registration.favorite.color.placeholder" placeholder="e.g.: Blue, pink, green">
                     </div>
                     
                     <div class="memory-field">
-                        <label class="memory-label">兴趣爱好</label>
-                        <input type="text" class="memory-input" id="hobbies" placeholder="例：读书、听音乐、游戏">
+                        <label class="memory-label" data-i18n="registration.hobbies">Hobbies</label>
+                        <input type="text" class="memory-input" id="hobbies" data-i18n-placeholder="registration.hobbies.placeholder" placeholder="e.g.: Reading, listening to music, gaming">
                     </div>
                     
                 </div>
                 
-                <button type="button" class="profile-submit-btn" onclick="handleProfileSubmit(event)">OK</button>
+                <button type="button" class="profile-submit-btn" onclick="handleProfileSubmit(event)" data-i18n="registration.submit">OK</button>
             </form>
         </div>
     </div>
