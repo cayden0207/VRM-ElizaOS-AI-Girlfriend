@@ -1654,7 +1654,7 @@
                         <div class="chat-user-avatar"></div>
                         <div class="chat-user-details">
                             <h3 class="chat-user-name" id="character-name">Alice</h3>
-                            <p class="chat-user-status">在线</p>
+                            <p class="chat-user-status" data-i18n="status.online">Online</p>
                         </div>
                     </div>
                     <div class="chat-actions">
@@ -3504,11 +3504,11 @@
                 
                 // 1. 检查localStorage中的钱包地址
                 this.walletAddress = localStorage.getItem('wallet_address');
-                console.log('💰 localStorage钱包地址:', this.walletAddress);
+                AppConfig.debug.log('💰 localStorage wallet address:', this.walletAddress);
                 
                 // 2. 检查选择的角色信息
                 const selectedCharacterData = localStorage.getItem('selectedCharacter');
-                console.log('👤 localStorage角色数据:', selectedCharacterData);
+                AppConfig.debug.log('👤 localStorage character data:', selectedCharacterData);
                 
                 // 检测旧格式数据并清理
                 if (selectedCharacterData) {
@@ -4006,11 +4006,11 @@
         // 初始化
         function init() {
             console.log('🚀 AI Companion 初始化开始...');
-            console.log('🌐 当前页面URL:', window.location.href);
-            console.log('📱 钱包验证器状态:', walletAuth);
+            AppConfig.debug.log('🌐 Current page URL:', window.location.href);
+            AppConfig.debug.log('📱 Wallet authenticator status:', walletAuth);
             
             // 首先进行钱包验证
-            console.log('⚡ 开始调用钱包验证...');
+            AppConfig.debug.log('⚡ Starting wallet verification...');
             const isAuthenticated = walletAuth.checkAuthentication();
             console.log('🔐 验证结果:', isAuthenticated);
             
@@ -4019,7 +4019,7 @@
                 return; // 如果验证失败，不继续初始化
             }
             
-            console.log('✅ 钱包验证成功，继续初始化应用');
+            AppConfig.debug.log('✅ Wallet verification successful, continuing app initialization');
             
             // 用户资料填写已移至character-select页面，index.html只处理已注册用户
             
@@ -4116,9 +4116,9 @@
         window.setExpression = setExpression;
 
         // 等待DOM加载完成后再初始化
-        console.log('🔍 检查DOM状态:', document.readyState);
-        console.log('🔍 init函数是否存在:', typeof init);
-        console.log('⚙️ 模块脚本执行完毕，准备初始化...');
+        AppConfig.debug.log('🔍 Check DOM state:', document.readyState);
+        AppConfig.debug.log('🔍 Init function exists:', typeof init);
+        AppConfig.debug.log('⚙️ Module script execution completed, preparing initialization...');
         
         if (document.readyState === 'loading') {
             console.log('⏳ DOM加载中，等待DOMContentLoaded事件');
@@ -4128,7 +4128,7 @@
             });
         } else {
             // DOM已经加载完成
-            console.log('✅ DOM已加载，立即调用init()');
+            AppConfig.debug.log('✅ DOM loaded, calling init() immediately');
             init();
         }
     </script>

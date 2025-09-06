@@ -44,6 +44,28 @@ const AppConfig = {
         saveError: 'Save failed, please try again',
         deleteError: 'Delete failed, please try again',
         loadError: 'Loading failed, please refresh the page'
+    },
+
+    // Debug logging system
+    debug: {
+        log: function(...args) {
+            if (AppConfig.features.enableDebugLogs) {
+                console.log(...args);
+            }
+        },
+        warn: function(...args) {
+            if (AppConfig.features.enableDebugLogs) {
+                console.warn(...args);
+            }
+        },
+        error: function(...args) {
+            // Always show errors
+            console.error(...args);
+        },
+        info: function(...args) {
+            // Always show important info in production
+            console.log(...args);
+        }
     }
 };
 
