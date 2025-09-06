@@ -207,7 +207,7 @@
         /* Floating voice selector styles - based on reference screenshot */
         .voice-selector-floating {
             position: absolute;
-            top: 20%; /* Adjusted from 40% to 20%, moved up by 50% */
+            top: 12%; /* Move up a bit more to avoid covering faces */
             left: 50%;
             transform: translate(-50%, -50%);
             z-index: 100;
@@ -2393,58 +2393,143 @@
 
         }
 
-        // 更新角色档案信息
+        // 从 i18n 中按角色ID获取一组字段（若存在）
+        function getI18nProfileById(charId) {
+            if (!window.i18n || !charId) return null;
+            const fields = ['age','birthday','zodiac','personality','interests','likes','dislikes','food','music','movies','games'];
+            const profile = {};
+            let hasAny = false;
+            fields.forEach(f => {
+                const key = `character.${charId}.${f}`;
+                const value = i18n.t(key);
+                // 若未配置该键，i18n.t 会返回 key 本身或英文兜底；通过判断是否等于 key 粗略判断
+                if (value && value !== key) {
+                    hasAny = true;
+                    switch (f) {
+                        case 'interests': profile.dailyInterests = value; break;
+                        case 'food': profile.favoriteFood = value; break;
+                        case 'music': profile.favoriteMusic = value; break;
+                        case 'movies': profile.favoriteMovies = value; break;
+                        case 'games': profile.favoriteGames = value; break;
+                        default: profile[f] = value;
+                    }
+                }
+            });
+            return hasAny ? profile : null;
+        }
+
+        // 更新角色档案信息（优先 i18n -> profile 数据 -> 兜底）
         function updateCharacterProfile(character) {
-            // 获取当前语言设置
             const currentLang = getCurrentLanguage();
-            const profile = getCharacterProfile(character.name, currentLang);
-            
+            // 1) 优先从 i18n 取（按角色ID的键值）
+            const i18nProfile = getI18nProfileById(character.id);
+            // 2) 其次从内置 profilesData 取（支持 zh/en 或扁平结构）
+            const fallbackProfile = getCharacterProfile(character.name, currentLang);
+            // 合并（i18n 优先生效）
+            const profile = { ...fallbackProfile, ...i18nProfile };
+
             document.getElementById('character-name').textContent = character.name;
-            
-            // 使用根据语言选择的 profile 数据
-            document.getElementById('character-age').textContent = profile.age;
-            document.getElementById('character-birthday').textContent = profile.birthday;
-            document.getElementById('character-zodiac').textContent = profile.zodiac;
-            document.getElementById('character-personality').textContent = profile.personality;
-            
-            // 更新其他信息（如果元素存在）
+
+            document.getElementById('character-age').textContent = profile.age ?? '';
+            document.getElementById('character-birthday').textContent = profile.birthday ?? '';
+            document.getElementById('character-zodiac').textContent = profile.zodiac ?? '';
+            document.getElementById('character-personality').textContent = profile.personality ?? '';
+
             const interestsEl = document.getElementById('character-interests');
-            if (interestsEl) {
-                interestsEl.textContent = profile.dailyInterests;
-            }
-            
+            if (interestsEl) interestsEl.textContent = profile.dailyInterests ?? '';
+
             const likesEl = document.getElementById('character-likes');
-            if (likesEl) {
-                likesEl.textContent = profile.likes;
-            }
-            
+            if (likesEl) likesEl.textContent = profile.likes ?? '';
+
             const dislikesEl = document.getElementById('character-dislikes');
-            if (dislikesEl) {
-                dislikesEl.textContent = profile.dislikes;
-            }
-            
+            if (dislikesEl) dislikesEl.textContent = profile.dislikes ?? '';
+
             const foodEl = document.getElementById('character-food');
-            if (foodEl) {
-                foodEl.textContent = profile.favoriteFood;
-            }
-            
+            if (foodEl) foodEl.textContent = profile.favoriteFood ?? '';
+
             const musicEl = document.getElementById('character-music');
-            if (musicEl) {
-                musicEl.textContent = profile.favoriteMusic;
-            }
-            
+            if (musicEl) musicEl.textContent = profile.favoriteMusic ?? '';
+
             const moviesEl = document.getElementById('character-movies');
-            if (moviesEl) {
-                moviesEl.textContent = profile.favoriteMovies;
-            }
-            
+            if (moviesEl) moviesEl.textContent = profile.favoriteMovies ?? '';
+
             const gamesEl = document.getElementById('character-games');
-            if (gamesEl) {
-                gamesEl.textContent = profile.favoriteGames;
-            }
-            
-            // 更新语音选择器
+            if (gamesEl) gamesEl.textContent = profile.favoriteGames ?? '';
+
             updateVoiceSelector();
+        }
+
+        // 基于 character.md 的英文资料缓存
+        let englishProfiles = null;
+
+        // 名称规范化与别名处理（大小写、空格差异）
+        function canonicalName(name) {
+            if (!name) return '';
+            const key = name.toLowerCase().replace(/\s+/g, '');
+            const aliasMap = {
+                'ququ': 'Ququ',
+                'miumiu': 'Miumiu',
+                'miumiu': 'Miumiu',
+                'miu\u00a0miu': 'Miumiu', // 防空格变体
+                'miumiu': 'Miumiu',
+                'yuuyii': 'Yuu Yii',
+                'yuuyii': 'Yuu Yii'
+            };
+            // 默认首字母大写保持原名；优先别名
+            return aliasMap[key] || name;
+        }
+
+        // 从 character.md 解析英文资料（作为权威英文源）
+        async function loadEnglishProfiles() {
+            try {
+                const res = await fetch('character.md');
+                if (!res.ok) return;
+                const txt = await res.text();
+                const blocks = txt.split(/^## /m).slice(1); // 跳过文档头
+                const profiles = {};
+                for (const block of blocks) {
+                    const lines = block.split(/\n/);
+                    const rawName = (lines[0] || '').trim();
+                    const name = rawName.replace(/\r?$/, '');
+                    const get = (label) => {
+                        const re = new RegExp(`^- \*\*${label}\\*\*:\\s*(.+?)\\s*$`, 'i');
+                        const line = lines.find(l => re.test(l));
+                        if (!line) return undefined;
+                        const m = line.match(re);
+                        return m ? m[1].trim() : undefined;
+                    };
+                    const p = {
+                        age: get('Age'),
+                        birthday: get('Birthday'),
+                        zodiac: get('Zodiac'),
+                        personality: get('Personality'),
+                        dailyInterests: get('Daily Interests'),
+                    };
+                    // Likes & Dislikes: "Likes X; dislikes Y"
+                    const likesLine = get('Likes & Dislikes');
+                    if (likesLine) {
+                        const likeMatch = likesLine.match(/Likes([^;]+?)(?:;|$)/i);
+                        const dislikeMatch = likesLine.match(/dislikes([^;]+?)(?:;|$)/i);
+                        if (likeMatch) p.likes = likeMatch[1].trim();
+                        if (dislikeMatch) p.dislikes = dislikeMatch[1].trim();
+                    }
+                    p.favoriteFood = get('Favorite Foods');
+                    p.favoriteMusic = get('Favorite Music');
+                    p.favoriteMovies = get('Favorite Movies');
+                    p.favoriteGames = get('Favorite Games');
+
+                    if (name) {
+                        profiles[canonicalName(name)] = p;
+                    }
+                }
+                englishProfiles = profiles;
+                // 若当前语言是英文，加载完成后刷新当前角色的资料
+                if (getCurrentLanguage() === 'en' && typeof currentCharacterIndex !== 'undefined' && characters[currentCharacterIndex]) {
+                    updateCharacterProfile(characters[currentCharacterIndex]);
+                }
+            } catch (e) {
+                console.warn('Failed to load character.md profiles:', e);
+            }
         }
 
         // 获取当前语言设置
@@ -2463,7 +2548,7 @@
             return 'en';
         }
 
-        // 根据角色名获取详细档案 - 基于character.md数据，支持中英文
+        // 根据角色名获取详细档案 - 基于本地配置 + character.md 英文权威
         function getCharacterProfile(name, language = 'en') {
             const profilesData = {
                 "Sikirei": {
@@ -2838,16 +2923,25 @@
             
             // 获取指定角色和语言的资料
             const characterData = profilesData[name];
-            if (characterData && characterData[language]) {
-                return characterData[language];
+
+            // A) 如果是英文且有从 character.md 解析的权威数据，优先返回
+            if (language === 'en' && englishProfiles) {
+                const enByCanonical = englishProfiles[canonicalName(name)];
+                if (enByCanonical) return enByCanonical;
             }
-            
-            // 如果没找到指定语言，尝试英文
-            if (characterData && characterData['en']) {
-                return characterData['en'];
+
+            // B) 如果数据是按语言分组的
+            if (characterData && (characterData['zh'] || characterData['en'])) {
+                const localized = characterData[language] || characterData['en'] || characterData['zh'];
+                return maybeTranslateProfile(localized, language);
             }
-            
-            // 最后的fallback
+
+            // C) 扁平结构（多为中文），做必要转换
+            if (characterData && (typeof characterData.age !== 'undefined' || typeof characterData.birthday !== 'undefined')) {
+                return maybeTranslateProfile(characterData, language);
+            }
+
+            // 3) 最后的fallback（保底数据）
             return language === 'zh' ? {
                 age: 20,
                 birthday: "4月15日",
@@ -2873,6 +2967,32 @@
                 favoriteMovies: "Romance films",
                 favoriteGames: "Casual games"
             };
+        }
+
+        // 尝试对部分字段做最小必要的本地化转换（目前仅黄道十二宫）
+        function maybeTranslateProfile(profile, language) {
+            if (!profile) return profile;
+            const result = { ...profile };
+            if (language === 'en' && result.zodiac) {
+                const zodiacMap = {
+                    '白羊座': 'Aries',
+                    '牡羊座': 'Aries',
+                    '金牛座': 'Taurus',
+                    '双子座': 'Gemini',
+                    '巨蟹座': 'Cancer',
+                    '狮子座': 'Leo',
+                    '处女座': 'Virgo',
+                    '天秤座': 'Libra',
+                    '天蠍座': 'Scorpio',
+                    '天蝎座': 'Scorpio',
+                    '射手座': 'Sagittarius',
+                    '摩羯座': 'Capricorn',
+                    '水瓶座': 'Aquarius',
+                    '双鱼座': 'Pisces'
+                };
+                result.zodiac = zodiacMap[result.zodiac] || result.zodiac;
+            }
+            return result;
         }
 
         function updateThumbnails() {
@@ -3313,8 +3433,11 @@
             }
         }
 
-        // 在DOM加载完成后初始化语言切换器
-        document.addEventListener('DOMContentLoaded', initLanguageToggle);
+        // 在DOM加载完成后初始化语言切换器并解析英文资料
+        document.addEventListener('DOMContentLoaded', () => {
+            initLanguageToggle();
+            loadEnglishProfiles();
+        });
 
         // 监听语言切换事件，更新角色信息
         window.addEventListener('languageChanged', function(event) {
@@ -3327,6 +3450,7 @@
     
     <!-- React 和 Solana Web3 -->
     <script src="config.js"></script>
+    <script src="i18n.characters.generated.js"></script>
     <script src="i18n.js"></script>
     <script src="simplified_characters.js"></script>
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>

@@ -1,5 +1,12 @@
 {
   "version": 2,
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/character-select.html",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/health",
@@ -12,10 +19,6 @@
     {
       "source": "/metrics",
       "destination": "/api/index.js"
-    },
-    {
-      "source": "/",
-      "destination": "/character-select.html"
     },
     {
       "source": "/chat",
