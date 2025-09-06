@@ -14,6 +14,12 @@ class I18n {
         }
         
         this.init();
+        // Merge auto-generated character i18n if present
+        if (typeof window !== 'undefined' && window.I18N_CHARACTERS) {
+            const gen = window.I18N_CHARACTERS;
+            if (gen.en) Object.assign(this.texts.en, gen.en);
+            if (gen.zh) Object.assign(this.texts.zh, gen.zh);
+        }
     }
 
     texts = {
@@ -154,6 +160,32 @@ class I18n {
             'character.alice.music': 'Pop dance music, K-Pop',
             'character.alice.movies': 'Romantic comedies',
             'character.alice.games': 'Rhythm dance games',
+
+            // Character: Rainy (example full set)
+            'character.rainy.age': '21',
+            'character.rainy.birthday': 'November 5',
+            'character.rainy.zodiac': 'Scorpio',
+            'character.rainy.personality': 'Quiet, gentle, and introspective',
+            'character.rainy.interests': 'Walking in the rain',
+            'character.rainy.likes': 'Sound of rain',
+            'character.rainy.dislikes': 'Hot sunny days',
+            'character.rainy.food': 'Ramen, hot chocolate',
+            'character.rainy.music': 'Slow-tempo jazz',
+            'character.rainy.movies': 'Art and indie films',
+            'character.rainy.games': 'Interactive novels',
+
+            // Character: Sikirei (example full set)
+            'character.sikirei.age': '24',
+            'character.sikirei.birthday': 'October 10',
+            'character.sikirei.zodiac': 'Libra',
+            'character.sikirei.personality': 'Alluring, mysterious, and refined',
+            'character.sikirei.interests': 'Astrology research',
+            'character.sikirei.likes': 'Stars and night sky',
+            'character.sikirei.dislikes': 'Light pollution',
+            'character.sikirei.food': 'Blueberry pudding, herbal tea',
+            'character.sikirei.music': 'Ambient soundscapes',
+            'character.sikirei.movies': 'Sci-fi mysteries',
+            'character.sikirei.games': 'The Sims',
 
             // User registration form
             'registration.title': 'User Registration',
@@ -325,6 +357,32 @@ class I18n {
             'character.alice.music': '流行舞曲、K-Pop',
             'character.alice.movies': '浪漫喜剧',
             'character.alice.games': '节奏舞蹈游戏',
+
+            // Character: Rainy（示例完整配置）
+            'character.rainy.age': '21',
+            'character.rainy.birthday': '11月5日',
+            'character.rainy.zodiac': '天蝎座',
+            'character.rainy.personality': '安静、温柔、内省',
+            'character.rainy.interests': '雨中漫步',
+            'character.rainy.likes': '雨声',
+            'character.rainy.dislikes': '炎热晴天',
+            'character.rainy.food': '拉面、热巧克力',
+            'character.rainy.music': '慢节奏爵士',
+            'character.rainy.movies': '艺术与独立电影',
+            'character.rainy.games': '互动小说',
+
+            // Character: Sikirei（示例完整配置）
+            'character.sikirei.age': '24',
+            'character.sikirei.birthday': '10月10日',
+            'character.sikirei.zodiac': '天秤座',
+            'character.sikirei.personality': '诱人、神秘、优雅',
+            'character.sikirei.interests': '占星研究',
+            'character.sikirei.likes': '星星和夜空',
+            'character.sikirei.dislikes': '光污染',
+            'character.sikirei.food': '蓝莓布丁、花草茶',
+            'character.sikirei.music': '氛围音景',
+            'character.sikirei.movies': '科幻悬疑',
+            'character.sikirei.games': '模拟人生',
 
             // User registration form
             'registration.title': '用户注册',
