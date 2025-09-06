@@ -2395,79 +2395,160 @@
 
         // 更新角色档案信息
         function updateCharacterProfile(character) {
-            // 获取角色详细信息，如果没有则使用默认值
-            const profile = getCharacterProfile(character.name);
-            const characterKey = character.name.toLowerCase();
+            // 获取当前语言设置
+            const currentLang = getCurrentLanguage();
+            const profile = getCharacterProfile(character.name, currentLang);
             
             document.getElementById('character-name').textContent = character.name;
             
-            // 使用国际化数据
-            if (window.i18n) {
-                document.getElementById('character-age').textContent = window.i18n.t(`character.${characterKey}.age`);
-                document.getElementById('character-birthday').textContent = window.i18n.t(`character.${characterKey}.birthday`);
-                document.getElementById('character-zodiac').textContent = window.i18n.t(`character.${characterKey}.zodiac`);
-                document.getElementById('character-personality').textContent = window.i18n.t(`character.${characterKey}.personality`);
-            } else {
-                document.getElementById('character-age').textContent = profile.age;
-                document.getElementById('character-birthday').textContent = profile.birthday;
-                document.getElementById('character-zodiac').textContent = profile.zodiac;
-                document.getElementById('character-personality').textContent = profile.personality;
-            }
+            // 使用根据语言选择的 profile 数据
+            document.getElementById('character-age').textContent = profile.age;
+            document.getElementById('character-birthday').textContent = profile.birthday;
+            document.getElementById('character-zodiac').textContent = profile.zodiac;
+            document.getElementById('character-personality').textContent = profile.personality;
+            
             // 更新其他信息（如果元素存在）
             const interestsEl = document.getElementById('character-interests');
             if (interestsEl) {
-                interestsEl.textContent = window.i18n ? window.i18n.t(`character.${characterKey}.interests`) : profile.dailyInterests;
+                interestsEl.textContent = profile.dailyInterests;
             }
             
             const likesEl = document.getElementById('character-likes');
             if (likesEl) {
-                likesEl.textContent = window.i18n ? window.i18n.t(`character.${characterKey}.likes`) : profile.likes;
+                likesEl.textContent = profile.likes;
             }
             
             const dislikesEl = document.getElementById('character-dislikes');
             if (dislikesEl) {
-                dislikesEl.textContent = window.i18n ? window.i18n.t(`character.${characterKey}.dislikes`) : profile.dislikes;
+                dislikesEl.textContent = profile.dislikes;
             }
             
             const foodEl = document.getElementById('character-food');
             if (foodEl) {
-                foodEl.textContent = window.i18n ? window.i18n.t(`character.${characterKey}.food`) : profile.favoriteFood;
+                foodEl.textContent = profile.favoriteFood;
             }
             
             const musicEl = document.getElementById('character-music');
             if (musicEl) {
-                musicEl.textContent = window.i18n ? window.i18n.t(`character.${characterKey}.music`) : profile.favoriteMusic;
+                musicEl.textContent = profile.favoriteMusic;
             }
             
             const moviesEl = document.getElementById('character-movies');
             if (moviesEl) {
-                moviesEl.textContent = window.i18n ? window.i18n.t(`character.${characterKey}.movies`) : profile.favoriteMovies;
+                moviesEl.textContent = profile.favoriteMovies;
             }
             
             const gamesEl = document.getElementById('character-games');
             if (gamesEl) {
-                gamesEl.textContent = window.i18n ? window.i18n.t(`character.${characterKey}.games`) : profile.favoriteGames;
+                gamesEl.textContent = profile.favoriteGames;
             }
             
             // 更新语音选择器
             updateVoiceSelector();
         }
 
-        // 根据角色名获取详细档案 - 基于character.md数据
-        function getCharacterProfile(name) {
-            const profiles = {
+        // 获取当前语言设置
+        function getCurrentLanguage() {
+            // 检查localStorage中的语言设置
+            const savedLang = localStorage.getItem('language');
+            if (savedLang) return savedLang;
+            
+            // 检查语言按钮的active状态
+            const activeLangBtn = document.querySelector('.language-btn.active');
+            if (activeLangBtn) {
+                return activeLangBtn.id === 'lang-en' ? 'en' : 'zh';
+            }
+            
+            // 默认返回英文
+            return 'en';
+        }
+
+        // 根据角色名获取详细档案 - 基于character.md数据，支持中英文
+        function getCharacterProfile(name, language = 'en') {
+            const profilesData = {
+                "Sikirei": {
+                    zh: {
+                        age: 24,
+                        birthday: "10月10日",
+                        zodiac: "天秤座",
+                        personality: "诱人、神秘、优雅",
+                        dailyInterests: "占星研究",
+                        likes: "星星和夜空",
+                        dislikes: "光污染",
+                        favoriteFood: "蓝莓布丁、花草茶",
+                        favoriteMusic: "氛围音景",
+                        favoriteMovies: "科幻悬疑",
+                        favoriteGames: "模拟人生"
+                    },
+                    en: {
+                        age: 24,
+                        birthday: "October 10",
+                        zodiac: "Libra",
+                        personality: "Alluring, mysterious, and refined",
+                        dailyInterests: "Astrology research",
+                        likes: "Stars and night sky",
+                        dislikes: "Light pollution",
+                        favoriteFood: "Blueberry pudding, herbal tea",
+                        favoriteMusic: "Ambient soundscapes",
+                        favoriteMovies: "Sci-fi mysteries",
+                        favoriteGames: "The Sims"
+                    }
+                },
                 "Alice": {
-                    age: 22,
-                    birthday: "6月5日",
-                    zodiac: "双子座",
-                    personality: "活泼外向，调皮可爱",
-                    dailyInterests: "跳舞、唱歌",
-                    likes: "鲜花和彩色甜点",
-                    dislikes: "安静和过于严肃的场合",
-                    favoriteFood: "草莓蛋糕、马卡龙",
-                    favoriteMusic: "流行舞曲、K-Pop",
-                    favoriteMovies: "浪漫喜剧",
-                    favoriteGames: "节奏舞蹈游戏"
+                    zh: {
+                        age: 22,
+                        birthday: "6月5日",
+                        zodiac: "双子座",
+                        personality: "活泼外向，调皮可爱",
+                        dailyInterests: "跳舞、唱歌",
+                        likes: "鲜花和彩色甜点",
+                        dislikes: "安静和过于严肃的场合",
+                        favoriteFood: "草莓蛋糕、马卡龙",
+                        favoriteMusic: "流行舞曲、K-Pop",
+                        favoriteMovies: "浪漫喜剧",
+                        favoriteGames: "节奏舞蹈游戏"
+                    },
+                    en: {
+                        age: 22,
+                        birthday: "June 5",
+                        zodiac: "Gemini",
+                        personality: "Lively and outgoing, playful and cute",
+                        dailyInterests: "Dancing, singing",
+                        likes: "Flowers and colorful sweets",
+                        dislikes: "Quiet and overly serious occasions",
+                        favoriteFood: "Strawberry cake, macarons",
+                        favoriteMusic: "Pop dance music, K-Pop",
+                        favoriteMovies: "Romantic comedies",
+                        favoriteGames: "Rhythm dance games"
+                    }
+                },
+                "Fliza": {
+                    zh: {
+                        age: 23,
+                        birthday: "8月14日",
+                        zodiac: "狮子座",
+                        personality: "温暖、关怀、富有同情心",
+                        dailyInterests: "农业、园艺",
+                        likes: "日出和晨露",
+                        dislikes: "环境污染",
+                        favoriteFood: "新鲜水果、蜂蜜柠檬水",
+                        favoriteMusic: "民谣、自然音景",
+                        favoriteMovies: "自然纪录片、温馨故事",
+                        favoriteGames: "动物森友会"
+                    },
+                    en: {
+                        age: 23,
+                        birthday: "August 14",
+                        zodiac: "Leo",
+                        personality: "Warm, caring, and compassionate",
+                        dailyInterests: "Agriculture, gardening",
+                        likes: "Sunrise and morning dew",
+                        dislikes: "Environmental pollution",
+                        favoriteFood: "Fresh fruits, honey lemon water",
+                        favoriteMusic: "Folk music, natural soundscapes",
+                        favoriteMovies: "Nature documentaries, heartwarming stories",
+                        favoriteGames: "Animal Crossing"
+                    }
                 },
                 "Ash": {
                     age: 24,
@@ -2755,7 +2836,19 @@
                 }
             };
             
-            return profiles[name] || {
+            // 获取指定角色和语言的资料
+            const characterData = profilesData[name];
+            if (characterData && characterData[language]) {
+                return characterData[language];
+            }
+            
+            // 如果没找到指定语言，尝试英文
+            if (characterData && characterData['en']) {
+                return characterData['en'];
+            }
+            
+            // 最后的fallback
+            return language === 'zh' ? {
                 age: 20,
                 birthday: "4月15日",
                 zodiac: "牡羊座", 
@@ -2767,6 +2860,18 @@
                 favoriteMusic: "轻音乐",
                 favoriteMovies: "浪漫片",
                 favoriteGames: "休闲游戏"
+            } : {
+                age: 20,
+                birthday: "April 15",
+                zodiac: "Aries", 
+                personality: "Gentle and caring AI girlfriend who always cares about you",
+                dailyInterests: "Chatting, gaming",
+                likes: "Time spent with you",
+                dislikes: "Loneliness",
+                favoriteFood: "Desserts",
+                favoriteMusic: "Light music",
+                favoriteMovies: "Romance films",
+                favoriteGames: "Casual games"
             };
         }
 
@@ -3015,7 +3120,7 @@
                        `${walletInfo.wallet.address.slice(0, 6)}...${walletInfo.wallet.address.slice(-4)}`);
             
             // 跳转到聊天界面
-            window.location.href = '/chat';
+            window.location.href = 'index.html';
         };
 
         // Mixamo到VRM骨骼映射 - 从index.html复制
@@ -3175,6 +3280,22 @@
         window.switchLanguage = function(lang) {
             if (window.i18n) {
                 window.i18n.switchLanguage(lang);
+            }
+            
+            // 保存语言设置到localStorage
+            localStorage.setItem('language', lang);
+            
+            // 更新语言按钮状态
+            const enBtn = document.getElementById('lang-en');
+            const zhBtn = document.getElementById('lang-zh');
+            if (enBtn && zhBtn) {
+                enBtn.classList.toggle('active', lang === 'en');
+                zhBtn.classList.toggle('active', lang === 'zh');
+            }
+            
+            // 重新更新当前角色的资料面板
+            if (typeof currentCharacterIndex !== 'undefined' && currentCharacterIndex >= 0 && characters[currentCharacterIndex]) {
+                updateCharacterProfile(characters[currentCharacterIndex]);
             }
         };
 
