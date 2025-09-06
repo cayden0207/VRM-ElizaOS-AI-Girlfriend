@@ -184,7 +184,10 @@ class I18n {
 
             // Success and action messages
             'registration.success': '🎉 Registration Complete! Please choose your AI girlfriend character',
-            'wallet.disconnected': 'Wallet disconnected'
+            'wallet.disconnected': 'Wallet disconnected',
+
+            // Status messages
+            'status.online': 'Online'
         },
         
         zh: {
@@ -352,7 +355,10 @@ class I18n {
 
             // Success and action messages
             'registration.success': '🎉 注册完成！请选择你的AI女友角色',
-            'wallet.disconnected': '钱包已断开连接'
+            'wallet.disconnected': '钱包已断开连接',
+
+            // Status messages
+            'status.online': '在线'
         }
     };
 

@@ -83,7 +83,7 @@ class ElizaOSChatSystem {
         const selectedCharacterData = localStorage.getItem('selectedCharacter');
         
         if (walletAddress) {
-            console.log('🔑 恢复认证会话:', walletAddress.slice(0, 8) + '...');
+            (window.AppConfig?.debug?.log || console.log)('🔑 Restoring auth session:', walletAddress.slice(0, 8) + '...');
             
             try {
                 // 向ElizaOS后端验证/注册用户
@@ -102,7 +102,7 @@ class ElizaOSChatSystem {
                         isNew: authData.data.isNew
                     };
                     
-                    console.log('✅ 用户认证成功');
+                    (window.AppConfig?.debug?.info || console.log)('✅ User authentication successful');
                     
                     // 恢复角色选择
                     if (selectedCharacterData) {
@@ -181,7 +181,7 @@ class ElizaOSChatSystem {
     
     async setCurrentCharacter(characterData) {
         this.currentCharacter = characterData;
-        console.log('🎯 设置当前角色:', characterData.name);
+        (window.AppConfig?.debug?.log || console.log)('🎯 Setting current character:', characterData.name);
         
         // 加载对话历史
         if (this.currentUser) {
@@ -202,7 +202,7 @@ class ElizaOSChatSystem {
         if (!this.currentUser || !this.currentCharacter) return;
         
         try {
-            console.log('📜 加载对话历史...');
+            (window.AppConfig?.debug?.log || console.log)('📜 Loading conversation history...');
             this.showMemoryStatus('加载记忆中...');
             
             const response = await fetch(
@@ -238,7 +238,7 @@ class ElizaOSChatSystem {
                     this.showContextInfo('已加载' + conversations.length + '条对话记忆');
                 }
                 
-                console.log(`✅ 加载了 ${conversations.length} 条对话历史`);
+                (window.AppConfig?.debug?.log || console.log)(`✅ Loaded ${conversations.length} conversation history items`);
             }
             
             this.showMemoryStatus('记忆系统就绪');
