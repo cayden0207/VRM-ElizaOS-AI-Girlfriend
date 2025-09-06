@@ -4005,7 +4005,7 @@
 
         // 初始化
         function init() {
-            AppConfig.info('🚀 AI Companion initialization started...');
+            AppConfig.debug.info('🚀 AI Companion initialization started...');
             AppConfig.debug.log('🌐 Current page URL:', window.location.href);
             AppConfig.debug.log('📱 Wallet authenticator status:', walletAuth);
             
@@ -4050,7 +4050,7 @@
                 aiStatusElement.innerHTML = '<span class="online-indicator"></span>' + i18n.t('status.ai.smart');
             }
             
-            AppConfig.info('🎉 AI Companion initialization completed');
+            AppConfig.debug.info('🎉 AI Companion initialization completed');
         }
 
         // 加载选择的角色
