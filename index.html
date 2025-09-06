@@ -2164,15 +2164,15 @@
         scene.background = new THREE.Color(0x87CEEB);
         
         // 加载背景图片
-        console.log('🎨 Loading background image: BG/chatroom2.png');
-        console.log('🌍 Current URL:', window.location.href);
+        AppConfig.debug.log('🎨 Loading background image: BG/chatroom2.png');
+        AppConfig.debug.log('🌍 Current URL:', window.location.href);
         
         const textureLoader = new THREE.TextureLoader();
         textureLoader.load(
             './BG/chatroom2.png',
             (texture) => {
-                console.log('🎨 背景纹理加载完成:', texture);
-                console.log('📐 纹理尺寸:', texture.image.width, 'x', texture.image.height);
+                AppConfig.debug.log('🎨 Background texture loaded:', texture);
+                AppConfig.debug.log('📐 Texture dimensions:', texture.image.width, 'x', texture.image.height);
                 
                 // 调整纹理设置以适应全屏
                 texture.minFilter = THREE.LinearFilter;
@@ -2182,7 +2182,7 @@
                 texture.flipY = false; // 防止图片上下颠倒
                 
                 scene.background = texture;
-                console.log('✅ 背景图片设置成功！');
+                AppConfig.debug.log('✅ Background image set successfully!');
                 
                 // 强制渲染一次
                 if (renderer && scene && camera) {
@@ -2191,7 +2191,7 @@
             },
             (progress) => {
                 const percent = progress.total ? (progress.loaded / progress.total * 100).toFixed(1) : '?';
-                console.log('📊 背景加载进度:', percent + '%');
+                AppConfig.debug.log('📊 Background loading progress:', percent + '%');
             },
             (error) => {
                 console.error('⚠️ 背景图片加载失败:', error);
@@ -2259,7 +2259,7 @@
             footShadow.position.set(0, -0.82, 0); // 直接贴着脚底，与character-select.html一致
             scene.add(footShadow);
             
-            console.log('✅ 创建脚底阴影', {
+            AppConfig.debug.log('✅ Created foot shadow', {
                 position: footShadow.position,
                 size: '2.2x2.2'
             });
@@ -3420,7 +3420,7 @@
             
             body.className = existingClasses.concat([newClass]).join(' ');
             
-            console.log(`🖼️ 设置角色头像: ${characterKey} -> ${newClass}`);
+            AppConfig.debug.log(`🖼️ Setting character avatar: ${characterKey} -> ${newClass}`);
         }
 
         function playSelectedAnimation() {
@@ -3500,7 +3500,7 @@
             
             // 检查钱包验证状态
             checkAuthentication() {
-                console.log('🔍 开始钱包验证流程...');
+                AppConfig.debug.log('🔍 Starting wallet verification process...');
                 
                 // 1. 检查localStorage中的钱包地址
                 this.walletAddress = localStorage.getItem('wallet_address');
@@ -3542,7 +3542,7 @@
                 
                 try {
                     this.selectedCharacter = JSON.parse(selectedCharacterData);
-                    console.log('📦 解析的角色数据:', this.selectedCharacter);
+                    AppConfig.debug.log('📦 Parsed character data:', this.selectedCharacter);
                     
                     // 验证角色数据中的钱包地址是否匹配
                     if (this.selectedCharacter.walletAddress !== this.walletAddress) {
@@ -3556,8 +3556,8 @@
                     
                     this.isAuthenticated = true;
                     this.updateWalletUI();
-                    console.log('✅ 钱包验证成功:', this.walletAddress);
-                    console.log('✅ 验证的角色:', this.selectedCharacter.name);
+                    AppConfig.debug.log('✅ Wallet verification successful:', this.walletAddress);
+                    AppConfig.debug.log('✅ Verified character:', this.selectedCharacter.name);
                     return true;
                     
                 } catch (error) {
@@ -4005,14 +4005,14 @@
 
         // 初始化
         function init() {
-            console.log('🚀 AI Companion 初始化开始...');
+            AppConfig.info('🚀 AI Companion initialization started...');
             AppConfig.debug.log('🌐 Current page URL:', window.location.href);
             AppConfig.debug.log('📱 Wallet authenticator status:', walletAuth);
             
             // 首先进行钱包验证
             AppConfig.debug.log('⚡ Starting wallet verification...');
             const isAuthenticated = walletAuth.checkAuthentication();
-            console.log('🔐 验证结果:', isAuthenticated);
+            AppConfig.debug.log('🔐 Verification result:', isAuthenticated);
             
             if (!isAuthenticated) {
                 console.log('❌ 钱包验证失败，停止初始化');
@@ -4050,7 +4050,7 @@
                 aiStatusElement.innerHTML = '<span class="online-indicator"></span>' + i18n.t('status.ai.smart');
             }
             
-            console.log('🎉 AI Companion 初始化完成');
+            AppConfig.info('🎉 AI Companion initialization completed');
         }
 
         // 加载选择的角色
@@ -4059,7 +4059,7 @@
                 // 从钱包验证系统获取角色信息
                 const character = walletAuth.getCurrentCharacter();
                 
-                console.log('📱 loadSelectedCharacter 调试信息:');
+                AppConfig.debug.log('📱 loadSelectedCharacter debug info:');
                 console.log('- character:', character);
                 console.log('- localStorage selectedCharacter:', localStorage.getItem('selectedCharacter'));
                 
