@@ -494,9 +494,10 @@
         /* 悬浮聊天框 */
         .floating-chat {
             position: fixed;
-            top: 50%;
+            /* Avoid translateY-based centering to prevent vertical jitter when hovering */
+            top: 120px;
             right: 20px;
-            transform: translateY(-50%);
+            transform: none;
             width: 416px;
             height: 754px;
             background: #F5F3F0;
@@ -513,7 +514,7 @@
 
 
         .floating-chat.dragging {
-            transform: translateY(-50%) scale(1.05);
+            transform: scale(1.05);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 
                         0 0 40px rgba(255, 182, 193, 0.8),
                         inset 0 1px 0 rgba(255, 255, 255, 0.3);
@@ -1375,15 +1376,25 @@
         }
 
         @media (max-width: 768px) {
+            /* Fullscreen chat window on mobile */
             .floating-chat {
-                width: 450px;
-                height: 600px;
-                right: 10px;
+                top: 0;
+                left: 0;
+                right: 0;
+                width: 100vw;
+                height: 100dvh;
+                border-radius: 0;
+                border-width: 0;
+                transform: none;
             }
-            
+
+            .chat-window-header { cursor: default; }
+
             .chat-window-messages {
-                height: 420px;
+                height: calc(100dvh - 140px); /* header + input approx */
             }
+
+            .music-controls { display: none; }
         }
 
         /* VRM状态信息 */
@@ -1485,26 +1496,26 @@
 </head>
 
 <body>
-    <!-- 引入聊天系统 - AI integration handled by ElizaOS -->
+    <!-- Include chat system - AI integration handled by ElizaOS -->
     <script type="module" src="chat-system-eliza.js"></script>
     <div class="game-container">
-        <!-- 左侧VRM展示区 -->
+        <!-- Left VRM display area -->
         <div class="vrm-container">
             <canvas id="vrm-canvas" class="vrm-canvas"></canvas>
             
-            <!-- AI对话气泡 -->
+            <!-- AI speech bubble -->
             <div class="ai-speech-bubble" id="ai-speech-bubble" style="display: none;"></div>
 
-            <!-- VRM状态信息 -->
+            <!-- VRM status info -->
             <div class="vrm-status" id="vrm-status" style="display: none;">
-                <div>🎭 VRM状态: <span id="vrm-loaded">加载中...</span></div>
-                <div>🎬 当前动画: <span id="current-animation">无</span></div>
-                <div>😊 表情状态: <span id="current-expression">中性</span></div>
-                <div>🎵 自动眨眼: <span id="auto-blinking">开启</span></div>
+                <div>🎭 VRM Status: <span id="vrm-loaded" data-i18n="status.loading">Loading...</span></div>
+                <div>🎬 Current Animation: <span id="current-animation" data-i18n="status.none">None</span></div>
+                <div>😊 Expression: <span id="current-expression" data-i18n="status.neutral">Neutral</span></div>
+                <div>🎵 Auto Blink: <span id="auto-blinking" data-i18n="status.enabled">Enabled</span></div>
             </div>
 
 
-            <!-- 复古音乐播放器 -->
+            <!-- Retro music player -->
             <div class="music-controls" id="music-controls">
                 <div class="music-window-title">
                     Background Music
@@ -1528,21 +1539,21 @@
                 </div>
             </div>
 
-            <!-- 语言切换器 -->
+            <!-- Language switcher -->
             <div class="language-toggle" id="language-toggle">
                 <span data-i18n="char.select.language">Language: </span>
                 <button class="language-btn" id="lang-en" onclick="switchLanguage('en')">EN</button>
-                <button class="language-btn" id="lang-zh" onclick="switchLanguage('zh')">中文</button>
+                <button class="language-btn" id="lang-zh" onclick="switchLanguage('zh')">ZH</button>
             </div>
             
 
-            <!-- 背景音乐音频元素 -->
+            <!-- Background music element -->
             <audio id="background-music" loop preload="auto">
                 <source src="BG/bgm.mp3" type="audio/mpeg">
-                您的浏览器不支持音频播放。
+                Your browser does not support audio playback.
             </audio>
             
-            <!-- 钱包状态显示（已登录时显示） -->
+            <!-- Wallet status (visible when logged in) -->
             <div class="wallet-status-info" id="wallet-status-info" style="display: none;">
                 <div class="wallet-avatar">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 21 21">
@@ -1558,55 +1569,21 @@
 
         </div>
 
-        <!-- 左侧控制面板 -->
-        <div class="left-panel" style="display: none;">
-            <!-- 快捷控制 -->
-            <div class="panel-section">
-                <h4>😊 快捷控制</h4>
-                <div class="emotion-buttons">
-                    <button class="emotion-btn" onclick="setExpression('neutral')">开心</button>
-                    <button class="emotion-btn" onclick="setExpression('happy')">伤心</button>
-                    <button class="emotion-btn" onclick="setExpression('sad')">生气</button>
-                    <button class="emotion-btn" onclick="setExpression('angry')">惊讶</button>
-                    <button class="emotion-btn" onclick="setExpression('surprised')">思考</button>
-                    <button class="emotion-btn" onclick="setExpression('relaxed')">中性</button>
-                </div>
-            </div>
+        <!-- Left control panel removed -->
 
-            <!-- 角色选择 -->
-            <div class="panel-section">
-                <h4>👤 角色选择</h4>
-                <select id="character-selector" onchange="changeCharacter()">
-                    <option value="">选择角色...</option>
-                </select>
-            </div>
-
-            <!-- 动画测试 -->
-            <div class="panel-section">
-                <h4>🎭 动画测试</h4>
-                <select id="animation-selector" onchange="">
-                    <option value="">选择动画...</option>
-                </select>
-                <button class="play-animation-btn" onclick="playSelectedAnimation()">播放动画</button>
-            </div>
-
-            <!-- 返回角色选择 -->
-            <button class="back-button" onclick="goToCharacterSelect()">← 返回角色选择</button>
-        </div>
-
-        <!-- 钱包状态显示 -->
+        <!-- Wallet status -->
         <div class="wallet-status" id="wallet-status" style="display: none;">
-            <span>钱包:</span>
+            <span>Wallet:</span>
             <span class="wallet-address" id="wallet-address"></span>
-            <button class="wallet-disconnect" onclick="disconnectWallet()">断开</button>
+            <button class="wallet-disconnect" onclick="disconnectWallet()">Disconnect</button>
         </div>
 
 
-        <!-- 悬浮聊天框 -->
+        <!-- Floating chat window -->
         <div class="floating-chat" id="floating-chat">
-            <!-- 手机Top Bar风格聊天框头部 -->
+            <!-- Mobile top bar styled chat header -->
             <div class="chat-window-header">
-                <!-- 真实手机状态栏 -->
+                <!-- Real phone status bar -->
                 <div class="phone-status-bar">
                     <div class="status-left">
                         <div class="carrier-info">
@@ -2128,7 +2105,7 @@
                             tracks.push(new THREE.VectorKeyframeTrack(`${vrmNodeName}.${propertyName}`, track.times, value));
                         }
                     } else if (!vrmBoneName) {
-                        console.log(`⚠️ 未映射的ActorCore骨骼: ${actorCoreRigName}`);
+                        (window.AppConfig?.debug?.warn || console.warn)(`Unmapped ActorCore rig: ${actorCoreRigName}`);
                     }
                 });
 
@@ -2196,9 +2173,9 @@
                 AppConfig.debug.log('📊 Background loading progress:', percent + '%');
             },
             (error) => {
-                console.error('⚠️ 背景图片加载失败:', error);
-                console.error('⚠️ 错误详情:', error.message);
-                console.error('⚠️ 完整文件路径:', new URL('BG/chatroom2.png', window.location.href).href);
+                console.error('⚠️ Background image load failed:', error);
+                console.error('⚠️ Detail:', error.message);
+                console.error('⚠️ Full path:', new URL('BG/chatroom2.png', window.location.href).href);
                 // 保持临时背景色
             }
         );
@@ -2317,7 +2294,7 @@
                 }
             });
 
-            console.log(`😊 发现可用表情: ${expressions.join(', ')}`);
+            (window.AppConfig?.debug?.log || console.log)(`Available expressions: ${expressions.join(', ')}`);
             return expressions;
         }
 
@@ -2333,7 +2310,7 @@
                     document.getElementById('current-expression').textContent = getEmotionText(expressionName);
                 }
             } catch (e) {
-                console.warn(`⚠️ 表情 ${expressionName} 不可用:`, e);
+                (window.AppConfig?.debug?.warn || console.warn)(`Expression ${expressionName} not available:`, e);
             }
         }
 
@@ -2346,16 +2323,16 @@
                 }
             });
 
-            document.getElementById('current-expression').textContent = '中性';
+            document.getElementById('current-expression').textContent = 'Neutral';
         }
 
         // 表情测试函数
         function testShyExpression() {
-            console.log('🧪 测试害羞表情...');
-            console.log('可用表情:', availableExpressions);
+            (window.AppConfig?.debug?.log || console.log)('Test bashful expression...');
+            (window.AppConfig?.debug?.log || console.log)('Available expressions:', availableExpressions);
             
             if (!currentVrm || !currentVrm.expressionManager) {
-                alert('VRM模型还未加载完成！');
+                alert('VRM model is not loaded yet!');
                 return;
             }
 
@@ -2370,26 +2347,26 @@
                 if (availableExpressions.includes(expr)) {
                     setExpression(expr, 1.0);
                     appliedExpression = expr;
-                    console.log(`✅ 应用表情: ${expr}`);
+                (window.AppConfig?.debug?.log || console.log)(`Applied expression: ${expr}`);
                 }
             });
             
             if (appliedExpression) {
-                document.getElementById('current-expression').textContent = `害羞 (${appliedExpression})`;
+                document.getElementById('current-expression').textContent = `Bashful (${appliedExpression})`;
                 // 5秒后恢复
                 setTimeout(() => {
                     resetExpressions();
                 }, 5000);
             } else {
-                alert('当前VRM模型不支持害羞表情 😔\n可用表情: ' + availableExpressions.join(', '));
+                alert('This VRM model does not support bashful expression.\nAvailable: ' + availableExpressions.join(', '));
             }
         }
 
         function testHappyExpression() {
-            console.log('🧪 测试开心表情...');
+            (window.AppConfig?.debug?.log || console.log)('Test happy expression...');
             
             if (!currentVrm || !currentVrm.expressionManager) {
-                alert('VRM模型还未加载完成！');
+                alert('VRM model is not loaded yet!');
                 return;
             }
 
@@ -2397,18 +2374,18 @@
             
             if (availableExpressions.includes('happy')) {
                 setExpression('happy', 1.0);
-                document.getElementById('current-expression').textContent = '开心';
+                document.getElementById('current-expression').textContent = 'Happy';
                 setTimeout(() => resetExpressions(), 3000);
             } else {
-                alert('当前VRM模型不支持开心表情');
+                alert('This VRM model does not support happy expression');
             }
         }
 
         function testSadExpression() {
-            console.log('🧪 测试难过表情...');
+            (window.AppConfig?.debug?.log || console.log)('Test sad expression...');
             
             if (!currentVrm || !currentVrm.expressionManager) {
-                alert('VRM模型还未加载完成！');
+                alert('VRM model is not loaded yet!');
                 return;
             }
 
@@ -2416,15 +2393,15 @@
             
             if (availableExpressions.includes('sad')) {
                 setExpression('sad', 1.0);
-                document.getElementById('current-expression').textContent = '难过';
+                document.getElementById('current-expression').textContent = 'Sad';
                 setTimeout(() => resetExpressions(), 3000);
             } else {
-                alert('当前VRM模型不支持难过表情');
+                alert('This VRM model does not support sad expression');
             }
         }
 
         function resetAllExpressions() {
-            console.log('🧪 重置所有表情...');
+            (window.AppConfig?.debug?.log || console.log)('Reset all expressions...');
             resetExpressions();
         }
 
@@ -2533,7 +2510,7 @@
                 // console.log(`🎬 动画加载成功: ${animationName} (${isActorCore ? 'ActorCore' : 'Mixamo'})`);
 
             } catch (error) {
-                console.error('❌ 动画加载失败:', error);
+                console.error('❌ Animation load failed:', error);
             }
         }
 
@@ -2576,7 +2553,7 @@
             if (characterName) {
                 vrmPath = vrmCharacters[characterName];
                 if (!vrmPath) {
-                    console.error('❌ 角色不存在:', characterName);
+                console.error('❌ Character not found:', characterName);
                     return;
                 }
             } else {
@@ -2586,9 +2563,9 @@
                 const selectedCharacterData = localStorage.getItem('selectedCharacter');
                 if (selectedCharacterData) {
                     const character = JSON.parse(selectedCharacterData);
-                    characterName = character.name || '芙莉莎';
+                    characterName = character.name || 'Fliza';
                 } else {
-                    characterName = '芙莉莎';
+                    characterName = 'Fliza';
                 }
             }
 
@@ -2598,13 +2575,13 @@
             console.log('- defaultVrmFile:', defaultVrmFile);
 
             if (!vrmPath) {
-                console.error('❌ VRM文件路径为空，无法加载');
-                updateVRMStatus('加载失败: 文件路径为空');
+                console.error('❌ VRM file path is empty');
+                updateVRMStatus('Failed: empty file path');
                 return;
             }
 
             currentCharacterName = characterName;
-            updateVRMStatus('加载中...');
+            updateVRMStatus('Loading...');
 
             const loader = new GLTFLoader();
             loader.crossOrigin = 'anonymous';
@@ -2657,11 +2634,11 @@
                         obj.frustumCulled = false;
                     });
 
-                    // VRMUtils.rotateVRM0 在 v2 中可能不需要或已更改
+                    // VRMUtils.rotateVRM0 may be unnecessary or changed in v2
                     try {
                         VRMUtils.rotateVRM0(vrm);
                     } catch (error) {
-                        console.log('⚠️ VRMUtils.rotateVRM0 不可用，跳过 (VRM v2兼容)');
+                        (window.AppConfig?.debug?.warn || console.warn)('VRMUtils.rotateVRM0 not available; skip (VRM v2 compat)');
                     }
 
                     availableExpressions = getAvailableExpressions(vrm);
@@ -2670,7 +2647,7 @@
                     window.currentVrm = currentVrm;
                     window.availableExpressions = availableExpressions;
 
-                    updateVRMStatus('✅ 已加载');
+                    updateVRMStatus('✅ Loaded');
                     
                     // 更新角色名称显示
                     const characterNameElement = document.getElementById('character-name');
@@ -2681,22 +2658,22 @@
                     // 默认播放待机动画
                     loadAnimation(idleAnimationUrl);
 
-                    // console.log('🎭 VRM 加载完成:', vrm);
+                    // console.log('🎭 VRM loaded:', vrm);
                     
                     // 初始化AI聊天系统
                     onVRMLoadComplete(currentCharacterName, vrmPath);
                 },
                 (progress) => {
                     const percent = (100.0 * (progress.loaded / progress.total)).toFixed(1);
-                    // console.log(`📊 VRM加载进度: ${percent}%`, progress);
-                    updateVRMStatus(`加载中... ${percent}%`);
+                    // console.log(`📊 VRM loading: ${percent}%`, progress);
+                    updateVRMStatus(`Loading... ${percent}%`);
                 },
                 (error) => {
-                    console.error('❌ VRM 加载失败:', error);
-                    console.error('❌ 错误详情:', error.message, error.stack);
-                    console.error('❌ 尝试加载的文件路径:', vrmPath);
-                    console.error('❌ 当前工作目录:', window.location.href);
-                    updateVRMStatus(`❌ 加载失败: ${error.message || error}`);
+                    console.error('❌ VRM load failed:', error);
+                    console.error('❌ Detail:', error.message, error.stack);
+                    console.error('❌ VRM path attempted:', vrmPath);
+                    console.error('❌ Current location:', window.location.href);
+                    updateVRMStatus(`❌ Failed: ${error.message || error}`);
                 }
             );
         }
@@ -3619,21 +3596,21 @@
             
             // 断开钱包连接
             disconnect() {
-                console.log('🔌 walletAuth.disconnect被调用');
-                console.log('💾 当前localStorage内容:', {...localStorage});
-                if (confirm('确定要断开钱包连接吗？这将清除所有本地数据。')) {
-                    console.log('✅ 用户确认断开连接');
-                    // 清除所有相关数据
-                    console.log('🗑️ 清除wallet_address');
+                (window.AppConfig?.debug?.log || console.log)('walletAuth.disconnect called');
+                (window.AppConfig?.debug?.log || console.log)('localStorage snapshot taken');
+                if (confirm('Disconnect wallet? This will clear local data.')) {
+                    (window.AppConfig?.debug?.log || console.log)('User confirmed disconnect');
+                    // Clear related data
+                    (window.AppConfig?.debug?.log || console.log)('Clearing wallet_address');
                     localStorage.removeItem('wallet_address');
-                    console.log('🗑️ 清除wallet_type');
+                    (window.AppConfig?.debug?.log || console.log)('Clearing wallet_type');
                     localStorage.removeItem('wallet_type');
-                    console.log('🗑️ 清除selectedCharacter');
+                    (window.AppConfig?.debug?.log || console.log)('Clearing selectedCharacter');
                     localStorage.removeItem('selectedCharacter');
                     
                     // 清除角色记忆数据（可选）
                     const keys = Object.keys(localStorage);
-                    console.log('🔍 检查需要清除的记忆数据:', keys);
+                    (window.AppConfig?.debug?.log || console.log)('Check keys to clear memory data:', keys);
                     keys.forEach(key => {
                         if (key.startsWith('memory_') || key.startsWith('user_profile_')) {
                             localStorage.removeItem(key);
@@ -4123,22 +4100,22 @@
         AppConfig.debug.log('⚙️ Module script execution completed, preparing initialization...');
         
         if (document.readyState === 'loading') {
-            console.log('⏳ DOM加载中，等待DOMContentLoaded事件');
+            (window.AppConfig?.debug?.log || console.log)('DOM loading, waiting for DOMContentLoaded');
             document.addEventListener('DOMContentLoaded', () => {
-                console.log('✅ DOMContentLoaded事件触发，调用init()');
+                (window.AppConfig?.debug?.log || console.log)('DOMContentLoaded fired, calling init()');
                 init();
             });
         } else {
-            // DOM已经加载完成
-            AppConfig.debug.log('✅ DOM loaded, calling init() immediately');
+            // DOM already loaded
+            (window.AppConfig?.debug?.log || console.log)('DOM loaded, calling init() immediately');
             init();
         }
     </script>
 
     <script>
-        // 全局表情测试函数
+        // Global expression test function
         window.testShyExpression = function() {
-            console.log('🧪 测试害羞表情...');
+            (window.AppConfig?.debug?.log || console.log)('Test bashful expression...');
             
             if (!window.currentVrm || !window.currentVrm.expressionManager) {
                 alert('VRM模型还未加载完成！请等待加载...');
@@ -4161,7 +4138,7 @@
                     if (window.setExpression) {
                         window.setExpression(expr, 1.0);
                         appliedExpression = expr;
-                        console.log(`✅ 应用表情: ${expr}`);
+                        (window.AppConfig?.debug?.log || console.log)(`Applied expression: ${expr}`);
                     }
                 }
             });
@@ -4233,7 +4210,7 @@
             if (window.resetExpressions) {
                 window.resetExpressions();
             }
-            console.log('🔄 所有表情已重置');
+            (window.AppConfig?.debug?.log || console.log)('All expressions reset');
         };
     </script>
     
@@ -4279,7 +4256,7 @@
             const hasSelectedCharacter = localStorage.getItem('selectedCharacter');
             
             if (hasStoredWallet && hasSelectedCharacter) {
-                console.log('🚀 从角色选择页面跳转，开始初始化聊天...');
+                (window.AppConfig?.debug?.log || console.log)('Redirected from character selection, initializing chat...');
                 
                 // 钱包已在character-select页面验证，直接显示已登录状态
                 

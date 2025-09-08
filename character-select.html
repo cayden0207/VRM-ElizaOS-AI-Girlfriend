@@ -98,6 +98,8 @@
             z-index: 100;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
             overflow: hidden;
+            transform: scale(1.3);
+            transform-origin: top left;
         }
 
         .character-name {
@@ -187,22 +189,7 @@
             font-size: 8px;
         }
 
-        .refresh-button {
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            width: 16px;
-            height: 16px;
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 9px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-        }
+        /* refresh-button decoration removed */
 
         /* Floating voice selector styles - based on reference screenshot */
         .voice-selector-floating {
@@ -275,6 +262,69 @@
                 opacity: 1;
                 transform: translate(-50%, -50%);
             }
+        }
+
+        /* Mobile optimizations - Iteration 1 */
+        @media (max-width: 768px) {
+            /* Voice selector pinned to bottom-right */
+            .voice-selector-floating {
+                position: fixed;
+                bottom: 96px;
+                right: 16px;
+                left: auto;
+                top: auto;
+                transform: none;
+                padding: 8px 12px;
+                border-radius: 28px;
+            }
+
+            .flag-btn { width: 36px; height: 36px; font-size: 18px; }
+
+            /* Character info panel – scale down and widen */
+            .character-info {
+                position: fixed;
+                top: 12px;
+                left: 12px;
+                width: calc(100vw - 24px);
+                transform: none;
+                border-radius: 12px;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            }
+            .character-name { font-size: 14px; padding: 10px; }
+            .profile-header { font-size: 12px; }
+            .profile-content { padding: 10px; }
+            .profile-row { padding: 6px 0; }
+            .profile-label, .profile-value { font-size: 12px; }
+            .profile-text { font-size: 13px; }
+
+            /* Thumbnails – horizontal scroll on mobile */
+            .character-selector {
+                position: fixed;
+                left: 12px;
+                right: 12px;
+                bottom: 84px;
+                margin: 0;
+                padding: 10px 8px;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                backdrop-filter: blur(12px);
+            }
+            .character-selector .nav-button { display: none; }
+
+            /* Start button – full width CTA */
+            .start-button {
+                position: fixed;
+                left: 16px;
+                right: 16px;
+                bottom: 16px;
+                width: auto;
+                margin: 0;
+            }
+
+            /* Reduce expensive decorative animations on mobile */
+            .chat-user-avatar::before,
+            .halo, .heartBeat, .onlinePulse { animation: none !important; }
         }
 
         /* Central character name display */
@@ -1486,22 +1536,22 @@
             
             <div class="profile-section">
                 <div class="profile-header">
-                    性格/Personality
+                    <span data-i18n="profile.personality">Personality</span>
                 </div>
                 <div class="profile-content">
-                    <div class="profile-text" id="character-personality">
-                        活泼外向，调皮可爱
+                    <div class="profile-text" id="character-personality" data-i18n="status.loading">
+                        Loading...
                     </div>
                 </div>
             </div>
             
             <div class="profile-section">
                 <div class="profile-header">
-                    兴趣/Daily Interests
+                    <span data-i18n="profile.interests">Daily Interests</span>
                 </div>
                 <div class="profile-content">
-                    <div class="profile-text" id="character-interests">
-                        跳舞、唱歌
+                    <div class="profile-text" id="character-interests" data-i18n="status.loading">
+                        Loading...
                     </div>
                 </div>
             </div>
@@ -1513,11 +1563,11 @@
                 <div class="profile-content">
                     <div class="profile-row">
                         <span class="profile-label" data-i18n="profile.likes.label">Likes</span>
-                        <span class="profile-value" id="character-likes">鲜花和彩色甜点</span>
+                        <span class="profile-value" id="character-likes">—</span>
                     </div>
                     <div class="profile-row">
                         <span class="profile-label" data-i18n="profile.dislikes.label">Dislikes</span>
-                        <span class="profile-value" id="character-dislikes">安静和过于严肃的场合</span>
+                        <span class="profile-value" id="character-dislikes">—</span>
                     </div>
                 </div>
             </div>
@@ -1530,28 +1580,27 @@
                 <div class="profile-content">
                     <div class="profile-row">
                         <span class="profile-label" data-i18n="profile.food.label">Food</span>
-                        <span class="profile-value" id="character-food">草莓蛋糕、马卡龙</span>
+                        <span class="profile-value" id="character-food">—</span>
                     </div>
                     <div class="profile-row">
                         <span class="profile-label" data-i18n="profile.music.label">Music</span>
-                        <span class="profile-value" id="character-music">流行舞曲、K-Pop</span>
+                        <span class="profile-value" id="character-music">—</span>
                     </div>
                     <div class="profile-row">
                         <span class="profile-label" data-i18n="profile.movies.label">Movies</span>
-                        <span class="profile-value" id="character-movies">浪漫喜剧</span>
+                        <span class="profile-value" id="character-movies">—</span>
                     </div>
                     <div class="profile-row">
                         <span class="profile-label" data-i18n="profile.games.label">Games</span>
-                        <span class="profile-value" id="character-games">节奏舞蹈游戏</span>
+                        <span class="profile-value" id="character-games">—</span>
                     </div>
                 </div>
             </div>
             
-            <button class="refresh-button">⟲</button>
         </div>
 
         <!-- 中央角色名称 -->
-        <div class="character-display-name" id="character-display-name">芙莉莎</div>
+        <div class="character-display-name" id="character-display-name">Fliza</div>
 
         <!-- 语音选择器 - 浮动控件 -->
         <div class="voice-selector-floating">
@@ -1620,7 +1669,6 @@
                 <div class="wallet-modal-header">
                     <h2>Connect wallet</h2>
                     <p>Get started by connecting your preferred wallet below.</p>
-                    <button class="wallet-close-btn" id="wallet-close-btn">×</button>
                 </div>
                 
                 <div class="wallet-list">
@@ -1883,7 +1931,12 @@
                 traits: ["神秘", "魔法", "幻想", "强大"],
                 emoji: "🔮",
                 level: 30,
-                type: "魔法系"
+                type: "魔法系",
+                voiceId: "c6wjO0u66VyvwAC4UTqx",
+                sampleLines: {
+                    jp: "静かにお茶をすすり、人生の物語を味わおう。",
+                    en: "Sipping tea in silence reveals life's greatest tales."
+                }
             },
             {
                 id: "yuuyii",
@@ -1893,7 +1946,12 @@
                 traits: ["温柔", "可爱", "双子", "甜美"],
                 emoji: "💕",
                 level: 23,
-                type: "双子系"
+                type: "双子系",
+                voiceId: "UPwKM85l2CG7nbF2u1or",
+                sampleLines: {
+                    jp: "泡と笑い—パステルの世界を作ろう！",
+                    en: "Bubbles and giggles—let's craft a world of pastel joy!"
+                }
             },
             {
                 id: "zwei",
@@ -1903,7 +1961,12 @@
                 traits: ["冷酷", "帅气", "战士", "坚强"],
                 emoji: "⚔️",
                 level: 29,
-                type: "战士系"
+                type: "战士系",
+                voiceId: "0EzDWfDZDlAIeQQOjhoC",
+                sampleLines: {
+                    jp: "そばにいて—どんな嵐も守るよ。",
+                    en: "Stand by my side—I'll protect you through every storm."
+                }
             },
             {
                 id: "bobo",
@@ -2084,6 +2147,8 @@
         // 语音播放功能变量 - 提前声明
         let currentAudio = null;
         let currentLanguage = 'jp'; // 默认日语
+        // 基于 character.md 的英文资料缓存（提前声明以避免 TDZ）
+        var englishProfiles = null;
         
         // 后端API配置
         const API_URL = window.AppConfig ? window.AppConfig.getApiUrl() : 'http://localhost:3000';
@@ -2320,8 +2385,8 @@
                     const percent = Math.round(progress.loaded / progress.total * 100);
                 },
                 (error) => {
-                    console.error('❌ VRM加载失败:', error);
-                    // 加载失败时隐藏加载器
+                    console.error('❌ VRM load failed:', error);
+                    // Hide loader on failure
                     hideCharacterLoader();
                     finishLoading(index, loadingStartTime);
                 }
@@ -2459,9 +2524,6 @@
             updateVoiceSelector();
         }
 
-        // 基于 character.md 的英文资料缓存
-        let englishProfiles = null;
-
         // 名称规范化与别名处理（大小写、空格差异）
         function canonicalName(name) {
             if (!name) return '';
@@ -2469,10 +2531,7 @@
             const aliasMap = {
                 'ququ': 'Ququ',
                 'miumiu': 'Miumiu',
-                'miumiu': 'Miumiu',
-                'miu\u00a0miu': 'Miumiu', // 防空格变体
-                'miumiu': 'Miumiu',
-                'yuuyii': 'Yuu Yii',
+                'miu\u00a0miu': 'Miumiu', // 防空格变体（不影响大多数情况）
                 'yuuyii': 'Yuu Yii'
             };
             // 默认首字母大写保持原名；优先别名
@@ -2492,11 +2551,13 @@
                     const rawName = (lines[0] || '').trim();
                     const name = rawName.replace(/\r?$/, '');
                     const get = (label) => {
-                        const re = new RegExp(`^- \*\*${label}\\*\*:\\s*(.+?)\\s*$`, 'i');
-                        const line = lines.find(l => re.test(l));
+                        // 更稳健的解析：不用正则，直接找 “- **Label**:” 前缀
+                        const needle = `- **${label}**:`;
+                        const line = lines.find(l => l.trimStart().startsWith(needle));
                         if (!line) return undefined;
-                        const m = line.match(re);
-                        return m ? m[1].trim() : undefined;
+                        const idx = line.indexOf(':');
+                        if (idx === -1) return undefined;
+                        return line.slice(idx + 1).trim();
                     };
                     const p = {
                         age: get('Age'),
@@ -3102,25 +3163,25 @@
                     };
                     
                     audio.onerror = () => {
-                        console.error('音频播放失败');
+                        console.error('Audio playback failed');
                         currentAudio = null;
                         URL.revokeObjectURL(audioUrl);
                     };
                     
                     await audio.play();
                 } else {
-                    console.error('语音生成失败');
+                    console.error('Voice generation failed');
                 }
             } catch (error) {
-                console.error('❌ ElevenLabs API 调用失败:', error);
-                console.error('🚫 语音播放失败，请检查API密钥和网络连接');
+                console.error('❌ ElevenLabs API request failed:', error);
+                console.error('🚫 Voice playback failed. Check API key and network.');
             }
         }
 
         // 通过后端API生成语音样本
         async function generateElevenLabsVoice(text, voiceId) {
-            console.log(`🔄 正在生成语音样本...`);
-            console.log(`📝 文本: "${text}"`);
+            console.log(`🔄 Generating voice sample...`);
+            console.log(`📝 Text: "${text}"`);
             console.log(`🎤 Voice ID: ${voiceId}`);
             
             try {
@@ -3137,20 +3198,20 @@
                 });
                 
                 if (!response.ok) {
-                    throw new Error(`后端API错误: ${response.status}`);
+                    throw new Error(`Backend API error: ${response.status}`);
                 }
                 
                 // 直接接收音频数据
                 const audioBlob = await response.blob();
-                console.log('🎵 收到音频数据:', audioBlob.size, 'bytes');
+                console.log('🎵 Audio received:', audioBlob.size, 'bytes');
                 
                 // 创建音频URL
                 const audioUrl = URL.createObjectURL(audioBlob);
-                console.log('✅ 语音样本生成成功');
+                console.log('✅ Voice sample generated');
                 return audioUrl;
                 
             } catch (error) {
-                console.error('❌ 语音样本生成失败:', error);
+                console.error('❌ Voice sample generation failed:', error);
                 return null;
             }
         }
@@ -3236,7 +3297,7 @@
             localStorage.setItem('wallet_type', walletInfo.wallet.provider);
             localStorage.setItem('userId', walletInfo.wallet.address); // 使用钱包地址作为用户ID
             
-            console.log('🚀 开始聊天:', selectedCharacter.name, '钱包:', 
+            (window.AppConfig?.debug?.log || console.log)('Start chat with:', selectedCharacter.name, 'Wallet:', 
                        `${walletInfo.wallet.address.slice(0, 6)}...${walletInfo.wallet.address.slice(-4)}`);
             
             // 跳转到聊天界面
@@ -3382,18 +3443,18 @@
                 animationAction.reset().play();
                 animationAction.timeScale = 0.7;
                 
-                console.log('Bashful 动画播放成功');
+                (window.AppConfig?.debug?.log || console.log)('Bashful animation played');
                 return Promise.resolve();
             } catch (error) {
-                console.log('播放默认动画失败:', error);
-                return Promise.resolve(); // 即使失败也要显示VRM
+                (window.AppConfig?.debug?.warn || console.warn)('Default animation failed:', error);
+                return Promise.resolve(); // still resolve to show VRM
             }
         }
 
-        // 调试函数 - 在控制台中可以调用
+        // Debug helper
         window.debugScene = function() {
-            console.log('场景对象:', scene.children);
-            console.log('当前角色索引:', currentCharacterIndex);
+            (window.AppConfig?.debug?.log || console.log)('Scene children count:', scene?.children?.length ?? 0);
+            (window.AppConfig?.debug?.log || console.log)('Current character index:', currentCharacterIndex);
         };
 
         // 语言切换函数 - 全局可访问
@@ -3547,60 +3608,55 @@
                         detail: { address, provider: walletType }
                     }));
                     
-                    console.log('✅ 钱包连接成功:', address);
+                    (window.AppConfig?.debug?.log || console.log)('Wallet connected:', address);
                     
                     // 检查用户是否需要填写资料
                     setTimeout(async () => {
-                        console.log('🔍 开始检查用户资料流程...');
-                        console.log('🔍 检查profile manager状态:', !!window.profileManager);
+                        (window.AppConfig?.debug?.log || console.log)('Start checking user profile flow...');
+                        (window.AppConfig?.debug?.log || console.log)('profileManager exists:', !!window.profileManager);
                         
                         if (window.profileManager) {
                             const userId = `wallet_${address}`;
                             const walletAddress = address;
-                            console.log('👤 用户ID:', userId);
-                            console.log('🏦 钱包地址:', walletAddress);
+                            (window.AppConfig?.debug?.log || console.log)('User ID:', userId);
+                            (window.AppConfig?.debug?.log || console.log)('Wallet:', walletAddress);
                             
                             try {
-                                console.log('🚀 正在从API检查用户资料...');
+                                (window.AppConfig?.debug?.log || console.log)('Checking profile via API...');
                                 const existingProfile = await window.profileManager.checkUserProfile(userId);
-                                console.log('📄 API返回的用户资料:', existingProfile);
+                                (window.AppConfig?.debug?.log || console.log)('Profile returned:', !!existingProfile);
                                 
                                 if (!existingProfile) {
-                                    console.log('📝 新用户：没有找到资料，显示注册面板');
-                                    console.log('📱 即将显示profile panel...');
+                                    (window.AppConfig?.debug?.log || console.log)('New user: show registration panel');
                                     
                                     // 确保面板存在
                                     const profilePanel = document.getElementById('user-profile-overlay');
                                     if (profilePanel) {
-                                        console.log('✅ Profile panel元素找到，显示面板');
+                                        (window.AppConfig?.debug?.log || console.log)('Profile panel element found; showing');
                                         window.profileManager.showProfilePanel();
                                     } else {
-                                        console.error('❌ 找不到user-profile-overlay元素');
+                                        console.error('❌ user-profile-overlay element not found');
                                     }
                                 } else {
-                                    console.log('👤 老用户：找到现有资料，显示欢迎信息');
-                                    console.log('📋 用户资料详情:', {
-                                        nickname: existingProfile.username || existingProfile.nickname,
-                                        location: existingProfile.location,
-                                        created: existingProfile.created_at
-                                    });
+                                    (window.AppConfig?.debug?.log || console.log)('Existing user: show welcome');
+                                    (window.AppConfig?.debug?.log || console.log)('User profile detail logged');
                                     
                                     // 显示用户欢迎信息
                                     window.profileManager.showUserWelcome(existingProfile);
                                 }
                             } catch (error) {
-                                console.error('❌ 检查用户资料失败:', error);
-                                console.log('🔧 出现错误，默认显示注册面板');
+                                console.error('❌ Check user profile failed:', error);
+                                (window.AppConfig?.debug?.log || console.log)('Error occurred; fallback to registration panel');
                                 window.profileManager.showProfilePanel();
                             }
                         } else {
-                            console.error('❌ profileManager未初始化');
-                            console.log('💡 尝试手动初始化profileManager...');
+                            console.error('❌ profileManager not initialized');
+                            (window.AppConfig?.debug?.log || console.log)('Try to initialize profileManager manually');
                             
                             // 尝试手动触发初始化
                             if (typeof UserProfileManager !== 'undefined' || window.UserProfileManager) {
                                 window.profileManager = new (window.UserProfileManager || UserProfileManager)();
-                                console.log('✅ 手动初始化profileManager成功');
+                                (window.AppConfig?.debug?.log || console.log)('profileManager initialized manually');
                                 
                                 // 立即重新执行检查，无需刷新页面
                                 setTimeout(async () => {
@@ -3608,25 +3664,25 @@
                                     try {
                                         const existingProfile = await window.profileManager.checkUserProfile(userId);
                                         if (!existingProfile) {
-                                            console.log('📝 新用户：显示注册面板');
+                                            (window.AppConfig?.debug?.log || console.log)('New user: show registration panel');
                                             window.profileManager.showProfilePanel();
                                         } else {
-                                            console.log('✅ 用户资料已存在，正常流程');
+                                            (window.AppConfig?.debug?.log || console.log)('Existing profile: continue');
                                             window.profileManager.showUserWelcome(existingProfile);
                                         }
                                     } catch (error) {
-                                        console.error('❌ 重新检查失败:', error);
+                                        console.error('❌ Re-check profile failed:', error);
                                         window.profileManager.showProfilePanel();
                                     }
                                 }, 500);
                             } else {
-                                console.error('❌ UserProfileManager类未找到，页面可能未完全加载');
+                                console.error('❌ UserProfileManager class not found; page may not be ready');
                             }
                         }
-                    }, 1500); // 增加延迟确保所有组件加载完成 // 延迟1秒显示资料面板
+                    }, 1500); // ensure all components are ready before showing panel
                 } catch (error) {
-                    console.error('❌ 连接失败:', error);
-                    alert('钱包连接失败: ' + error.message);
+                    console.error('❌ Connection failed:', error);
+                    alert('Wallet connection failed: ' + error.message);
                 } finally {
                     setIsConnecting(false);
                 }
@@ -3653,9 +3709,9 @@
                     // 触发全局事件
                     window.dispatchEvent(new CustomEvent('walletDisconnected'));
                     
-                    console.log('🚪 钱包已断开连接');
+                    (window.AppConfig?.debug?.log || console.log)('Wallet disconnected');
                 } catch (error) {
-                    console.error('断开连接失败:', error);
+                    console.error('Disconnect failed:', error);
                 }
             };
             
@@ -3669,7 +3725,7 @@
                     const balance = await connection.getBalance(publicKey);
                     setBalance(balance / window.solanaWeb3.LAMPORTS_PER_SOL);
                 } catch (error) {
-                    console.error('获取余额失败:', error);
+                    console.error('Failed to get balance:', error);
                 }
             };
             
@@ -3988,8 +4044,27 @@
         }
         
         // 渲染 React 组件
-        const root = ReactDOM.createRoot(document.getElementById('wallet-adapter-root'));
-        root.render(React.createElement(WalletConnector));
+        // Mount React wallet UI safely (after ReactDOM is available)
+        function mountWalletUI() {
+            const container = document.getElementById('wallet-adapter-root');
+            const ReactDOMGlobal = window.ReactDOM || ReactDOM;
+            if (container && ReactDOMGlobal && typeof ReactDOMGlobal.createRoot === 'function') {
+                try {
+                    const root = ReactDOMGlobal.createRoot(container);
+                    root.render(React.createElement(WalletConnector));
+                    return true;
+                } catch (e) {
+                    console.error('Wallet UI mount failed:', e);
+                }
+            }
+            return false;
+        }
+
+        if (!mountWalletUI()) {
+            const onLoad = () => mountWalletUI();
+            window.addEventListener('load', onLoad, { once: true });
+            setTimeout(mountWalletUI, 800);
+        }
         
         // 全局钱包状态管理 (向后兼容)
         let currentWalletState = {
@@ -4024,7 +4099,7 @@
         window.modernWalletUI = window.walletManager; // 向后兼容
         
         // 用户资料管理系统 - 在Babel环境中定义
-        console.log('🚀 开始定义UserProfileManager类...');
+        (window.AppConfig?.debug?.log || console.log)('Start defining UserProfileManager class...');
         class UserProfileManager {
             constructor() {
                 this.currentUserId = null;
@@ -4043,28 +4118,28 @@
                     if (response.ok) {
                         const result = await response.json();
                         if (result.success && result.profile) {
-                            console.log('✅ 从API获取用户资料成功:', result.profile);
+                            (window.AppConfig?.debug?.log || console.log)('Profile fetched from API');
                             return result.profile;
                         }
                     }
                     
                     if (response.status === 404) {
-                        console.log('📝 API确认：用户资料不存在');
+                        (window.AppConfig?.debug?.log || console.log)('No profile found by API');
                         return null;
                     }
                     
-                    console.warn('⚠️ API响应异常，状态码:', response.status);
+                    (window.AppConfig?.debug?.warn || console.warn)('API abnormal response status:', response.status);
                     return null;
                     
                 } catch (error) {
-                    console.error('❌ API请求失败:', error);
+                    console.error('❌ API request failed:', error);
                     return null;
                 }
             }
             
             // 显示用户资料面板
             showProfilePanel(userId = null, existingProfile = null) {
-                console.log('📱 显示用户资料面板');
+                (window.AppConfig?.debug?.log || console.log)('Show user profile panel');
                 const overlay = document.getElementById('user-profile-overlay');
                 if (overlay) {
                     // 如果是编辑模式，填充现有数据
@@ -4081,9 +4156,9 @@
                     }
                     
                     overlay.style.display = 'flex';
-                    console.log('✅ 资料面板已显示');
+                    (window.AppConfig?.debug?.log || console.log)('Profile panel shown');
                 } else {
-                    console.error('❌ 找不到user-profile-overlay元素');
+                    console.error('❌ user-profile-overlay element not found');
                 }
             }
             
@@ -4117,20 +4192,20 @@
             
             // 显示用户欢迎信息
             showUserWelcome(profile) {
-                console.log('👋 显示用户欢迎信息:', profile);
+                (window.AppConfig?.debug?.log || console.log)('Show user welcome');
                 // 这里可以添加欢迎信息显示逻辑
             }
         }
 
         // 确保UserProfileManager类可全局访问
-        console.log('📤 设置全局UserProfileManager...');
+        (window.AppConfig?.debug?.log || console.log)('Expose UserProfileManager globally');
         window.UserProfileManager = UserProfileManager;
         
         // 立即初始化ProfileManager以确保在钱包连接时可用
-        console.log('🏗️ 创建profileManager实例...');
+        (window.AppConfig?.debug?.log || console.log)('Create profileManager instance...');
         const profileManager = new UserProfileManager();
         window.profileManager = profileManager;
-        console.log('✅ ProfileManager已初始化');
+        (window.AppConfig?.debug?.log || console.log)('ProfileManager initialized');
         
     </script>
                 // 连接按钮点击
@@ -4211,7 +4286,7 @@
 
             async connectWallet(walletName) {
                 try {
-                    console.log(`🔗 连接钱包: ${walletName}`);
+                    (window.AppConfig?.debug?.log || console.log)(`Connect wallet: ${walletName}`);
                     
                     // 查找钱包配置
                     const walletConfig = this.wallets.find(w => w.name.toLowerCase() === walletName.toLowerCase());
@@ -4253,7 +4328,7 @@
                     localStorage.setItem('wallet_address', address);
                     localStorage.setItem('wallet_type', walletName.toLowerCase());
                     
-                    console.log(`✅ ${walletName} 连接成功:`, address);
+                    (window.AppConfig?.debug?.log || console.log)(`Wallet connected: ${walletName}`, address);
                     
                     // 更新UI
                     this.updateUI();
@@ -4266,7 +4341,7 @@
                     }));
                     
                 } catch (error) {
-                    console.error('❌ 钱包连接失败:', error);
+                    console.error('❌ Wallet connection failed:', error);
                     this.updateConnectButton(false);
                     this.showToast(`连接失败: ${error.message}`, 'error');
                 }
@@ -4274,7 +4349,7 @@
 
             async disconnect() {
                 try {
-                    console.log('🚪 断开钱包连接...');
+                    (window.AppConfig?.debug?.log || console.log)('Disconnect wallet...');
 
                     if (this.selectedWallet?.adapter?.disconnect) {
                         await this.selectedWallet.adapter.disconnect();
@@ -4298,7 +4373,7 @@
                     window.dispatchEvent(new CustomEvent('walletDisconnected'));
 
                 } catch (error) {
-                    console.error('❌ 断开连接失败:', error);
+                    console.error('❌ Disconnect failed:', error);
                     // 强制清理状态
                     this.selectedWallet = null;
                     this.isConnected = false;
@@ -4312,7 +4387,7 @@
                 const savedType = localStorage.getItem('wallet_type');
                 
                 if (savedAddress && savedType) {
-                    console.log('🔍 检查已保存的钱包连接...');
+                    (window.AppConfig?.debug?.log || console.log)('Check saved wallet connection...');
                     
                     const walletConfig = this.wallets.find(w => w.name.toLowerCase() === savedType.toLowerCase());
                     if (walletConfig) {
@@ -4326,7 +4401,7 @@
                             };
                             this.isConnected = true;
                             this.updateUI();
-                            console.log('✅ 自动重连成功:', savedAddress);
+                            (window.AppConfig?.debug?.log || console.log)('Auto reconnected:', savedAddress);
                         }
                     }
                 }
@@ -4427,7 +4502,7 @@
         }
 
         // 用户资料管理系统 - 移到这里确保在钱包初始化之前定义
-        console.log('🚀 开始定义UserProfileManager类...');
+        (window.AppConfig?.debug?.log || console.log)('Start defining UserProfileManager class...');
         class UserProfileManager {
             constructor() {
                 this.currentUserId = null;
@@ -4446,28 +4521,28 @@
                     if (response.ok) {
                         const result = await response.json();
                         if (result.success && result.profile) {
-                            console.log('✅ 从API获取用户资料成功:', result.profile);
+                            (window.AppConfig?.debug?.log || console.log)('Profile fetched from API');
                             return result.profile;
                         }
                     }
                     
                     if (response.status === 404) {
-                        console.log('📝 API确认：用户资料不存在');
+                        (window.AppConfig?.debug?.log || console.log)('No profile found by API');
                         return null;
                     }
                     
-                    console.warn('⚠️ API响应异常，状态码:', response.status);
+                    (window.AppConfig?.debug?.warn || console.warn)('API abnormal response status:', response.status);
                     return null;
                     
                 } catch (error) {
-                    console.error('❌ API请求失败:', error);
+                    console.error('❌ API request failed:', error);
                     return null;
                 }
             }
             
             // 显示用户资料面板
             showProfilePanel(userId = null, existingProfile = null) {
-                console.log('📱 显示用户资料面板');
+                (window.AppConfig?.debug?.log || console.log)('Show user profile panel');
                 const overlay = document.getElementById('user-profile-overlay');
                 if (overlay) {
                     // 如果是编辑模式，填充现有数据
@@ -4484,9 +4559,9 @@
                     }
                     
                     overlay.style.display = 'flex';
-                    console.log('✅ 资料面板已显示');
+                    (window.AppConfig?.debug?.log || console.log)('Profile panel shown');
                 } else {
-                    console.error('❌ 找不到user-profile-overlay元素');
+                    console.error('❌ user-profile-overlay element not found');
                 }
             }
             
@@ -4520,20 +4595,20 @@
             
             // 显示用户欢迎信息
             showUserWelcome(profile) {
-                console.log('👋 显示用户欢迎信息:', profile);
+                (window.AppConfig?.debug?.log || console.log)('Show user welcome');
                 // 这里可以添加欢迎信息显示逻辑
             }
         }
 
         // 确保UserProfileManager类可全局访问
-        console.log('📤 设置全局UserProfileManager...');
+        (window.AppConfig?.debug?.log || console.log)('Expose UserProfileManager globally');
         window.UserProfileManager = UserProfileManager;
         
         // 立即初始化ProfileManager以确保在钱包连接时可用
-        console.log('🏗️ 创建profileManager实例...');
+        (window.AppConfig?.debug?.log || console.log)('Create profileManager instance...');
         const profileManager = new UserProfileManager();
         window.profileManager = profileManager;
-        console.log('✅ ProfileManager已初始化');
+        (window.AppConfig?.debug?.log || console.log)('ProfileManager initialized');
 
         // 初始化钱包管理器
         let walletManager;
@@ -4575,17 +4650,17 @@
                     if (response.ok) {
                         const result = await response.json();
                         const profile = result.profile;
-                        console.log('✅ 从数据库获取用户资料:', profile.username || profile.nickname || '未知');
+                        (window.AppConfig?.debug?.log || console.log)('Profile from DB exists');
                         return profile;
                     } else if (response.status === 404) {
-                        console.log('ℹ️ 用户资料不存在，需要注册');
+                        (window.AppConfig?.debug?.log || console.log)('Profile not found, need registration');
                         return null;
                     } else {
-                        console.error('❌ API获取用户资料失败:', response.status);
+                        console.error('❌ Failed to fetch profile:', response.status);
                         return null;
                     }
                 } catch (error) {
-                    console.error('❌ API请求失败:', error.message);
+                    console.error('❌ API request failed:', error.message);
                     // 生产环境：API失败应该提示用户重试
                     alert('网络连接失败，请检查网络后刷新页面');
                     return null;
@@ -4612,8 +4687,8 @@
                 try {
                     // 发送到后端API
                     const apiUrl = window.AppConfig ? window.AppConfig.getApiUrl() : 'http://localhost:3000';
-                    console.log('🌐 发送API请求到:', `${apiUrl}/api/profiles`);
-                    console.log('📊 发送数据:', apiData);
+                    (window.AppConfig?.debug?.log || console.log)('POST API:', `${apiUrl}/api/profiles`);
+                    (window.AppConfig?.debug?.log || console.log)('Payload prepared');
                     
                     const response = await fetch(`${apiUrl}/api/profiles`, {
                         method: 'POST',
@@ -4623,23 +4698,23 @@
                         body: JSON.stringify(apiData)
                     });
                     
-                    console.log('📈 API响应状态:', response.status);
+                    (window.AppConfig?.debug?.log || console.log)('API response status:', response.status);
                     
                     if (response.ok) {
                         const result = await response.json();
                         const savedProfile = result.profile;
-                        console.log('✅ 用户资料已保存到数据库:', savedProfile.username || savedProfile.nickname || '未知');
+                        (window.AppConfig?.debug?.log || console.log)('Profile saved to DB');
                         return savedProfile;
                     } else if (response.status === 409) {
                         // 用户已存在，尝试更新
-                        console.log('🔄 用户已存在，尝试更新资料');
+                        (window.AppConfig?.debug?.log || console.log)('User exists, trying update');
                         return await this.updateUserProfile(userId, profileData);
                     } else {
                         const errorData = await response.json();
                         throw new Error(errorData.message || `API保存失败: ${response.status}`);
                     }
                 } catch (error) {
-                    console.error('❌ 保存用户资料失败:', error.message);
+                    console.error('❌ Save profile failed:', error.message);
                     // 生产环境：显示用户友好的错误提示
                     alert('保存失败，请检查网络连接后重试');
                     throw error; // 向上抛出错误，让调用者处理
@@ -4663,14 +4738,14 @@
                     });
                     
                     if (response.ok) {
-                        console.log('✅ 用户资料已从数据库删除');
+                        (window.AppConfig?.debug?.log || console.log)('Profile deleted');
                         return true;
                     } else {
-                        console.error('❌ 删除失败:', response.status);
+                        console.error('❌ Delete failed:', response.status);
                         return false;
                     }
                 } catch (error) {
-                    console.error('❌ API删除失败:', error.message);
+                    console.error('❌ API delete failed:', error.message);
                     alert('删除失败，请检查网络连接后重试');
                     return false;
                 }
@@ -4692,14 +4767,14 @@
                     
                     if (response.ok) {
                         const result = await response.json();
-                        console.log('✅ 用户资料已更新');
+                        (window.AppConfig?.debug?.log || console.log)('Profile updated');
                         return result.profile;
                     } else {
-                        console.error('❌ 更新失败:', response.status);
+                        console.error('❌ Update failed:', response.status);
                         return null;
                     }
                 } catch (error) {
-                    console.error('❌ API更新失败:', error.message);
+                    console.error('❌ API update failed:', error.message);
                     alert('更新失败，请检查网络连接后重试');
                     return null;
                 }
@@ -4716,11 +4791,11 @@
                         const result = await response.json();
                         return result.profiles || [];
                     } else {
-                        console.error('❌ 获取所有用户失败:', response.status);
+                        console.error('❌ Get all users failed:', response.status);
                         return [];
                     }
                 } catch (error) {
-                    console.error('❌ API请求失败:', error.message);
+                    console.error('❌ API request failed:', error.message);
                     return [];
                 }
             }
@@ -4747,7 +4822,7 @@
                         this.initDateSelectors();
                     }, 100);
                     overlay.style.display = 'flex';
-                    console.log('📝 显示用户资料注册面板');
+                    (window.AppConfig?.debug?.log || console.log)('Show user registration panel');
                 }
             }
             
@@ -4880,49 +4955,8 @@
             
             // 显示用户欢迎信息
             showUserWelcome(profile) {
-                // 创建临时欢迎消息
-                const welcomeDiv = document.createElement('div');
-                welcomeDiv.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white;
-                    padding: 15px 20px;
-                    border-radius: 10px;
-                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-                    z-index: 10000;
-                    font-family: 'Microsoft YaHei', sans-serif;
-                    max-width: 300px;
-                    animation: slideInRight 0.5s ease;
-                `;
-                
-                welcomeDiv.innerHTML = `
-                    <div style="font-weight: bold; margin-bottom: 8px;">🎉 欢迎回来!</div>
-                    <div style="font-size: 14px; opacity: 0.9;">
-                        你好, ${profile.nickname || '用户'}! 进入AI女友世界
-                    </div>
-                    <button onclick="this.parentElement.remove()" style="
-                        position: absolute;
-                        top: 5px;
-                        right: 8px;
-                        background: none;
-                        border: none;
-                        color: white;
-                        cursor: pointer;
-                        font-size: 18px;
-                        opacity: 0.7;
-                    ">×</button>
-                `;
-                
-                document.body.appendChild(welcomeDiv);
-                
-                // 3秒后自动消失
-                setTimeout(() => {
-                    if (welcomeDiv.parentElement) {
-                        welcomeDiv.remove();
-                    }
-                }, 3000);
+                // No UI toast in production; keep debug log only
+                (window.AppConfig?.debug?.log || console.log)('User welcome:', !!profile);
             }
         }
         
@@ -4932,14 +4966,14 @@
         // 立即初始化ProfileManager以确保在钱包连接时可用
         const profileManager = new UserProfileManager();
         window.profileManager = profileManager;
-        console.log('✅ ProfileManager已初始化');
+        (window.AppConfig?.debug?.log || console.log)('ProfileManager initialized');
         
         // 提交用户资料表单
         async function submitProfile(event) {
             try {
-                console.log('🔄 表单提交开始');
+                (window.AppConfig?.debug?.log || console.log)('Form submit start');
                 event.preventDefault();
-                console.log('✅ 阻止了默认表单提交行为');
+                (window.AppConfig?.debug?.log || console.log)('Default submit prevented');
                 
                 const formData = {
                 username: document.getElementById('username').value.trim(),
@@ -4957,7 +4991,7 @@
                 }
             };
             
-            console.log('📊 收集到的表单数据:', formData);
+            (window.AppConfig?.debug?.log || console.log)('Form data collected');
             
             // 验证必填字段
             const requiredFields = {
@@ -4972,7 +5006,7 @@
             
             const missingFields = Object.entries(requiredFields).filter(([key, value]) => !value).map(([key]) => key);
             if (missingFields.length > 0) {
-                console.error('❌ 缺少必填字段:', missingFields);
+                console.error('❌ Missing required fields:', missingFields);
                 alert(`请填写所有必填信息！缺少: ${missingFields.join(', ')}`);
                 return;
             }
@@ -4997,20 +5031,20 @@
                     bio: `喜欢的食物: ${formData.memory.favoriteFood}, 喜欢的颜色: ${formData.memory.favoriteColor}`
                 };
                 
-                console.log('📝 准备保存用户资料:', apiFormData);
+                (window.AppConfig?.debug?.log || console.log)('Prepare to save user profile');
                 
                 // 保存到数据库
                 try {
                     await profileManager.saveUserProfile(userId, apiFormData);
-                    console.log('✅ 用户资料保存成功，隐藏面板');
+                    (window.AppConfig?.debug?.log || console.log)('User profile saved; hide panel');
                     profileManager.hideProfilePanel();
                 } catch (error) {
-                    console.error('❌ 保存用户资料失败:', error);
+                    console.error('❌ Save user profile failed:', error);
                     alert('保存用户资料失败，请重试');
                     return;
                 }
                 
-                console.log('✅ 用户资料提交完成，准备选择角色');
+                (window.AppConfig?.debug?.log || console.log)('User profile submitted; ready to select character');
                 
                 // 显示提示消息
                 const successMsg = document.createElement('div');
@@ -5034,10 +5068,10 @@
                 }, 3000);
                 
             } else {
-                console.error('❌ 无法获取钱包地址，无法保存资料');
+                console.error('❌ Wallet address missing; cannot save profile');
             }
             } catch (error) {
-                console.error('❌ 表单提交过程中发生错误:', error);
+                console.error('❌ Error during form submit:', error);
                 alert(i18n.t('error.save') + ': ' + error.message);
             }
         }
@@ -5049,33 +5083,33 @@
         
         // 测试函数 - 强制显示profile panel
         window.testShowProfilePanel = function() {
-            console.log('🧪 测试显示profile panel');
+            (window.AppConfig?.debug?.log || console.log)('Test: show profile panel');
             if (window.profileManager) {
-                console.log('✅ profileManager存在，显示面板');
+                (window.AppConfig?.debug?.log || console.log)('profileManager exists; show panel');
                 window.profileManager.showProfilePanel();
             } else {
-                console.error('❌ profileManager不存在');
+                console.error('❌ profileManager does not exist');
             }
         };
         
         // 新增：测试新用户流程
         window.testNewUserFlow = function() {
-            console.log('🧪 模拟新用户流程');
+            (window.AppConfig?.debug?.log || console.log)('Test: simulate new user flow');
             const testAddress = 'TEST_NEW_USER_' + Date.now();
-            console.log('🔄 使用测试地址:', testAddress);
+            (window.AppConfig?.debug?.log || console.log)('Use test address:', testAddress);
             
             setTimeout(async () => {
                 if (window.profileManager) {
                     const userId = `wallet_${testAddress}`;
                     try {
                         const profile = await window.profileManager.checkUserProfile(userId);
-                        console.log('📄 检查结果:', profile);
+                        (window.AppConfig?.debug?.log || console.log)('Check result:', !!profile);
                         if (!profile) {
-                            console.log('📝 新用户确认，显示面板');
+                            (window.AppConfig?.debug?.log || console.log)('New user confirmed; show panel');
                             window.profileManager.showProfilePanel();
                         }
                     } catch (error) {
-                        console.log('❌ API错误，显示面板');
+                        (window.AppConfig?.debug?.log || console.log)('API error; show panel');
                         window.profileManager.showProfilePanel();
                     }
                 }
@@ -5091,22 +5125,22 @@
             const walletAddress = localStorage.getItem('wallet_address');
             if (walletAddress) {
                 const userId = `wallet_${walletAddress}`;
-                console.log('🧹 正在从数据库清除用户资料:', userId);
+                (window.AppConfig?.debug?.log || console.log)('Clearing user profile from DB:', userId);
                 
                 // 纯API删除，不再使用localStorage
                 if (window.profileManager) {
                     const success = await window.profileManager.deleteUserProfile(userId);
                     if (success) {
-                        console.log('✅ 用户资料已从数据库删除，刷新页面查看效果');
+                        (window.AppConfig?.debug?.log || console.log)('User profile deleted; refresh to see effect');
                         location.reload();
                     } else {
-                        console.log('⚠️ 删除失败，可能用户不存在');
+                        (window.AppConfig?.debug?.warn || console.warn)('Delete failed; user may not exist');
                     }
                 } else {
-                    console.error('❌ profileManager未初始化');
+                    console.error('❌ profileManager not initialized');
                 }
             } else {
-                console.log('⚠️ 未连接钱包，无需清除');
+                (window.AppConfig?.debug?.log || console.log)('No wallet connected; skip clear');
             }
         };
         
@@ -5116,13 +5150,13 @@
             profiles.forEach(({userId}) => {
                 window.profileManager.deleteUserProfile(userId);
             });
-            console.log(`✅ 已清除 ${profiles.length} 个用户资料`);
+            (window.AppConfig?.debug?.log || console.log)(`Cleared ${profiles.length} user profiles`);
         };
         
         // 查看所有用户资料
         window.showAllProfiles = function() {
             const profiles = window.profileManager.getAllUserProfiles();
-            console.log(`📋 总共有 ${profiles.length} 个用户资料:`);
+            (window.AppConfig?.debug?.log || console.log)(`Total profiles: ${profiles.length}`);
             profiles.forEach(({userId, profile}) => {
                 console.log(`👤 ${userId}:`, profile);
             });
@@ -5137,13 +5171,13 @@
                 const profile = window.profileManager.getUserProfile(userId);
                 if (profile) {
                     window.profileManager.showProfilePanel(userId, profile);
-                    console.log('📝 正在编辑用户资料');
+                    (window.AppConfig?.debug?.log || console.log)('Editing user profile');
                 } else {
-                    console.log('⚠️ 未找到用户资料，显示新用户注册面板');
+                    (window.AppConfig?.debug?.log || console.log)('Profile not found; show registration');
                     window.profileManager.showProfilePanel();
                 }
             } else {
-                console.log('⚠️ 未连接钱包');
+                (window.AppConfig?.debug?.warn || console.warn)('Wallet not connected');
             }
         };
         
@@ -5153,10 +5187,10 @@
             if (walletAddress) {
                 const userId = `wallet_${walletAddress}`;
                 const profile = window.profileManager.getUserProfile(userId);
-                console.log('👤 当前用户资料:', profile);
+                (window.AppConfig?.debug?.log || console.log)('Current user profile available');
                 return profile;
             } else {
-                console.log('⚠️ 未连接钱包');
+                (window.AppConfig?.debug?.warn || console.warn)('Wallet not connected');
                 return null;
             }
         };
@@ -5355,7 +5389,7 @@
 // 直接在这里实现完整的表单提交逻辑
 window.handleProfileSubmit = async function(event) {
     try {
-        console.log('🔄 表单提交开始');
+        (window.AppConfig?.debug?.log || console.log)('Form submit start');
         if (event) {
             event.preventDefault();
             event.stopPropagation();
@@ -5377,7 +5411,7 @@ window.handleProfileSubmit = async function(event) {
             }
         };
         
-        console.log('📊 收集到的表单数据:', formData);
+        (window.AppConfig?.debug?.log || console.log)('Form data collected');
         
         // 验证必填字段
         const requiredFields = {
@@ -5392,7 +5426,7 @@ window.handleProfileSubmit = async function(event) {
         
         const missingFields = Object.entries(requiredFields).filter(([key, value]) => !value).map(([key]) => key);
         if (missingFields.length > 0) {
-            console.error('❌ 缺少必填字段:', missingFields);
+            console.error('❌ Missing required fields:', missingFields);
             alert(`请填写所有必填信息！缺少: ${missingFields.join(', ')}`);
             return;
         }
@@ -5417,13 +5451,13 @@ window.handleProfileSubmit = async function(event) {
                 bio: `喜欢的食物: ${formData.memory.favoriteFood}, 喜欢的颜色: ${formData.memory.favoriteColor}`
             };
             
-            console.log('📝 准备保存用户资料:', apiFormData);
+            (window.AppConfig?.debug?.log || console.log)('Prepare to save user profile');
             
             // 发送到后端API
             try {
                 const apiUrl = window.AppConfig ? window.AppConfig.getApiUrl() : 'http://localhost:3000';
-                console.log('🌐 发送API请求到:', `${apiUrl}/api/profiles`);
-                console.log('📊 发送数据:', apiFormData);
+                (window.AppConfig?.debug?.log || console.log)('POST API:', `${apiUrl}/api/profiles`);
+                (window.AppConfig?.debug?.log || console.log)('Payload prepared');
                 
                 const response = await fetch(`${apiUrl}/api/profiles`, {
                     method: 'POST',
@@ -5436,11 +5470,11 @@ window.handleProfileSubmit = async function(event) {
                     })
                 });
                 
-                console.log('📈 API响应状态:', response.status);
+                (window.AppConfig?.debug?.log || console.log)('API response status:', response.status);
                 
                 if (response.ok) {
                     const result = await response.json();
-                    console.log('✅ 用户资料保存成功');
+                    (window.AppConfig?.debug?.log || console.log)('User profile saved');
                     
                     // 隐藏面板
                     const overlay = document.getElementById('user-profile-overlay');
@@ -5474,15 +5508,15 @@ window.handleProfileSubmit = async function(event) {
                     throw new Error(errorData.message || `API保存失败: ${response.status}`);
                 }
             } catch (error) {
-                console.error('❌ 保存用户资料失败:', error);
+                console.error('❌ Save user profile failed:', error);
                 alert('保存用户资料失败，请重试: ' + error.message);
             }
         } else {
-            console.error('❌ 无法获取钱包地址，无法保存资料');
+            console.error('❌ Wallet address missing; cannot save profile');
             alert('无法获取钱包地址，请重新连接钱包');
         }
     } catch (error) {
-        console.error('❌ 表单提交过程中发生错误:', error);
+        console.error('❌ Error during form submit:', error);
         alert('提交失败：' + error.message);
     }
 };

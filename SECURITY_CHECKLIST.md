@@ -1,148 +1,147 @@
-# 🔒 安全与优化清单
+# 🔒 Security & Optimization Checklist
 
-## ✅ 已完成的安全改进
+## ✅ Completed Hardening
 
-### API安全
-- [x] OpenAI API密钥迁移到后端
-- [x] ElevenLabs API密钥迁移到后端  
-- [x] 实施API速率限制
-- [x] 环境变量管理规范化
+### API Security
+- [x] Move OpenAI API key to backend
+- [x] Move ElevenLabs API key to backend  
+- [x] Add API rate limiting
+- [x] Standardize env var management
 
-### 配置安全
-- [x] 移除前端Supabase密钥暴露
-- [x] 自动环境检测
-- [x] 生产环境配置优化
-- [x] Vercel函数超时增加到25秒
+### Configuration Safety
+- [x] Remove Supabase keys from frontend
+- [x] Auto environment detection
+- [x] Production config optimization
+- [x] Increase Vercel function timeout to 25s
 
-### CORS安全
-- [x] 生产环境域名限制
-- [x] 请求体大小限制
-
----
-
-## ⚠️ 待优化项目
-
-### 高优先级 (部署前必须修复)
-
-1. **钱包签名验证** 
-   - 文件：`config.js:39`
-   - 问题：生产环境应启用钱包签名验证
-   - 修复：设置 `requireWalletSignature: true`
-
-2. **环境变量配置**
-   - 在Vercel中添加：`FRONTEND_URL=https://your-domain.vercel.app`
-
-### 中等优先级 (建议近期优化)
-
-3. **内存管理优化**
-   - 文件：`backend/server.js:353`
-   - 问题：聊天历史无限增长可能导致内存溢出
-   - 建议：实施LRU缓存或定期清理
-
-4. **错误处理改进**
-   - 添加全局错误处理中间件
-   - 统一错误响应格式
-   - 添加错误日志记录
-
-5. **性能优化**
-   - API响应缓存
-   - 用户资料缓存
-   - 数据库连接池
-
-### 低优先级 (长期优化)
-
-6. **监控和日志**
-   - 集成Vercel Analytics
-   - API性能监控
-   - 错误追踪系统
-
-7. **用户体验**
-   - 离线模式支持
-   - 更好的加载状态
-   - 错误重试机制
+### CORS
+- [x] Restrict to production domains
+- [x] Request body size limit
 
 ---
 
-## 🚀 部署前检查清单
+## ⚠️ To Improve
 
-### Vercel环境变量
-- [ ] `OPENAI_API_KEY` - OpenAI密钥
-- [ ] `ELEVENLABS_API_KEY` - ElevenLabs密钥（可选）
-- [ ] `SUPABASE_URL` - Supabase URL
-- [ ] `SUPABASE_ANON_KEY` - Supabase密钥
-- [ ] `FRONTEND_URL` - 前端域名（用于CORS）
+### High Priority (before go‑live)
+
+1. **Wallet signature verification** 
+   - File: `config.js:39`
+   - Issue: Enable signature verification in production
+   - Fix: Set `requireWalletSignature: true`
+
+2. **Env configuration**
+   - Add in Vercel: `FRONTEND_URL=https://your-domain.vercel.app`
+
+### Medium Priority (near term)
+
+3. **Memory management**
+   - Problem: Unbounded chat history can leak memory
+   - Suggestion: LRU cache or periodic cleanup
+
+4. **Error handling**
+   - Global error middleware
+   - Unified error response format
+   - Centralized error logging
+
+5. **Performance**
+   - API response cache
+   - Profile cache
+   - DB connection pooling
+
+### Low Priority (long term)
+
+6. **Monitoring & logging**
+   - Vercel Analytics
+   - API performance metrics
+   - Error tracking (Sentry, etc.)
+
+7. **User Experience**
+   - Offline support
+   - Better loading states
+   - Error retry strategy
+
+---
+
+## 🚀 Pre‑deployment Checklist
+
+### Vercel Environment Variables
+- [ ] `OPENAI_API_KEY`
+- [ ] `ELEVENLABS_API_KEY` (optional)
+- [ ] `SUPABASE_URL`
+- [ ] `SUPABASE_ANON_KEY`
+- [ ] `FRONTEND_URL` (for CORS)
 - [ ] `NODE_ENV=production`
 
-### 功能测试
-- [ ] 用户注册/登录流程
-- [ ] AI聊天功能
-- [ ] 语音播放功能
-- [ ] 钱包连接功能
-- [ ] 用户资料管理
-- [ ] API速率限制测试
+### Functional Tests
+- [ ] Registration / login flow
+- [ ] AI chat
+- [ ] Voice playback
+- [ ] Wallet connection
+- [ ] Profile management
+- [ ] Rate‑limit behavior
 
-### 性能测试
-- [ ] API响应时间 < 3秒
-- [ ] 首屏加载时间 < 2秒
-- [ ] 内存使用监控
-- [ ] 并发用户测试
-
----
-
-## 📊 推荐的监控指标
-
-### 业务指标
-- 日活跃用户数
-- 聊天消息数量
-- API调用成功率
-- 用户留存率
-
-### 技术指标  
-- API响应时间
-- 错误率
-- Vercel函数执行时间
-- 数据库查询性能
-
-### 成本指标
-- OpenAI API使用量
-- ElevenLabs API使用量
-- Vercel函数执行时间
-- 数据库存储使用量
+### Performance Tests
+- [ ] API p95 < 3s
+- [ ] First paint < 2s
+- [ ] Memory usage monitored
+- [ ] Concurrency test
 
 ---
 
-## 🛡️ 安全最佳实践
+## 📊 Recommended Metrics
 
-1. **定期密钥轮换**
-   - 每月轮换API密钥
-   - 使用强随机密钥
+### Business
+- DAU
+- Chat messages volume
+- API success rate
+- Retention
 
-2. **访问控制**
-   - 实施IP白名单（如需要）
-   - 用户级别的速率限制
+### Technical  
+- API latency
+- Error rate
+- Vercel function duration
+- DB query performance
 
-3. **数据保护**
-   - 敏感信息加密存储
-   - 遵循GDPR/数据保护法规
-
-4. **安全更新**
-   - 定期更新依赖包
-   - 监控安全漏洞
+### Cost
+- OpenAI usage
+- ElevenLabs usage
+- Vercel function time
+- DB storage
 
 ---
 
-## 📈 扩展性考虑
+## 🛡️ Best Practices
 
-### 数据存储
-- 考虑使用Redis缓存热数据
-- 聊天历史可考虑迁移到专用数据库
+1. **Key rotation**
+   - Rotate monthly
+   - Use strong randomness
 
-### API架构  
-- 考虑实施GraphQL
-- API版本管理
-- 微服务架构迁移（如需要）
+2. **Access control**
+   - IP allow‑list (if applicable)
+   - User‑level rate limiting
 
-### 用户管理
-- 多租户支持
-- 权限系统
-- 订阅和计费系统
+3. **Data protection**
+   - Encrypt sensitive data at rest
+   - GDPR / data‑privacy compliance
+
+4. **Security updates**
+   - Regular dependency updates
+   - Track advisories / CVEs
+
+---
+
+## 📈 Scalability
+
+### Data
+- Redis cache for hot data
+- Consider dedicated store for chat history
+
+### API  
+- Consider GraphQL
+- API versioning
+- Microservices (if needed)
+
+### Users
+- Multi‑tenant support
+- Permission model
+- Subscriptions & billing

@@ -1,7 +1,7 @@
 /**
- * ElizaOS AI女友聊天系统 V3.0
- * 完整集成ElizaOS AgentRuntime
- * 具备记忆、上下文、关系进展系统
+ * ElizaOS AI Girlfriend Chat System V3.0
+ * Full integration with ElizaOS AgentRuntime
+ * Includes memory, context, and relationship progression system
  */
 
 class ElizaOSChatSystem {
@@ -14,71 +14,71 @@ class ElizaOSChatSystem {
         this.isLoading = false;
         this.conversationContext = [];
         
-        // ElizaOS特有功能
+        // ElizaOS specific indicators
         this.memoryIndicator = null;
         this.relationshipIndicator = null;
         
-        // 🎵 语音存储系统
+        // 🎵 Voice storage
         this.voiceStorage = new Map();
         
         this.initializeSystem();
     }
     
     getAPIBaseURL() {
-        // 如果是本地开发环境
+        // Local development environment
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
             return 'http://localhost:3000';
         }
         
-        // 生产环境：直接使用当前域名（单体应用）
+        // Production: use same origin
         return window.location.origin;
     }
     
     async initializeSystem() {
-        console.log('🤖 ' + (window.i18n ? window.i18n.t('eliza.initializing') : '初始化ElizaOS聊天系统...'));
+        console.log('🤖 ' + (window.i18n ? window.i18n.t('eliza.initializing') : 'Initializing ElizaOS chat system...'));
         
         try {
-            // 检查ElizaOS API健康状态
+            // Check ElizaOS API health
             await this.checkElizaOSHealth();
             
-            // 初始化用户认证
+            // Initialize auth
             await this.initializeAuth();
             
-            // 设置UI组件
+            // Setup UI
             this.setupElizaOSUI();
             
-            // 设置事件监听器
+            // Setup event listeners
             this.setupEventListeners();
             
-            console.log('✅ ' + (window.i18n ? window.i18n.t('eliza.init.complete') : 'ElizaOS聊天系统初始化完成'));
+            console.log('✅ ' + (window.i18n ? window.i18n.t('eliza.init.complete') : 'ElizaOS chat system initialized'));
         } catch (error) {
-            console.error('❌ ' + (window.i18n ? window.i18n.t('eliza.init.failed') : 'ElizaOS系统初始化失败') + ':', error);
-            // 静默处理初始化失败，系统会自动使用后备模式
+            console.error('❌ ' + (window.i18n ? window.i18n.t('eliza.init.failed') : 'ElizaOS initialization failed') + ':', error);
+            // Silent fallback on initialization error
         }
     }
     
     async checkElizaOSHealth() {
         try {
             const response = await fetch(`${this.apiBaseURL}/api/health`);
-            if (!response.ok) throw new Error(window.i18n ? window.i18n.t('eliza.connection.failed') : 'ElizaOS API连接失败');
+            if (!response.ok) throw new Error(window.i18n ? window.i18n.t('eliza.connection.failed') : 'Failed to connect ElizaOS API');
             
             const data = await response.json();
-            console.log('🔗 ' + (window.i18n ? window.i18n.t('eliza.connection.normal') : 'ElizaOS连接正常') + ':', data);
+            console.log('🔗 ' + (window.i18n ? window.i18n.t('eliza.connection.normal') : 'ElizaOS connected') + ':', data);
             
-            // 显示系统状态
+            // Show system status
             if (data.agents) {
-                console.log(`🤖 可用Agent: ${data.agents.loaded}, 活跃: ${data.agents.active}`);
+                console.log(`🤖 Agents loaded: ${data.agents.loaded}, active: ${data.agents.active}`);
             }
             
             return true;
         } catch (error) {
-            console.warn('⚠️ ElizaOS连接失败:', error);
+            console.warn('⚠️ ElizaOS connection failed:', error);
             throw error;
         }
     }
     
     async initializeAuth() {
-        // 检查localStorage中的认证信息
+        // Check localStorage auth info
         const walletAddress = localStorage.getItem('wallet_address') || localStorage.getItem('walletAddress');
         const selectedCharacterData = localStorage.getItem('selectedCharacter');
         
@@ -86,7 +86,7 @@ class ElizaOSChatSystem {
             (window.AppConfig?.debug?.log || console.log)('🔑 Restoring auth session:', walletAddress.slice(0, 8) + '...');
             
             try {
-                // 向ElizaOS后端验证/注册用户
+                // Authenticate/register user with backend
                 const authResponse = await fetch(`${this.apiBaseURL}/api/auth`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -104,7 +104,7 @@ class ElizaOSChatSystem {
                     
                     (window.AppConfig?.debug?.info || console.log)('✅ User authentication successful');
                     
-                    // 恢复角色选择
+                    // Restore previously selected character
                     if (selectedCharacterData) {
                         const characterData = JSON.parse(selectedCharacterData);
                         await this.setCurrentCharacter(characterData);
@@ -114,22 +114,22 @@ class ElizaOSChatSystem {
                 }
                 
             } catch (error) {
-                console.error('❌ 认证失败:', error);
+                console.error('❌ Authentication failed:', error);
                 this.handleAuthFailure();
             }
         } else {
-            console.log('⏳ 等待用户登录...');
+        (window.AppConfig?.debug?.log || console.log)('Waiting for user login...');
         }
     }
     
     setupElizaOSUI() {
-        // 创建ElizaOS特有的UI元素
+        // Create ElizaOS-specific UI elements
         this.createMemoryIndicator();
         this.createRelationshipIndicator();
         this.createContextDisplay();
     }
     
-    // createMemoryIndicator 函数已移除
+    // createMemoryIndicator function removed
     
     createRelationshipIndicator() {
         const chatHeader = document.querySelector('.chat-header') || document.body;
@@ -140,7 +140,7 @@ class ElizaOSChatSystem {
         this.relationshipIndicator.innerHTML = `
             <div class="relationship-status">
                 <span class="hearts" id="relationship-hearts">💝</span>
-                <span class="level-text">亲密度: <span id="relationship-level">1</span>/10</span>
+                <span class="level-text">Intimacy: <span id="relationship-level">1</span>/10</span>
             </div>
         `;
         
@@ -183,16 +183,16 @@ class ElizaOSChatSystem {
         this.currentCharacter = characterData;
         (window.AppConfig?.debug?.log || console.log)('🎯 Setting current character:', characterData.name);
         
-        // 加载对话历史
+        // Load conversation history
         if (this.currentUser) {
             await this.loadConversationHistory();
         }
         
-        // 更新UI
+        // Update UI
         this.updateCharacterUI();
         
-        // ⚠️ 移除循环调用 - 避免无限循环
-        // 不再触发callback，因为callback又会调用setCurrentCharacter形成循环
+        // ⚠️ Removed recursive callback to avoid infinite loop
+        // Do not trigger callback again, it would call setCurrentCharacter repeatedly
         // if (window.setCurrentCharacterCallback) {
         //     window.setCurrentCharacterCallback(characterData);
         // }
@@ -203,7 +203,7 @@ class ElizaOSChatSystem {
         
         try {
             (window.AppConfig?.debug?.log || console.log)('📜 Loading conversation history...');
-            this.showMemoryStatus('加载记忆中...');
+            this.showMemoryStatus('Loading memories...');
             
             const response = await fetch(
                 `${this.apiBaseURL}/api/history/${this.currentUser.id}/${this.currentCharacter.id}?limit=20`
@@ -212,10 +212,10 @@ class ElizaOSChatSystem {
             const data = await response.json();
             
             if (data.success && data.data) {
-                // 设置关系数据
+                // Set relationship data
                 this.relationshipData = data.data.relationship;
                 
-                // 显示历史对话
+                // Render historical messages
                 const conversations = data.data.conversations.reverse();
                 conversations.forEach(conv => {
                     const message = {
@@ -227,38 +227,38 @@ class ElizaOSChatSystem {
                     };
                     
                     this.chatHistory.push(message);
-                    this.updateChatUI(message, false); // false = 不触发动画
+                    this.updateChatUI(message, false); // false = do not animate
                 });
                 
-                // 更新关系指示器
+                // Update relationship indicator
                 this.updateRelationshipUI();
                 
-                // 显示上下文信息
+                // Show context info
                 if (conversations.length > 0) {
-                    this.showContextInfo('已加载' + conversations.length + '条对话记忆');
+                    this.showContextInfo('Loaded ' + conversations.length + ' conversation memories');
                 }
                 
                 (window.AppConfig?.debug?.log || console.log)(`✅ Loaded ${conversations.length} conversation history items`);
             }
             
-            this.showMemoryStatus('记忆系统就绪');
+            this.showMemoryStatus('Memory system ready');
             
         } catch (error) {
-            console.error('❌ 加载对话历史失败:', error);
-            this.showMemoryStatus('记忆加载失败');
+            console.error('❌ Load conversation history failed:', error);
+            this.showMemoryStatus('Memory load failed');
         }
     }
     
     updateCharacterUI() {
         if (!this.currentCharacter) return;
         
-        // 更新角色名称显示
+        // Update character name
         const characterNameElement = document.getElementById('character-name');
         if (characterNameElement) {
             characterNameElement.textContent = this.currentCharacter.name;
         }
         
-        // 更新头像
+        // Update avatar
         const avatarElement = document.getElementById('character-avatar');
         if (avatarElement) {
             avatarElement.src = `characters/${this.currentCharacter.id}.jpg`;
@@ -277,7 +277,7 @@ class ElizaOSChatSystem {
         }
         
         if (heartsElement) {
-            // 根据亲密度显示不同数量的心
+            // Display hearts based on intimacy level
             const hearts = '💝'.repeat(Math.min(level, 5));
             heartsElement.textContent = hearts;
         }
@@ -297,7 +297,7 @@ class ElizaOSChatSystem {
             this.contextDisplay.textContent = `💭 ${info}`;
             this.contextDisplay.style.display = 'block';
             
-            // 3秒后自动隐藏
+            // Auto hide after 3 seconds
             setTimeout(() => {
                 this.contextDisplay.style.display = 'none';
             }, 3000);
@@ -305,7 +305,7 @@ class ElizaOSChatSystem {
     }
     
     setupEventListeners() {
-        // 消息发送
+        // Send message
         const sendButton = document.getElementById('send-btn');
         const messageInput = document.getElementById('message-input');
         
@@ -322,16 +322,16 @@ class ElizaOSChatSystem {
             });
         }
         
-        // 全局角色设置监听 - 防止循环调用
+        // Global character-set listener to prevent recursion
         window.setCurrentCharacterCallback = (character) => {
-            // 🔄 防循环：只在角色真正不同时才设置
+            // Only set when character actually changes
             if (!this.currentCharacter || 
                 (this.currentCharacter.id || this.currentCharacter.name?.toLowerCase()) !== 
                 (character.id || character.name?.toLowerCase())) {
-                console.log('🔄 外部角色设置请求:', character.name);
+                (window.AppConfig?.debug?.log || console.log)('External setCharacter request:', character.name);
                 this.setCurrentCharacter(character);
             } else {
-                console.log('🔄 跳过重复的外部角色设置:', character.name);
+                (window.AppConfig?.debug?.log || console.log)('Skip duplicate setCharacter:', character.name);
             }
         };
     }
@@ -344,7 +344,7 @@ class ElizaOSChatSystem {
         if (!message || this.isLoading) return;
         
         if (!this.currentUser || !this.currentCharacter) {
-            this.showError('请先登录并选择角色');
+            this.showError('Please log in and select a character first');
             return;
         }
         
@@ -352,7 +352,7 @@ class ElizaOSChatSystem {
             this.isLoading = true;
             messageInput.value = '';
             
-            // 显示用户消息
+            // Show user message
             const userMessage = {
                 id: Date.now(),
                 sender: 'user',
@@ -363,18 +363,18 @@ class ElizaOSChatSystem {
             this.chatHistory.push(userMessage);
             this.updateChatUI(userMessage);
             
-            // 显示记忆状态
-            this.showMemoryStatus(window.i18n ? window.i18n.t('eliza.thinking') : 'AI正在思考...');
+            // Show memory status
+            this.showMemoryStatus(window.i18n ? window.i18n.t('eliza.thinking') : 'AI is thinking...');
             this.showTypingIndicator();
             
-            // 发送到ElizaOS后端
+            // Send to ElizaOS backend
             const requestData = {
                 userId: this.currentUser.id,
                 characterId: this.currentCharacter.id.toLowerCase(),
                 message: message
             };
             
-            console.log('📤 发送到ElizaOS:', requestData);
+            (window.AppConfig?.debug?.log || console.log)('Send to ElizaOS:', requestData);
             
             const response = await fetch(`${this.apiBaseURL}/api/chat`, {
                 method: 'POST',
@@ -382,16 +382,14 @@ class ElizaOSChatSystem {
                 body: JSON.stringify(requestData)
             });
             
-            console.log('🌐 HTTP响应状态:', response.status, response.statusText);
-            console.log('🌐 HTTP响应头:', Object.fromEntries(response.headers.entries()));
+            (window.AppConfig?.debug?.log || console.log)('HTTP status:', response.status, response.statusText);
             
             const data = await response.json();
-            console.log('📨 ElizaOS响应:', data);
-            console.log('📨 响应详情:', JSON.stringify(data, null, 2));
+            (window.AppConfig?.debug?.log || console.log)('ElizaOS response received');
             
             if (data.success && data.data) {
-                console.log('✅ 准备显示AI回复:', data.data.response);
-                // AI回复消息
+                (window.AppConfig?.debug?.log || console.log)('Prepare to display AI reply');
+                // Add AI reply message
                 const aiMessage = {
                     id: Date.now() + 1,
                     sender: 'ai',
@@ -401,10 +399,10 @@ class ElizaOSChatSystem {
                     relationshipLevel: data.data.relationship_level || 1
                 };
                 
-                console.log('📝 AI消息对象:', aiMessage);
+                (window.AppConfig?.debug?.log || console.log)('AI message object prepared');
                 this.chatHistory.push(aiMessage);
                 
-                // 更新关系数据
+                // Update relationship data
                 if (data.data.relationship_level) {
                     this.relationshipData = {
                         ...this.relationshipData,
@@ -413,54 +411,54 @@ class ElizaOSChatSystem {
                     this.updateRelationshipUI();
                 }
                 
-                // 延迟显示回复
-                console.log('⏳ 准备在1秒后显示AI回复...');
+                // Delay before displaying reply
+                (window.AppConfig?.debug?.log || console.log)('AI reply will display in 1s...');
                 setTimeout(() => {
-                    console.log('🎬 开始显示AI回复...');
+                    (window.AppConfig?.debug?.log || console.log)('Start displaying AI reply...');
                     this.hideTypingIndicator();
                     this.updateChatUI(aiMessage);
                     
-                    // 🎤 存储语音数据并自动播放
+                    // 🎤 Store voice data and auto play
                     if (aiMessage.audio && aiMessage.audio.data) {
                         this.voiceStorage.set(aiMessage.id, aiMessage.audio);
-                        console.log('🎵 开始自动播放语音...');
+                        (window.AppConfig?.debug?.log || console.log)('Auto-playing voice...');
                         this.playVoiceMessage(aiMessage.audio);
                     }
                     
-                    // 触发VRM表情和语音
+                    // Trigger VRM expression and voice
                     this.triggerVRMResponse(aiMessage);
                     
-                    this.showMemoryStatus('记忆已更新');
+                    this.showMemoryStatus('Memory updated');
                     
-                    // 显示关系变化
+                    // Show relationship changes
                     if (data.data.relationship_level > (this.relationshipData?.relationship_level || 1)) {
-                        this.showContextInfo(`亲密度提升到 ${data.data.relationship_level} 级！`);
+                        this.showContextInfo(`Relationship level increased to ${data.data.relationship_level}!`);
                     }
                     
                 }, 1000 + Math.random() * 2000);
                 
             } else {
-                console.error('❌ ElizaOS响应格式错误:', data);
-                console.error('❌ 详细信息:', {
+                console.error('❌ ElizaOS response format error:', data);
+                console.error('❌ Detail:', {
                     success: data.success,
                     hasData: !!data.data,
                     dataKeys: data.data ? Object.keys(data.data) : null,
                     error: data.error
                 });
-                throw new Error(data.error || '发送失败');
+                throw new Error(data.error || 'Send failed');
             }
             
         } catch (error) {
-            console.error('❌ 消息发送失败:', error);
+            console.error('❌ Message send failed:', error);
             this.hideTypingIndicator();
-            this.showError('消息发送失败: ' + error.message);
+            this.showError('Send message failed: ' + error.message);
         } finally {
             this.isLoading = false;
         }
     }
     
     updateChatUI(message, animate = true) {
-        console.log('🎨 updateChatUI调用:', {
+        (window.AppConfig?.debug?.log || console.log)('updateChatUI called with', {
             sender: message.sender,
             content: message.content,
             animate: animate
@@ -468,11 +466,11 @@ class ElizaOSChatSystem {
         
         const messagesContainer = document.getElementById('chat-window-messages');
         if (!messagesContainer) {
-            console.error('❌ 找不到chat-window-messages容器');
+            console.error('❌ chat-window-messages container not found');
             return;
         }
         
-        console.log('📦 消息容器找到:', messagesContainer);
+        (window.AppConfig?.debug?.log || console.log)('Messages container found');
         
         const messageElement = document.createElement('div');
         messageElement.className = `message ${message.sender}-message`;
@@ -481,7 +479,7 @@ class ElizaOSChatSystem {
                 <div class="message-text">${this.formatMessage(message.content)}</div>
                 <div class="message-time">${this.formatTime(message.timestamp)}</div>
                 ${message.relationshipLevel ? 
-                  `<div class="relationship-hint">亲密度: ${message.relationshipLevel}</div>` : ''}
+                  `<div class="relationship-hint">Intimacy: ${message.relationshipLevel}</div>` : ''}
             </div>
         `;
         
@@ -503,7 +501,7 @@ class ElizaOSChatSystem {
     }
     
     triggerVRMResponse(message) {
-        // 与VRM系统集成
+        // Integrate with VRM system
         if (window.triggerExpression) {
             window.triggerExpression(message.emotion || 'neutral');
         }
@@ -512,7 +510,7 @@ class ElizaOSChatSystem {
             window.speakText(message.content, this.currentCharacter?.voiceId);
         }
         
-        console.log('😊 触发表情:', message.emotion);
+        (window.AppConfig?.debug?.log || console.log)('Trigger expression:', message.emotion);
     }
     
     showTypingIndicator() {
@@ -540,7 +538,7 @@ class ElizaOSChatSystem {
             <div class="typing-dots">
                 <span></span><span></span><span></span>
             </div>
-            <div class="typing-text">${this.currentCharacter?.name || 'AI'} 正在输入...</div>
+            <div class="typing-text">${this.currentCharacter?.name || 'AI'} is typing...</div>
         `;
         indicator.style.display = 'none';
         
@@ -549,7 +547,7 @@ class ElizaOSChatSystem {
     }
     
     formatMessage(content) {
-        // 格式化消息，支持Emoji和链接
+        // Format message, support emoji and links
         return content
             .replace(/\n/g, '<br>')
             .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
@@ -578,7 +576,7 @@ class ElizaOSChatSystem {
     showError(message) {
         console.error('🚨', message);
         
-        // 显示错误提示
+        // Show error toast
         const errorDiv = document.createElement('div');
         errorDiv.className = 'error-message';
         errorDiv.textContent = message;
@@ -602,62 +600,62 @@ class ElizaOSChatSystem {
     }
     
     handleAuthFailure() {
-        // 认证失败处理
+        // Authentication failure handling
         this.currentUser = null;
         this.currentCharacter = null;
-        this.showError('认证失败，请重新连接钱包');
+        this.showError('Authentication failed, please reconnect wallet');
         
-        // 清除存储
+        // Clear storage
         localStorage.removeItem('wallet_address');
         localStorage.removeItem('walletAddress');
         localStorage.removeItem('selectedCharacter');
     }
     
-    // 🔗 兼容性方法：确保与旧前端代码兼容
+    // 🔗 Compatibility methods: keep old frontend working
     setCharacter(character) {
-        // 🔍 调用栈追踪 - 找出谁在反复调用
+        // 🔍 Trace call stack to find repeated callers
         const stack = new Error().stack;
         const caller = stack.split('\n')[2]?.trim() || 'unknown';
-        console.log('🔗 兼容性调用: setCharacter ->', character.name, '调用者:', caller);
+        (window.AppConfig?.debug?.log || console.log)('Compat call: setCharacter ->', character.name, 'caller:', caller);
         
-        // 改进的防重复逻辑 - 使用JSON比较确保完全相同
+        // Improved duplicate-prevention via JSON compare
         if (this.currentCharacter) {
             const currentId = this.currentCharacter.id || this.currentCharacter.name?.toLowerCase();
             const newId = character.id || character.name?.toLowerCase();
             
             if (currentId === newId) {
-                console.log('🔗 角色已设置，跳过重复调用 (ID匹配)');
-                return Promise.resolve(); // 返回Promise保持一致性
+                (window.AppConfig?.debug?.log || console.log)('Character already set; skip duplicate');
+                return Promise.resolve(); // keep promise interface
             }
         }
         
-        // 🚫 添加防抖 - 防止频繁调用
+        // 🚫 Debounce to prevent frequent calls
         if (this._setCharacterTimeout) {
             clearTimeout(this._setCharacterTimeout);
         }
         
         this._setCharacterTimeout = setTimeout(() => {
-            console.log('🔗 执行角色设置:', character.name);
+            (window.AppConfig?.debug?.log || console.log)('Applying character:', character.name);
             this.setCurrentCharacter(character);
             this._setCharacterTimeout = null;
-        }, 100); // 100ms防抖
+        }, 100); // 100ms debounce
         
         return Promise.resolve();
     }
     
     async sendMessage(message) {
-        console.log('🔗 兼容性调用: sendMessage ->', message);
+        (window.AppConfig?.debug?.log || console.log)('Compat call: sendMessage ->', message);
         
         if (!this.currentUser || !this.currentCharacter) {
-            console.warn('⚠️ 用户或角色未设置，无法发送消息');
+            (window.AppConfig?.debug?.warn || console.warn)('User or character not set; cannot send');
             return;
         }
         
         try {
-            // 获取当前UI语言设置
+            // Get current UI language
             const currentLanguage = window.i18n ? window.i18n.getCurrentLanguage() : 'en';
             
-            // 调用ElizaOS聊天API
+            // Call ElizaOS chat API
             const response = await fetch(`${this.apiBaseURL}/api/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -665,7 +663,7 @@ class ElizaOSChatSystem {
                     userId: this.currentUser.id,
                     characterId: this.currentCharacter.id,
                     message: message,
-                    language: currentLanguage // 添加语言参数
+                    language: currentLanguage // pass language to backend
                 })
             });
             
@@ -674,11 +672,10 @@ class ElizaOSChatSystem {
             }
             
             const data = await response.json();
-            console.log('📨 兼容性ElizaOS响应:', data);
-            console.log('📨 兼容性响应详情:', JSON.stringify(data, null, 2));
+            (window.AppConfig?.debug?.log || console.log)('Compat ElizaOS response received');
             
             if (data.success && data.data) {
-                // 创建用户消息
+                // Create user message
                 const userMessage = {
                     id: Date.now(),
                     sender: 'user',
@@ -686,67 +683,66 @@ class ElizaOSChatSystem {
                     timestamp: new Date()
                 };
                 
-                // 创建AI回复消息
+                // Create AI reply message
                 const aiMessage = {
                     id: Date.now() + 1,
                     sender: 'ai',
                     content: data.data.response,
                     timestamp: new Date(),
                     emotion: data.data.emotion,
-                    audio: data.data.audio // 🎤 添加语音数据
+                    audio: data.data.audio // 🎤 attach voice data
                 };
                 
-                console.log('🖥️ 准备更新UI - 用户消息:', userMessage);
-                console.log('🖥️ 准备更新UI - AI消息:', aiMessage);
+                (window.AppConfig?.debug?.log || console.log)('Prepare UI messages');
                 
-                // 更新聊天界面
+                // Update chat UI
                 this.updateChatUI(userMessage);
-                console.log('✅ 用户消息UI已更新');
+                (window.AppConfig?.debug?.log || console.log)('User message UI updated');
                 
                 this.updateChatUI(aiMessage);
-                console.log('✅ AI消息UI已更新');
+                (window.AppConfig?.debug?.log || console.log)('AI message UI updated');
                 
-                // 🎤 存储语音数据并自动播放
+                // 🎤 store voice and auto play
                 if (aiMessage.audio && aiMessage.audio.data) {
                     this.voiceStorage.set(aiMessage.id, aiMessage.audio);
-                    console.log('🎵 开始自动播放语音...');
+                    (window.AppConfig?.debug?.log || console.log)('Auto-playing voice...');
                     this.playVoiceMessage(aiMessage.audio);
                 }
                 
-                console.log('✅ ElizaOS消息发送成功');
+                (window.AppConfig?.debug?.log || console.log)('ElizaOS message sent');
                 return data.data;
             } else {
-                throw new Error(data.error || '发送消息失败');
+                throw new Error(data.error || 'Send message failed');
             }
         } catch (error) {
-            console.error('❌ 兼容性sendMessage错误:', error);
-            this.showError(`发送消息失败: ${error.message}`);
+            console.error('❌ Compat sendMessage error:', error);
+            this.showError(`Send message failed: ${error.message}`);
         }
     }
     
     async getUserStats() {
-        console.log('🔗 兼容性调用: getUserStats');
-        // 返回基本统计信息
+        (window.AppConfig?.debug?.log || console.log)('Compat call: getUserStats');
+        // Return basic stats
         return {
             totalInteractions: this.chatHistory.length,
             lastInteraction: Date.now()
         };
     }
     
-    // waitingForWallet 属性兼容
+    // waitingForWallet property compatibility
     get waitingForWallet() {
         return !this.currentUser;
     }
     
     set waitingForWallet(value) {
-        // 兼容性设置，不做实际操作
-        console.log('🔗 兼容性设置: waitingForWallet =', value);
+        // Compatibility setter; no-op
+        (window.AppConfig?.debug?.log || console.log)('Compat set: waitingForWallet =', value);
     }
     
-    // 🎤 语音播放功能
+    // 🎤 Voice playback functions
     playVoiceMessage(audioData) {
         try {
-            console.log('🎵 开始播放语音...', {
+            (window.AppConfig?.debug?.log || console.log)('Start playing voice...', {
                 mimeType: audioData.mimeType,
                 dataLength: audioData.data.length,
                 voiceId: audioData.voiceId
@@ -755,17 +751,17 @@ class ElizaOSChatSystem {
             this.tryPlayAudio(audioData);
             
         } catch (error) {
-            console.error('❌ 语音处理失败:', error);
+            console.error('❌ Voice processing failed:', error);
         }
     }
     
-    // 🎤 尝试多种方式播放音频
+    // 🎤 Try multiple playback methods
     async tryPlayAudio(audioData) {
         const uint8Array = new Uint8Array(audioData.data);
         
-        // 方法1: 尝试使用Blob URL (原方法)
+        // Method 1: Blob URL (original approach)
         try {
-            console.log('🎵 尝试方法1: Blob URL播放');
+            (window.AppConfig?.debug?.log || console.log)('Try method 1: Blob URL');
             const arrayBuffer = uint8Array.buffer;
             const blob = new Blob([arrayBuffer], { type: audioData.mimeType });
             const audioUrl = URL.createObjectURL(blob);
@@ -773,20 +769,20 @@ class ElizaOSChatSystem {
             const audio = new Audio();
             audio.volume = 0.8;
             
-            // 设置回调
+            // Set callbacks
             audio.onplay = () => {
-                console.log('✅ 语音开始播放 (Blob URL)');
-                this.showVoiceStatus('🎵 播放中...');
+                (window.AppConfig?.debug?.log || console.log)('Voice started (Blob URL)');
+                this.showVoiceStatus('🎵 Playing...');
             };
             
             audio.onended = () => {
-                console.log('✅ 语音播放完成');
+                (window.AppConfig?.debug?.log || console.log)('Voice finished');
                 this.hideVoiceStatus();
                 URL.revokeObjectURL(audioUrl);
             };
             
             audio.onerror = (error) => {
-                console.log('❌ Blob URL方法失败，尝试备用方案:', error);
+                (window.AppConfig?.debug?.warn || console.warn)('Blob URL method failed, try fallback:', error);
                 URL.revokeObjectURL(audioUrl);
                 this.tryPlayAudioFallback(audioData);
             };
@@ -796,17 +792,17 @@ class ElizaOSChatSystem {
             return;
             
         } catch (blobError) {
-            console.log('❌ Blob URL方法失败，尝试备用方案:', blobError);
+            (window.AppConfig?.debug?.warn || console.warn)('Blob URL method failed, try fallback:', blobError);
             this.tryPlayAudioFallback(audioData);
         }
     }
     
-    // 🎤 备用音频播放方法
+    // 🎤 Fallback playback method
     tryPlayAudioFallback(audioData) {
         try {
-            console.log('🎵 尝试方法2: Data URL播放');
+            (window.AppConfig?.debug?.log || console.log)('Try method 2: Data URL');
             
-            // 方法2: 使用Data URL
+            // Method 2: Data URL
             const uint8Array = new Uint8Array(audioData.data);
             let binaryString = '';
             for (let i = 0; i < uint8Array.length; i++) {
@@ -820,45 +816,45 @@ class ElizaOSChatSystem {
             audio.volume = 0.8;
             
             audio.onplay = () => {
-                console.log('✅ 语音开始播放 (Data URL)');
-                this.showVoiceStatus('🎵 播放中...');
+                (window.AppConfig?.debug?.log || console.log)('Voice started (Data URL)');
+                this.showVoiceStatus('🎵 Playing...');
             };
             
             audio.onended = () => {
-                console.log('✅ 语音播放完成');
+                (window.AppConfig?.debug?.log || console.log)('Voice finished');
                 this.hideVoiceStatus();
             };
             
             audio.onerror = (error) => {
-                console.error('❌ Data URL方法也失败了:', error);
-                this.showVoiceStatus('❌ 语音播放失败');
+                console.error('❌ Data URL method also failed:', error);
+                this.showVoiceStatus('❌ Voice playback failed');
                 setTimeout(() => this.hideVoiceStatus(), 3000);
             };
             
             audio.src = dataUrl;
             audio.play().catch(error => {
-                console.error('❌ Data URL播放启动失败:', error);
-                this.showVoiceStatus('❌ 语音播放失败');
+                console.error('❌ Data URL playback start failed:', error);
+                this.showVoiceStatus('❌ Voice playback failed');
                 setTimeout(() => this.hideVoiceStatus(), 3000);
             });
             
         } catch (fallbackError) {
-            console.error('❌ 所有语音播放方法都失败了:', fallbackError);
+            console.error('❌ All voice playback methods failed:', fallbackError);
             // 创建用户交互播放按钮
             this.showInteractivePlayButton(audioData);
         }
     }
     
-    // 🎤 显示交互式播放按钮
+    // 🎤 Show interactive play button
     showInteractivePlayButton(audioData) {
-        console.log('🎵 显示用户交互播放按钮');
+        (window.AppConfig?.debug?.log || console.log)('Show user-interaction play button');
         
-        // 创建播放按钮
+        // Create play button
         let playButton = document.getElementById('interactive-voice-play');
         if (!playButton) {
             playButton = document.createElement('button');
             playButton.id = 'interactive-voice-play';
-            playButton.innerHTML = '🎵 点击播放语音';
+            playButton.innerHTML = '🎵 Click to play voice';
             playButton.style.cssText = `
                 position: fixed;
                 top: 80px;
@@ -894,14 +890,14 @@ class ElizaOSChatSystem {
             document.body.appendChild(playButton);
         }
         
-        // 更新按钮点击事件
+        // Update button handler
         playButton.onclick = () => {
-            console.log('👆 用户点击播放语音按钮');
+            (window.AppConfig?.debug?.log || console.log)('User clicked play voice');
             this.forcePlayAudio(audioData);
             playButton.remove();
         };
         
-        // 5秒后自动隐藏按钮
+        // Auto hide after 5 seconds
         setTimeout(() => {
             if (playButton && playButton.parentNode) {
                 playButton.remove();
@@ -909,44 +905,44 @@ class ElizaOSChatSystem {
         }, 10000);
     }
     
-    // 🎤 强制播放音频（需要用户交互）
+    // 🎤 Force play (needs user interaction)
     forcePlayAudio(audioData) {
         try {
-            console.log('🎵 强制播放音频（用户交互）');
+            (window.AppConfig?.debug?.log || console.log)('Force play audio (user interaction)');
             
-            // 使用最简单的方法播放
+            // Use simplest approach to play
             const uint8Array = new Uint8Array(audioData.data);
             const arrayBuffer = uint8Array.buffer;
             const blob = new Blob([arrayBuffer], { type: audioData.mimeType });
             
-            // 创建临时URL
+            // Create temp URL
             const audioUrl = URL.createObjectURL(blob);
             const audio = new Audio(audioUrl);
             audio.volume = 0.8;
             
             audio.onplay = () => {
-                console.log('✅ 用户交互语音播放成功');
-                this.showVoiceStatus('🎵 播放中...');
+                (window.AppConfig?.debug?.log || console.log)('User-interaction voice playback success');
+                this.showVoiceStatus('🎵 Playing...');
             };
             
             audio.onended = () => {
-                console.log('✅ 语音播放完成');
+                (window.AppConfig?.debug?.log || console.log)('Voice playback finished');
                 this.hideVoiceStatus();
                 URL.revokeObjectURL(audioUrl);
             };
             
             audio.onerror = (error) => {
-                console.error('❌ 用户交互播放也失败了:', error);
+                console.error('❌ User-interaction playback also failed:', error);
                 URL.revokeObjectURL(audioUrl);
-                this.showVoiceStatus('❌ 语音播放失败');
+                this.showVoiceStatus('❌ Voice playback failed');
                 setTimeout(() => this.hideVoiceStatus(), 3000);
             };
             
-            // 由于是用户交互触发，应该能成功播放
+            // As it's user-interaction triggered, should succeed
             audio.play();
             
         } catch (error) {
-            console.error('❌ 强制播放失败:', error);
+            console.error('❌ Force play failed:', error);
             this.showVoiceStatus('❌ 语音播放失败');
             setTimeout(() => this.hideVoiceStatus(), 3000);
         }
@@ -997,7 +993,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // 🔗 兼容性别名：让旧的前端代码可以访问ElizaOS系统
         window.chatSystemV2 = window.elizaChatSystem;
-        console.log('🔗 设置兼容性别名: window.chatSystemV2 -> ElizaOS');
+        (window.AppConfig?.debug?.log || console.log)('Set compatibility alias: window.chatSystemV2 -> ElizaOS');
     }
 });
 
