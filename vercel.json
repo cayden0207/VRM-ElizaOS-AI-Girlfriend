@@ -2,6 +2,10 @@
   "version": 2,
   "rewrites": [
     {
+      "source": "/",
+      "destination": "/character-select.html"
+    },
+    {
       "source": "/health",
       "destination": "/api/index.js"
     },
