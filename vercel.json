@@ -3,10 +3,6 @@
   "outputDirectory": ".",
   "rewrites": [
     {
-      "source": "/",
-      "destination": "/character-select.html"
-    },
-    {
       "source": "/health",
       "destination": "/api/index.js"
     },
@@ -20,7 +16,7 @@
     },
     {
       "source": "/chat",
-      "destination": "/index.html"
+      "destination": "/chat.html"
     }
   ],
   "env": {

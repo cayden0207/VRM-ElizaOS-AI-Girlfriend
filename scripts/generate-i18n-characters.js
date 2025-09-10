@@ -1,8 +1,8 @@
 // Generate i18n character fields for 25 characters from character.md (EN)
-// and character-select.html profilesData (ZH). Produces i18n.characters.generated.js
+// and index.html profilesData (ZH). Produces i18n.characters.generated.js
 import { promises as fs } from 'fs';
 
-const CHAR_HTML = 'character-select.html';
+const CHAR_HTML = 'index.html';
 const CHAR_MD = 'character.md';
 const OUT_FILE = 'i18n.characters.generated.js';
 
@@ -148,7 +148,7 @@ async function main() {
   const enMap = await parseEnglishProfiles(CHAR_MD);
   const merged = toI18nEntries(nameToId, zhMap, enMap);
 
-  const header = '// Auto-generated from character.md and character-select.html. Do not edit manually.\n';
+  const header = '// Auto-generated from character.md and index.html. Do not edit manually.\n';
   const body = `window.I18N_CHARACTERS = ${JSON.stringify(merged, null, 2)};\n`;
   await fs.writeFile(OUT_FILE, header + body, 'utf8');
   console.log(`Generated ${OUT_FILE} with ${Object.keys(merged.en).length} EN keys and ${Object.keys(merged.zh).length} ZH keys.`);
