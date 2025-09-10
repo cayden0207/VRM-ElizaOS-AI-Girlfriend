@@ -151,55 +151,82 @@
 
     /* ========== CHARACTER SELECTOR ========== */
     
-    /* Character Selector Main Container */
+    /* Character Selector - Mobile version with desktop-like navigation */
     .character-selector {
         position: fixed !important;
         bottom: 72px !important;
-        left: 20px !important;
-        right: 20px !important;
-        transform: none !important;
-        scale: 0.5 !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        padding: 8px 20px !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(4px) !important;
+        border-radius: 60px !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
         z-index: 90;
+        scale: 0.7 !important;
+        box-shadow: 0 1px 7px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* Navigation buttons - Mobile */
+    .character-selector .nav-button {
+        background: none !important;
+        border: none !important;
+        color: white !important;
+        font-size: 20px !important;
+        cursor: pointer !important;
+        padding: 5px !important;
+        min-width: 30px !important;
+        height: 30px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    /* Character thumbnails - Mobile */
+    .character-selector .character-thumbnails {
+        display: flex !important;
+        gap: 4px !important;
+    }
+
+    /* Selected indicator - Mobile */
+    .character-selector .selected-indicator {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        margin: 0 8px !important;
+    }
+
+    .character-selector .selected-avatar {
+        width: 50px !important;
+        height: 50px !important;
+        border-radius: 50% !important;
         overflow: hidden !important;
-        max-width: calc(100vw - 40px) !important;
+        margin-bottom: 4px !important;
     }
 
-    /* Character List */
-    .character-list {
-        position: relative !important;
-        bottom: auto !important;
-        left: auto !important;
-        right: auto !important;
+    .character-selector .selected-avatar img {
         width: 100% !important;
-        height: 80px;
-        flex-direction: row;
-        gap: 8px;
-        overflow-x: auto;
-        overflow-y: hidden;
-        padding: 5px;
-        background: rgba(0, 0, 0, 0.5);
-        border-radius: 10px;
-        justify-content: flex-start;
-        z-index: 50;
-        transform: none;
-        scale: 1 !important;
+        height: 100% !important;
+        object-fit: cover !important;
     }
 
-    .character-list::-webkit-scrollbar {
-        height: 4px;
+    .character-selector .selected-badge {
+        font-size: 10px !important;
+        color: white !important;
     }
 
-    /* Character Items */
-    .character-item {
-        flex: 0 0 auto;
-        width: 60px;
-        height: 60px;
+    .character-selector .selected-text {
+        display: none !important;
     }
 
-    .avatar-img {
-        width: 60px;
-        height: 60px;
+    /* Hide old character-list in mobile when using new selector */
+    .character-list {
+        display: none !important;
     }
+
 
     /* ========== BUTTONS ========== */
     
@@ -311,15 +338,10 @@
         scale: 0.3;
     }
 
-    .character-list {
-        bottom: 120px;
-        height: 70px;
-    }
-
-    .character-item,
-    .avatar-img {
-        width: 50px;
-        height: 50px;
+    /* Character selector adjustments for small screens */
+    .character-selector {
+        bottom: 120px !important;
+        scale: 0.6 !important;
     }
 
     .selected-avatar,
@@ -377,9 +399,9 @@
         padding: 10px;
     }
 
-    .character-list {
-        bottom: 60px;
-        height: 60px;
+    /* Character selector - landscape adjustments */
+    .character-selector {
+        bottom: 60px !important;
     }
 
     .start-button {
