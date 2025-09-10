@@ -1,78 +1,40 @@
 /* ==================================================
-   INDEX.HTML - RESPONSIVE STYLES
-   Separated Desktop and Mobile CSS
+   INDEX.HTML - CLEAN RESPONSIVE STYLES
+   Single @media query for all mobile styles
    ================================================== */
 
 /* ==================================================
    DESKTOP STYLES (Default - min-width: 769px)
    ================================================== */
-
-/* Desktop-specific styles are in the main index.html <style> section */
-/* This file contains responsive overrides and mobile-specific styles */
+/* Desktop styles are in the main index.html <style> section */
 
 /* ==================================================
-   TABLET STYLES (769px - 1200px)
-   ================================================== */
-@media (min-width: 769px) and (max-width: 1200px) {
-    /* Slight adjustments for tablet screens */
-    .character-list {
-        gap: 15px;
-    }
-    
-    .character-info {
-        padding: 25px;
-    }
-    
-    .start-button {
-        padding: 14px 35px;
-        font-size: 17px;
-    }
-}
-
-/* ==================================================
-   MOBILE STYLES (max-width: 768px)
+   ALL MOBILE STYLES (max-width: 768px) - SINGLE BLOCK
    ================================================== */
 @media (max-width: 768px) {
-    /* ========== MOBILE LAYOUT STRUCTURE ========== */
+    /* ========== LAYOUT STRUCTURE ========== */
     
-    /* Voice selector positioning */
-    .voice-selector {
-        position: fixed !important;
-        bottom: 100px !important;
-        right: 10px !important;
-        left: auto !important;
-        transform: none !important;
-        z-index: 99;
-        background: rgba(0, 0, 0, 0.8);
-        padding: 5px 10px;
-        border-radius: 20px;
+    /* VRM display area */
+    .vrm-display {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 45vh;
+        z-index: 10;
     }
 
-    /* Voice selector floating style */
-    .voice-selector-floating {
-        position: fixed !important;
-        bottom: 300px !important;
-        right: 185px !important;
-        left: auto !important;
-        top: auto !important;
-        transform: none !important;
-        padding: 8px 12px !important;
-        border-radius: 28px !important;
+    /* ========== TOP ELEMENTS ========== */
+    
+    /* WAIFU Title */
+    .heroes-title {
+        font-size: 40px;
+        top: 8px;
+        left: 20px;
         z-index: 100;
     }
-    
-    /* Character selector style */
-    .character-selector {
-        position: fixed !important;
-        bottom: 72px !important;
-        left: 20px !important;
-        right: 20px !important;
-        transform: none !important;
-        scale: 0.5 !important;
-        z-index: 90;
-    }
 
-    /* Language toggle positioning - 放在WAIFU标题下方 */
+    /* Language Toggle - Below WAIFU title */
     .language-toggle {
         position: fixed !important;
         top: 55px !important;
@@ -85,53 +47,48 @@
         border-radius: 15px;
     }
 
-    /* VRM display area adjustments */
-    .vrm-display {
+    /* ========== CHARACTER DISPLAY ========== */
+    
+    /* Character Display Name */
+    .character-display-name {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 45vh;
-        z-index: 10;
+        bottom: 450px;  /* Positioned for mobile */
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 32px;
+        z-index: 30;
     }
 
-    /* Character list layout */
-    .character-list {
-        position: fixed;
-        bottom: 72px;
-        left: 20px;
-        right: 20px;
-        height: 80px;
-        flex-direction: row;
-        gap: 8px;
-        overflow-x: auto;
-        overflow-y: hidden;
-        padding: 5px;
-        background: rgba(0, 0, 0, 0.5);
-        border-radius: 10px;
-        justify-content: flex-start;
-        z-index: 50;
-        transform: none;
-        scale: 0.5;
+    /* Voice Selector - Above character-display-name and aligned */
+    .voice-selector-floating {
+        position: fixed !important;
+        bottom: 490px !important;  /* 40px above character-display-name */
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        right: auto !important;
+        top: auto !important;
+        padding: 8px 12px !important;
+        border-radius: 28px !important;
+        z-index: 35;
+        background: rgba(0, 0, 0, 0.8);
     }
 
-    .character-list::-webkit-scrollbar {
-        height: 4px;
+    /* Regular Voice Selector (if different from floating) */
+    .voice-selector {
+        position: fixed !important;
+        bottom: 100px !important;
+        right: 10px !important;
+        left: auto !important;
+        transform: none !important;
+        z-index: 99;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 5px 10px;
+        border-radius: 20px;
     }
 
-    /* Character thumbnails */
-    .character-item {
-        flex: 0 0 auto;
-        width: 60px;
-        height: 60px;
-    }
-
-    .avatar-img {
-        width: 60px;
-        height: 60px;
-    }
-
-    /* Character info panel - 使用您要求的样式 */
+    /* ========== CHARACTER INFO ========== */
+    
+    /* Character Info Panel */
     .character-info {
         position: fixed;
         top: 100px;
@@ -150,7 +107,7 @@
         z-index: 20;
     }
 
-    /* Profile content adjustments */
+    /* Profile adjustments */
     .profile-container {
         padding: 0;
     }
@@ -185,14 +142,65 @@
         width: 100%;
     }
 
-    /* Voice play button */
+    /* ========== CHARACTER SELECTOR ========== */
+    
+    /* Character Selector Main Container */
+    .character-selector {
+        position: fixed !important;
+        bottom: 72px !important;
+        left: 20px !important;
+        right: 20px !important;
+        transform: none !important;
+        scale: 0.5 !important;
+        z-index: 90;
+    }
+
+    /* Character List */
+    .character-list {
+        position: fixed;
+        bottom: 72px;
+        left: 20px;
+        right: 20px;
+        height: 80px;
+        flex-direction: row;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 5px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        justify-content: flex-start;
+        z-index: 50;
+        transform: none;
+        scale: 0.5;
+    }
+
+    .character-list::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    /* Character Items */
+    .character-item {
+        flex: 0 0 auto;
+        width: 60px;
+        height: 60px;
+    }
+
+    .avatar-img {
+        width: 60px;
+        height: 60px;
+    }
+
+    /* ========== BUTTONS ========== */
+    
+    /* Voice Play Button */
     .voice-play-btn {
         width: 50px;
         height: 50px;
         font-size: 20px;
     }
 
-    /* Start button positioning */
+    /* Start Button */
     .start-button {
         position: fixed;
         bottom: 20px;
@@ -205,14 +213,9 @@
         z-index: 60;
     }
 
-    /* Hero title */
-    .heroes-title {
-        font-size: 40px;
-        top: 8px;
-        left: 20px;
-    }
-
-    /* ========== MOBILE WALLET MODAL ========== */
+    /* ========== MODALS ========== */
+    
+    /* Wallet Modal */
     .wallet-modal {
         padding: 20px;
     }
@@ -228,7 +231,7 @@
         gap: 10px;
     }
 
-    /* ========== MOBILE REGISTRATION FORM ========== */
+    /* Registration Form */
     .registration-overlay {
         padding: 10px;
     }
@@ -269,7 +272,6 @@
         font-size: 14px;
     }
 
-    /* Registration buttons */
     .registration-buttons {
         flex-direction: column;
         gap: 10px;
@@ -284,10 +286,10 @@
 }
 
 /* ==================================================
-   SMALL MOBILE STYLES (max-width: 480px)
+   SMALL MOBILE (max-width: 480px) - Optional refinements
    ================================================== */
 @media (max-width: 480px) {
-    /* Even more compact layout for small phones */
+    /* Only override what's absolutely necessary */
     .vrm-display {
         height: 40vh;
     }
@@ -324,10 +326,21 @@
         font-size: 13px;
         padding: 10px 15px;
     }
+
+    /* Adjust voice selector for small screens */
+    .voice-selector-floating {
+        bottom: 470px !important;
+        scale: 0.9;
+    }
+
+    .character-display-name {
+        bottom: 430px;
+        font-size: 28px;
+    }
 }
 
 /* ==================================================
-   LANDSCAPE MOBILE STYLES
+   LANDSCAPE ORIENTATION (optional)
    ================================================== */
 @media (max-width: 768px) and (orientation: landscape) {
     .vrm-display {
@@ -360,19 +373,13 @@
         width: 60px;
         height: 60px;
     }
-}
 
-/* ==================================================
-   HIGH-DPI DISPLAYS (Retina)
-   ================================================== */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-    /* Sharper borders and shadows for high-DPI displays */
-    .character-item {
-        border: 2px solid transparent;
+    /* Adjust for landscape */
+    .voice-selector-floating {
+        bottom: 380px !important;
     }
 
-    .character-item.active {
-        border-color: #FFD700;
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    .character-display-name {
+        bottom: 340px;
     }
 }
