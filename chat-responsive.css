@@ -1,0 +1,412 @@
+/* ==================================================
+   CHAT.HTML - RESPONSIVE STYLES
+   Separated Desktop and Mobile CSS
+   ================================================== */
+
+/* ==================================================
+   DESKTOP STYLES (Default - min-width: 1201px)
+   ================================================== */
+
+/* Desktop-specific styles are in the main chat.html <style> section */
+/* This file contains responsive overrides and mobile-specific styles */
+
+/* ==================================================
+   TABLET STYLES (769px - 1200px)
+   ================================================== */
+@media (min-width: 769px) and (max-width: 1200px) {
+    /* Floating chat adjustments for tablets */
+    .floating-chat {
+        width: 450px;
+        max-width: 90vw;
+        right: 15px;
+        bottom: 15px;
+    }
+
+    .chat-messages {
+        max-height: 350px;
+    }
+
+    /* Control panel adjustments */
+    .control-panel {
+        padding: 15px;
+    }
+
+    .emotion-grid {
+        gap: 8px;
+    }
+
+    .emotion-btn,
+    .animation-btn {
+        padding: 8px 12px;
+        font-size: 11px;
+    }
+}
+
+/* ==================================================
+   MOBILE STYLES (max-width: 768px)
+   ================================================== */
+@media (max-width: 768px) {
+    /* ========== MOBILE LAYOUT STRUCTURE ========== */
+    
+    /* VRM container takes full viewport */
+    .vrm-container {
+        width: 100vw;
+        height: 100vh;
+        position: fixed;
+        top: 0;
+        left: 0;
+    }
+
+    /* ========== MOBILE CHAT WINDOW ========== */
+    .floating-chat {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 50vh;
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        transform: translateY(0);
+        transition: transform 0.3s ease, height 0.3s ease;
+    }
+
+    /* Chat collapsed state */
+    .floating-chat.collapsed {
+        height: 60px;
+        transform: translateY(calc(100% - 60px));
+    }
+
+    /* Chat header - acts as drag handle on mobile */
+    .chat-header {
+        padding: 12px 15px;
+        cursor: grab;
+        touch-action: none;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .chat-header:active {
+        cursor: grabbing;
+    }
+
+    /* Add visual indicator for draggable area */
+    .chat-header::before {
+        content: '';
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+    }
+
+    /* Chat messages area */
+    .chat-messages {
+        max-height: calc(50vh - 180px);
+        padding: 10px;
+    }
+
+    /* Message styling adjustments */
+    .message {
+        max-width: 85%;
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+
+    .timestamp {
+        font-size: 10px;
+    }
+
+    /* Chat input area */
+    .chat-input-container {
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .chat-input {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .send-btn {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    /* ========== MOBILE CONTROL PANEL ========== */
+    .control-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to bottom, 
+                    rgba(0, 0, 0, 0.9) 0%, 
+                    rgba(0, 0, 0, 0) 100%);
+        padding: 10px;
+        z-index: 999;
+        max-height: 40vh;
+        overflow-y: auto;
+        transform: translateY(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .control-panel.visible {
+        transform: translateY(0);
+    }
+
+    /* Mobile control panel toggle button */
+    .mobile-controls-toggle {
+        display: block;
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        z-index: 1001;
+        background: rgba(0, 0, 0, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        cursor: pointer;
+    }
+
+    /* Control sections in mobile */
+    .control-section {
+        margin-bottom: 10px;
+    }
+
+    .control-section h3 {
+        font-size: 12px;
+        margin-bottom: 8px;
+    }
+
+    /* Emotion and animation grids */
+    .emotion-grid,
+    .animation-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 5px;
+    }
+
+    .emotion-btn,
+    .animation-btn {
+        padding: 6px 8px;
+        font-size: 10px;
+    }
+
+    /* Audio and settings controls */
+    .audio-controls {
+        gap: 10px;
+    }
+
+    .audio-controls label {
+        font-size: 11px;
+    }
+
+    .audio-controls input[type="range"] {
+        height: 20px;
+    }
+
+    /* Settings buttons */
+    .settings-controls {
+        gap: 8px;
+    }
+
+    .settings-controls button {
+        padding: 8px 12px;
+        font-size: 11px;
+    }
+
+    /* ========== MOBILE TOP CONTROLS ========== */
+    .top-controls {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 998;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .language-toggle {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    /* Character change button */
+    .change-character-btn {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    /* ========== MOBILE WALLET INFO ========== */
+    .wallet-info-display {
+        position: fixed;
+        bottom: auto;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 11px;
+        padding: 5px 10px;
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 15px;
+    }
+}
+
+/* ==================================================
+   SMALL MOBILE STYLES (max-width: 480px)
+   ================================================== */
+@media (max-width: 480px) {
+    /* Even more compact layout for small phones */
+    .floating-chat {
+        height: 45vh;
+    }
+
+    .chat-messages {
+        max-height: calc(45vh - 160px);
+    }
+
+    .message {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+
+    .chat-input {
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    .send-btn {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    /* Smaller control buttons */
+    .emotion-grid,
+    .animation-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .emotion-btn,
+    .animation-btn {
+        padding: 5px 6px;
+        font-size: 9px;
+    }
+}
+
+/* ==================================================
+   LANDSCAPE MOBILE STYLES
+   ================================================== */
+@media (max-width: 768px) and (orientation: landscape) {
+    /* Adjust chat window for landscape */
+    .floating-chat {
+        height: 70vh;
+        width: 50%;
+        right: 0;
+        left: auto;
+        border-radius: 20px 0 0 0;
+    }
+
+    .chat-messages {
+        max-height: calc(70vh - 140px);
+    }
+
+    /* Control panel in landscape */
+    .control-panel {
+        width: 50%;
+        left: 0;
+        right: auto;
+        max-height: 100vh;
+        border-radius: 0 20px 20px 0;
+    }
+
+    /* Adjust emotion/animation grids for landscape */
+    .emotion-grid,
+    .animation-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ==================================================
+   TOUCH DEVICE OPTIMIZATIONS
+   ================================================== */
+@media (hover: none) and (pointer: coarse) {
+    /* Larger touch targets for mobile */
+    .emotion-btn,
+    .animation-btn,
+    .send-btn,
+    button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+
+    /* Remove hover effects on touch devices */
+    .emotion-btn:hover,
+    .animation-btn:hover,
+    .send-btn:hover {
+        transform: none;
+    }
+
+    /* Improve scrolling performance */
+    .chat-messages {
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+    }
+}
+
+/* ==================================================
+   MOBILE-SPECIFIC ANIMATIONS
+   ================================================== */
+@media (max-width: 768px) {
+    /* Swipe to expand/collapse chat */
+    .floating-chat {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                    height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Smooth control panel slide */
+    .control-panel {
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Message animations */
+    @keyframes slideInFromBottom {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .message {
+        animation: slideInFromBottom 0.3s ease-out;
+    }
+}
+
+/* ==================================================
+   MOBILE UTILITY CLASSES
+   ================================================== */
+@media (max-width: 768px) {
+    /* Hide desktop-only elements */
+    .desktop-only {
+        display: none !important;
+    }
+
+    /* Show mobile-only elements */
+    .mobile-only {
+        display: block !important;
+    }
+
+    /* Prevent body scroll when chat is expanded */
+    body.chat-expanded {
+        overflow: hidden;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+    }
+}
