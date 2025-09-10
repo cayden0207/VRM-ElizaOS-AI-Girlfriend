@@ -48,12 +48,25 @@
         border-radius: 20px;
     }
 
+    /* Voice selector floating style */
+    .voice-selector-floating {
+        position: fixed;
+        bottom: 300px;
+        right: 185px;
+        left: auto;
+        top: auto;
+        transform: none;
+        padding: 8px 12px;
+        border-radius: 28px;
+    }
+
     /* Language toggle positioning - 放在WAIFU标题下方 */
     .language-toggle {
         position: fixed !important;
-        top: 35px !important;
-        left: 10px !important;
+        top: 55px !important;
+        left: 8px !important;
         bottom: auto !important;
+        scale: 0.85;
         z-index: 100;
         background: rgba(0, 0, 0, 0.7);
         padding: 5px 10px;
@@ -111,7 +124,7 @@
         left: 20px;
         right: 20px;
         max-width: none;
-        transform: scale(0.4);
+        scale: 0.35;
         transform-origin: top center;
         bottom: auto;
         height: auto;
@@ -180,9 +193,9 @@
 
     /* Hero title */
     .heroes-title {
-        font-size: 14px;
+        font-size: 34px;
         top: 8px;
-        left: 8px;
+        left: 30px;
     }
 
     /* ========== MOBILE WALLET MODAL ========== */
@@ -269,7 +282,7 @@
         top: 90px;
         left: 15px;
         right: 15px;
-        transform: scale(0.35);
+        scale: 0.3;
     }
 
     .character-list {
