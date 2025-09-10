@@ -266,68 +266,7 @@
             }
         }
 
-        /* Mobile optimizations - Iteration 1 */
-        @media (max-width: 768px) {
-            /* Voice selector pinned to bottom-right */
-            .voice-selector-floating {
-                position: fixed;
-                bottom: 96px;
-                right: 16px;
-                left: auto;
-                top: auto;
-                transform: none;
-                padding: 8px 12px;
-                border-radius: 28px;
-            }
-
-            .flag-btn { width: 36px; height: 36px; font-size: 18px; }
-
-            /* Character info panel – scale down and widen */
-            .character-info {
-                position: fixed;
-                top: 12px;
-                left: 12px;
-                width: calc(100vw - 24px);
-                transform: none;
-                border-radius: 12px;
-                box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-            }
-            .character-name { font-size: 14px; padding: 10px; }
-            .profile-header { font-size: 12px; }
-            .profile-content { padding: 10px; }
-            .profile-row { padding: 6px 0; }
-            .profile-label, .profile-value { font-size: 12px; }
-            .profile-text { font-size: 13px; }
-
-            /* Thumbnails – horizontal scroll on mobile */
-            .character-selector {
-                position: fixed;
-                left: 12px;
-                right: 12px;
-                bottom: 84px;
-                margin: 0;
-                padding: 10px 8px;
-                overflow-x: auto;
-                overflow-y: hidden;
-                -webkit-overflow-scrolling: touch;
-                backdrop-filter: blur(12px);
-            }
-            .character-selector .nav-button { display: none; }
-
-            /* Start button – full width CTA */
-            .start-button {
-                position: fixed;
-                left: 16px;
-                right: 16px;
-                bottom: 16px;
-                width: auto;
-                margin: 0;
-            }
-
-            /* Reduce expensive decorative animations on mobile */
-            .chat-user-avatar::before,
-            .halo, .heartBeat, .onlinePulse { animation: none !important; }
-        }
+        /* Mobile optimizations moved to index-responsive.css */
 
         /* Central character name display */
         .character-display-name {
@@ -1176,41 +1115,7 @@
         }
 
 
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .heroes-title {
-                font-size: 32px;
-            }
-
-            .character-display-name {
-                font-size: 48px;
-                bottom: 180px;
-            }
-
-            .character-info {
-                top: 100px;
-                left: 20px;
-                right: 20px;
-                max-width: none;
-            }
-
-            .control-panel {
-                top: 20px;
-                right: 20px;
-            }
-
-            .character-selector {
-                bottom: 20px;
-                left: 20px;
-                right: 20px;
-                transform: none;
-            }
-
-            .start-button {
-                bottom: 20px;
-                right: 20px;
-            }
-        }
+        /* Responsive design moved to index-responsive.css */
 
         /* User profile panel styles - precise replica design */
         .user-profile-overlay {
