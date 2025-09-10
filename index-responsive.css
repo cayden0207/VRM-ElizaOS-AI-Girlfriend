@@ -345,6 +345,11 @@
         bottom: calc(220px - 60px) !important; /* 10px below character-display-name (220px) minus estimated height */
         left: 50% !important;
         transform: translateX(-50%) !important;
+        max-width: calc(100vw - 40px) !important; /* Prevent overflow */
+        box-sizing: border-box !important;
+        gap: 4px !important; /* Compact spacing */
+        padding: 6px 12px !important; /* Compact padding */
+        overflow: hidden !important; /* Extra safety */
     }
 
     .selected-avatar,
@@ -442,7 +447,26 @@
         left: 50% !important;
         transform: translateX(-50%) !important;
         scale: 0.45 !important;
-        max-width: calc(100vw - 20px) !important; /* Prevent overflow */
+        max-width: calc(100vw - 40px) !important; /* Prevent overflow - match main rule */
         box-sizing: border-box !important;
+        gap: 4px !important; /* Force compact spacing */
+        padding: 6px 12px !important; /* Force compact padding */
+        overflow: hidden !important; /* Extra safety */
+    }
+}
+
+/* ==================================================
+   EMERGENCY OVERRIDE - Highest priority for overflow fix
+   ================================================== */
+@media (max-width: 767px) {
+    .character-selector.character-selector {
+        max-width: calc(100vw - 40px) !important;
+        box-sizing: border-box !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        gap: 3px !important; /* Even more compact */
+        padding: 4px 8px !important; /* Even more compact */
+        overflow: hidden !important;
+        white-space: nowrap !important;
     }
 }
