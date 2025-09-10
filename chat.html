@@ -8,6 +8,7 @@
     <title data-i18n-title="app.title">AI Girlfriend Chat Game 🌸</title>
     <link rel="stylesheet" href="chat-ui.css">
     <link rel="stylesheet" href="wallet-ui.css">
+    <link rel="stylesheet" href="chat-responsive.css">
     
     <!-- Configuration files -->
     <script src="config.js"></script>
@@ -1578,6 +1579,11 @@
             <button class="wallet-disconnect" onclick="disconnectWallet()">Disconnect</button>
         </div>
 
+
+        <!-- Mobile Controls Toggle Button -->
+        <button class="mobile-controls-toggle mobile-only" id="mobile-controls-toggle" style="display: none;">
+            Controls
+        </button>
 
         <!-- Floating chat window -->
         <div class="floating-chat" id="floating-chat">
@@ -4104,11 +4110,104 @@
             document.addEventListener('DOMContentLoaded', () => {
                 (window.AppConfig?.debug?.log || console.log)('DOMContentLoaded fired, calling init()');
                 init();
+                initMobileControls();
             });
         } else {
             // DOM already loaded
             (window.AppConfig?.debug?.log || console.log)('DOM loaded, calling init() immediately');
             init();
+            initMobileControls();
+        }
+
+        // Mobile Controls Functionality
+        function initMobileControls() {
+            // Show mobile controls toggle button on mobile devices
+            if (window.innerWidth <= 768) {
+                const mobileToggle = document.getElementById('mobile-controls-toggle');
+                if (mobileToggle) {
+                    mobileToggle.style.display = 'block';
+                }
+            }
+
+            // Mobile controls toggle functionality
+            const controlsToggle = document.getElementById('mobile-controls-toggle');
+            const controlPanel = document.querySelector('.control-panel');
+            
+            if (controlsToggle && controlPanel) {
+                controlsToggle.addEventListener('click', () => {
+                    controlPanel.classList.toggle('visible');
+                    controlsToggle.textContent = controlPanel.classList.contains('visible') ? 'Hide' : 'Controls';
+                });
+            }
+
+            // Mobile chat drag functionality
+            initMobileChatDrag();
+
+            // Responsive layout adjustments
+            handleResponsiveLayout();
+        }
+
+        function initMobileChatDrag() {
+            const chatWindow = document.getElementById('floating-chat');
+            if (!chatWindow) return;
+
+            let startY = 0;
+            let currentY = 0;
+            let isDragging = false;
+            const chatHeader = chatWindow.querySelector('.chat-header') || chatWindow.querySelector('.chat-window-header');
+
+            if (chatHeader) {
+                chatHeader.addEventListener('touchstart', (e) => {
+                    if (window.innerWidth <= 768) {
+                        startY = e.touches[0].clientY;
+                        isDragging = true;
+                    }
+                });
+
+                chatHeader.addEventListener('touchmove', (e) => {
+                    if (!isDragging || window.innerWidth > 768) return;
+                    
+                    e.preventDefault();
+                    currentY = e.touches[0].clientY - startY;
+                    
+                    // Limit drag range
+                    const maxDrag = window.innerHeight * 0.4;
+                    currentY = Math.max(-maxDrag, Math.min(maxDrag, currentY));
+                    
+                    chatWindow.style.transform = `translateY(${currentY}px)`;
+                });
+
+                chatHeader.addEventListener('touchend', () => {
+                    if (!isDragging || window.innerWidth > 768) return;
+                    
+                    isDragging = false;
+                    
+                    // Snap to collapsed or expanded state
+                    if (Math.abs(currentY) > 100) {
+                        chatWindow.classList.toggle('collapsed');
+                    }
+                    
+                    chatWindow.style.transform = '';
+                    currentY = 0;
+                });
+            }
+        }
+
+        function handleResponsiveLayout() {
+            function updateLayout() {
+                const isMobile = window.innerWidth <= 768;
+                const mobileToggle = document.getElementById('mobile-controls-toggle');
+                
+                if (mobileToggle) {
+                    mobileToggle.style.display = isMobile ? 'block' : 'none';
+                }
+                
+                // Update body class for mobile layout
+                document.body.classList.toggle('mobile-layout', isMobile);
+            }
+
+            window.addEventListener('resize', updateLayout);
+            updateLayout(); // Initial call
         }
     </script>
 

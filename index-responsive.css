@@ -1,0 +1,341 @@
+/* ==================================================
+   INDEX.HTML - RESPONSIVE STYLES
+   Separated Desktop and Mobile CSS
+   ================================================== */
+
+/* ==================================================
+   DESKTOP STYLES (Default - min-width: 769px)
+   ================================================== */
+
+/* Desktop-specific styles are in the main index.html <style> section */
+/* This file contains responsive overrides and mobile-specific styles */
+
+/* ==================================================
+   TABLET STYLES (769px - 1200px)
+   ================================================== */
+@media (min-width: 769px) and (max-width: 1200px) {
+    /* Slight adjustments for tablet screens */
+    .character-list {
+        gap: 15px;
+    }
+    
+    .character-info {
+        padding: 25px;
+    }
+    
+    .start-button {
+        padding: 14px 35px;
+        font-size: 17px;
+    }
+}
+
+/* ==================================================
+   MOBILE STYLES (max-width: 768px)
+   ================================================== */
+@media (max-width: 768px) {
+    /* ========== MOBILE LAYOUT STRUCTURE ========== */
+    
+    /* Voice selector positioning */
+    .voice-selector {
+        position: fixed !important;
+        bottom: 100px !important;
+        right: 10px !important;
+        left: auto !important;
+        transform: none !important;
+        z-index: 99;
+        background: rgba(0, 0, 0, 0.8);
+        padding: 5px 10px;
+        border-radius: 20px;
+    }
+
+    /* Language toggle positioning */
+    .language-toggle {
+        position: fixed !important;
+        left: 10px !important;
+        bottom: 20px !important;
+        z-index: 100;
+    }
+
+    /* VRM display area adjustments */
+    .vrm-display {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 45vh;
+        z-index: 10;
+    }
+
+    /* Character list layout */
+    .character-list {
+        position: fixed;
+        bottom: 140px;
+        left: 10px;
+        right: 10px;
+        height: 80px;
+        flex-direction: row;
+        gap: 8px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 5px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 10px;
+        justify-content: flex-start;
+        z-index: 50;
+    }
+
+    .character-list::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    /* Character thumbnails */
+    .character-item {
+        flex: 0 0 auto;
+        width: 60px;
+        height: 60px;
+    }
+
+    .avatar-img {
+        width: 60px;
+        height: 60px;
+    }
+
+    /* Character info panel */
+    .character-info {
+        position: fixed;
+        top: 45vh;
+        left: 0;
+        right: 0;
+        bottom: 230px;
+        overflow-y: auto;
+        padding: 15px;
+        background: linear-gradient(to bottom, 
+                    rgba(0, 0, 0, 0.8) 0%, 
+                    rgba(0, 0, 0, 0.95) 100%);
+        z-index: 20;
+    }
+
+    /* Profile content adjustments */
+    .profile-container {
+        padding: 0;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .selected-avatar {
+        width: 80px;
+        height: 80px;
+    }
+
+    .selected-avatar-img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .basic-info h3 {
+        font-size: 20px;
+    }
+
+    .info-row {
+        flex-direction: column;
+        gap: 5px;
+        align-items: flex-start;
+    }
+
+    .info-item {
+        width: 100%;
+    }
+
+    /* Voice play button */
+    .voice-play-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+    }
+
+    /* Start button positioning */
+    .start-button {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 140px);
+        max-width: 200px;
+        padding: 12px 20px;
+        font-size: 14px;
+        z-index: 60;
+    }
+
+    /* Hero title */
+    .heroes-title {
+        font-size: 14px;
+        top: 8px;
+        left: 8px;
+    }
+
+    /* ========== MOBILE WALLET MODAL ========== */
+    .wallet-modal {
+        padding: 20px;
+    }
+
+    .wallet-modal-content {
+        padding: 20px;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .wallet-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    /* ========== MOBILE REGISTRATION FORM ========== */
+    .registration-overlay {
+        padding: 10px;
+    }
+
+    .registration-container {
+        width: 95%;
+        max-width: none;
+        height: 90vh;
+        padding: 15px;
+    }
+
+    .registration-header h2 {
+        font-size: 20px;
+    }
+
+    .registration-content {
+        padding: 15px;
+    }
+
+    .form-columns {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .profile-field input,
+    .profile-field select,
+    .profile-field textarea {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .birthday-inputs {
+        gap: 5px;
+    }
+
+    .birthday-inputs input,
+    .birthday-inputs select {
+        font-size: 14px;
+    }
+
+    /* Registration buttons */
+    .registration-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .submit-btn,
+    .close-registration-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+/* ==================================================
+   SMALL MOBILE STYLES (max-width: 480px)
+   ================================================== */
+@media (max-width: 480px) {
+    /* Even more compact layout for small phones */
+    .vrm-display {
+        height: 40vh;
+    }
+
+    .character-info {
+        top: 40vh;
+        bottom: 200px;
+    }
+
+    .character-list {
+        bottom: 120px;
+        height: 70px;
+    }
+
+    .character-item,
+    .avatar-img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .selected-avatar,
+    .selected-avatar-img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .basic-info h3 {
+        font-size: 18px;
+    }
+
+    .start-button {
+        font-size: 13px;
+        padding: 10px 15px;
+    }
+}
+
+/* ==================================================
+   LANDSCAPE MOBILE STYLES
+   ================================================== */
+@media (max-width: 768px) and (orientation: landscape) {
+    .vrm-display {
+        height: 60vh;
+    }
+
+    .character-info {
+        top: 60vh;
+        bottom: 100px;
+        padding: 10px;
+    }
+
+    .character-list {
+        bottom: 60px;
+        height: 60px;
+    }
+
+    .start-button {
+        bottom: 5px;
+        padding: 8px 15px;
+        font-size: 13px;
+    }
+
+    .profile-header {
+        flex-direction: row;
+    }
+
+    .selected-avatar,
+    .selected-avatar-img {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* ==================================================
+   HIGH-DPI DISPLAYS (Retina)
+   ================================================== */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* Sharper borders and shadows for high-DPI displays */
+    .character-item {
+        border: 2px solid transparent;
+    }
+
+    .character-item.active {
+        border-color: #FFD700;
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    }
+}
