@@ -38,9 +38,9 @@
     .language-toggle {
         position: fixed !important;
         top: 55px !important;
-        left: 8px !important;
+        left: -11px !important;
         bottom: auto !important;
-        scale: 0.85;
+        scale: 0.6;
         z-index: 100;
         background: rgba(0, 0, 0, 0.7);
         padding: 5px 10px;
@@ -336,10 +336,10 @@
 
     /* Voice Selector - Small screen adjustments */
     .voice-selector-floating {
-        bottom: 590px !important;
-        left: 67px !important;
+        bottom: 595px !important;
+        left: 8px !important;
         transform: none !important;
-        scale: 0.9 !important;
+        scale: 0.85 !important;
     }
 
     /* Small screen adjustments */
