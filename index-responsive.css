@@ -50,14 +50,26 @@
 
     /* Voice selector floating style */
     .voice-selector-floating {
-        position: fixed;
-        bottom: 300px;
-        right: 185px;
-        left: auto;
-        top: auto;
-        transform: none;
-        padding: 8px 12px;
-        border-radius: 28px;
+        position: fixed !important;
+        bottom: 300px !important;
+        right: 185px !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+        padding: 8px 12px !important;
+        border-radius: 28px !important;
+        z-index: 100;
+    }
+    
+    /* Character selector style */
+    .character-selector {
+        position: fixed !important;
+        bottom: 72px !important;
+        left: 20px !important;
+        right: 20px !important;
+        transform: none !important;
+        scale: 0.5 !important;
+        z-index: 90;
     }
 
     /* Language toggle positioning - 放在WAIFU标题下方 */
