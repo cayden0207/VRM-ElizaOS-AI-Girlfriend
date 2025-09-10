@@ -1,0 +1,350 @@
+/* ==================================================
+   STANDARDIZED RESPONSIVE CSS SYSTEM
+   Auto-adapts to all screen sizes without device-specific media queries
+   ================================================== */
+
+/* ==================================================
+   CSS CUSTOM PROPERTIES (Variables)
+   ================================================== */
+:root {
+    /* Viewport-based fluid sizing */
+    --vw: 1vw;
+    --vh: 1vh;
+    --vmin: 1vmin;
+    --vmax: 1vmax;
+    
+    /* Fluid typography scale (clamp: min, preferred, max) */
+    --fs-xs: clamp(0.75rem, 2vw, 0.875rem);
+    --fs-sm: clamp(0.875rem, 2.5vw, 1rem);
+    --fs-base: clamp(1rem, 3vw, 1.125rem);
+    --fs-lg: clamp(1.125rem, 3.5vw, 1.5rem);
+    --fs-xl: clamp(1.5rem, 4vw, 2rem);
+    --fs-2xl: clamp(2rem, 5vw, 3rem);
+    --fs-3xl: clamp(2.5rem, 6vw, 4rem);
+    
+    /* Fluid spacing scale */
+    --space-xs: clamp(0.25rem, 1vw, 0.5rem);
+    --space-sm: clamp(0.5rem, 2vw, 1rem);
+    --space-md: clamp(1rem, 3vw, 1.5rem);
+    --space-lg: clamp(1.5rem, 4vw, 2rem);
+    --space-xl: clamp(2rem, 5vw, 3rem);
+    --space-2xl: clamp(3rem, 6vw, 4rem);
+    
+    /* Fluid component sizing */
+    --container-width: min(95%, 1200px);
+    --card-width: clamp(280px, 90vw, 400px);
+    --button-height: clamp(40px, 10vw, 56px);
+    --input-height: clamp(36px, 9vw, 48px);
+    
+    /* Dynamic breakpoints using CSS container queries */
+    --mobile-max: 768px;
+    --tablet-max: 1024px;
+    --desktop-min: 1025px;
+    
+    /* Z-index system */
+    --z-base: 1;
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-overlay: 300;
+    --z-modal: 400;
+    --z-tooltip: 500;
+}
+
+/* ==================================================
+   CONTAINER QUERIES (Future-proof responsive)
+   ================================================== */
+@supports (container-type: inline-size) {
+    .responsive-container {
+        container-type: inline-size;
+    }
+    
+    /* Container-based responsive styles */
+    @container (max-width: 768px) {
+        .container-responsive {
+            padding: var(--space-sm);
+        }
+    }
+    
+    @container (min-width: 769px) {
+        .container-responsive {
+            padding: var(--space-lg);
+        }
+    }
+}
+
+/* ==================================================
+   FLUID TYPOGRAPHY
+   ================================================== */
+h1, .h1 {
+    font-size: var(--fs-3xl);
+    line-height: 1.2;
+}
+
+h2, .h2 {
+    font-size: var(--fs-2xl);
+    line-height: 1.3;
+}
+
+h3, .h3 {
+    font-size: var(--fs-xl);
+    line-height: 1.4;
+}
+
+p, .body {
+    font-size: var(--fs-base);
+    line-height: 1.6;
+}
+
+.small {
+    font-size: var(--fs-sm);
+}
+
+/* ==================================================
+   FLUID LAYOUT SYSTEM
+   ================================================== */
+
+/* Auto-responsive grid */
+.auto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+    gap: var(--space-md);
+}
+
+/* Responsive flexbox */
+.flex-responsive {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+}
+
+.flex-responsive > * {
+    flex: 1 1 clamp(200px, 30%, 400px);
+}
+
+/* ==================================================
+   STANDARDIZED COMPONENT STYLES
+   ================================================== */
+
+/* Character Info Panel - Auto-responsive */
+.character-info-standard {
+    position: fixed;
+    inset: max(10vh, 80px) max(2vw, 20px) auto max(2vw, 20px);
+    max-width: var(--container-width);
+    padding: var(--space-md);
+    
+    /* Fluid scaling based on viewport */
+    transform: scale(clamp(0.35, 0.35 + (100vw - 320px) / 1000, 1));
+    transform-origin: top center;
+    
+    /* Automatic height adjustment */
+    max-height: min(70vh, 600px);
+    overflow-y: auto;
+}
+
+/* Character Selector - Auto-responsive */
+.character-selector-standard {
+    position: fixed;
+    bottom: max(5vh, 50px);
+    left: var(--space-md);
+    right: var(--space-md);
+    
+    /* Fluid scaling */
+    scale: clamp(0.5, 0.5 + (100vw - 320px) / 2000, 1);
+    
+    /* Auto-grid for character items */
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: clamp(60px, 15vw, 100px);
+    gap: var(--space-sm);
+    overflow-x: auto;
+    padding: var(--space-sm);
+}
+
+/* Voice Selector - Auto-responsive */
+.voice-selector-standard {
+    position: fixed;
+    bottom: clamp(200px, 40vh, 350px);
+    right: clamp(20px, 20vw, 200px);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: calc(var(--space-lg) * 1.5);
+    
+    /* Auto font size */
+    font-size: var(--fs-sm);
+}
+
+/* Language Toggle - Auto-responsive */
+.language-toggle-standard {
+    position: fixed;
+    top: clamp(40px, 8vh, 60px);
+    left: var(--space-sm);
+    padding: var(--space-xs) var(--space-sm);
+    
+    /* Fluid scaling */
+    scale: clamp(0.8, 0.8 + (100vw - 320px) / 3000, 1);
+    
+    font-size: var(--fs-sm);
+}
+
+/* Heroes Title - Auto-responsive */
+.heroes-title-standard {
+    position: fixed;
+    top: var(--space-sm);
+    left: var(--space-md);
+    font-size: clamp(24px, 8vw, 48px);
+    font-weight: bold;
+}
+
+/* Start Button - Auto-responsive */
+.start-button-standard {
+    position: fixed;
+    bottom: var(--space-md);
+    left: 50%;
+    transform: translateX(-50%);
+    
+    width: clamp(150px, 50vw, 250px);
+    height: var(--button-height);
+    padding: var(--space-sm) var(--space-md);
+    
+    font-size: var(--fs-base);
+}
+
+/* ==================================================
+   UTILITY CLASSES
+   ================================================== */
+
+/* Responsive visibility */
+.mobile-only {
+    display: none;
+}
+
+.desktop-only {
+    display: block;
+}
+
+/* Use aspect-ratio for responsive sizing */
+.aspect-square {
+    aspect-ratio: 1 / 1;
+}
+
+.aspect-video {
+    aspect-ratio: 16 / 9;
+}
+
+.aspect-portrait {
+    aspect-ratio: 3 / 4;
+}
+
+/* Fluid padding/margin */
+.p-fluid {
+    padding: var(--space-md);
+}
+
+.m-fluid {
+    margin: var(--space-md);
+}
+
+/* ==================================================
+   SINGLE BREAKPOINT FOR CRITICAL CHANGES
+   ================================================== */
+@media (max-width: 768px) {
+    /* Only critical mobile-specific changes */
+    .mobile-only {
+        display: block;
+    }
+    
+    .desktop-only {
+        display: none;
+    }
+    
+    /* Adjust z-index for mobile */
+    .character-info-standard {
+        z-index: var(--z-overlay);
+    }
+    
+    .character-selector-standard {
+        z-index: var(--z-sticky);
+    }
+}
+
+/* ==================================================
+   VIEWPORT-BASED ANIMATIONS
+   ================================================== */
+@media (prefers-reduced-motion: no-preference) {
+    * {
+        transition: scale 0.3s ease,
+                    transform 0.3s ease,
+                    opacity 0.3s ease;
+    }
+    
+    .character-selector-standard {
+        scroll-behavior: smooth;
+    }
+}
+
+/* ==================================================
+   ORIENTATION-BASED ADJUSTMENTS
+   ================================================== */
+@media (orientation: landscape) {
+    .character-info-standard {
+        max-height: min(60vh, 400px);
+    }
+    
+    .character-selector-standard {
+        bottom: var(--space-sm);
+    }
+}
+
+/* ==================================================
+   HIGH-DPI DISPLAYS
+   ================================================== */
+@media (min-resolution: 2dppx) {
+    /* Sharper borders for retina */
+    * {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* ==================================================
+   ACCESSIBILITY FEATURES
+   ================================================== */
+@media (prefers-contrast: high) {
+    :root {
+        --contrast-multiplier: 1.5;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #1a1a1a;
+        --text-primary: #ffffff;
+    }
+}
+
+/* ==================================================
+   USAGE INSTRUCTIONS
+   ================================================== */
+/*
+To use this standardized system:
+
+1. Replace fixed values with fluid variables:
+   - font-size: 16px → font-size: var(--fs-base)
+   - padding: 20px → padding: var(--space-md)
+   - width: 300px → width: clamp(250px, 80vw, 400px)
+
+2. Use the -standard classes:
+   - class="character-info" → class="character-info-standard"
+   - class="character-selector" → class="character-selector-standard"
+
+3. Benefits:
+   - Automatically adapts to ALL screen sizes
+   - No need for device-specific media queries
+   - Smooth scaling between breakpoints
+   - Better performance (fewer CSS rules)
+   - Easier maintenance
+
+4. The clamp() function ensures:
+   - Minimum size for small screens
+   - Preferred size that scales with viewport
+   - Maximum size for large screens
+*/
