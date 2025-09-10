@@ -159,8 +159,8 @@
         transform: translateX(-50%) !important;
         display: flex !important;
         align-items: center !important;
-        gap: 6px !important;
-        padding: 8px 20px !important;
+        gap: 4px !important; /* Reduced gap for mobile */
+        padding: 6px 12px !important; /* Reduced padding for mobile */
         background: rgba(255, 255, 255, 0.1) !important;
         backdrop-filter: blur(4px) !important;
         border-radius: 60px !important;
@@ -168,6 +168,8 @@
         z-index: 90;
         scale: 0.45 !important;
         box-shadow: 0 1px 7px rgba(0, 0, 0, 0.1) !important;
+        max-width: calc(100vw - 40px) !important; /* Prevent overflow with more margin */
+        box-sizing: border-box !important;
     }
 
     /* Navigation buttons - Mobile */
@@ -440,5 +442,7 @@
         left: 50% !important;
         transform: translateX(-50%) !important;
         scale: 0.45 !important;
+        max-width: calc(100vw - 20px) !important; /* Prevent overflow */
+        box-sizing: border-box !important;
     }
 }
