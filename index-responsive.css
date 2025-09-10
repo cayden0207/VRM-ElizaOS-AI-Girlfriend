@@ -28,10 +28,10 @@
     
     /* WAIFU Title */
     .heroes-title {
-        font-size: 40px;
-        top: 8px;
-        left: 20px;
-        z-index: 100;
+        font-size: 40px !important;
+        top: 8px !important;
+        left: 20px !important;
+        z-index: 100 !important;
     }
 
     /* Language Toggle - Below WAIFU title */
