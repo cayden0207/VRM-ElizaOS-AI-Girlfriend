@@ -160,14 +160,17 @@
         transform: none !important;
         scale: 0.5 !important;
         z-index: 90;
+        overflow: hidden !important;
+        max-width: calc(100vw - 40px) !important;
     }
 
     /* Character List */
     .character-list {
-        position: fixed;
-        bottom: 72px;
-        left: 20px;
-        right: 20px;
+        position: relative !important;
+        bottom: auto !important;
+        left: auto !important;
+        right: auto !important;
+        width: 100% !important;
         height: 80px;
         flex-direction: row;
         gap: 8px;
@@ -179,7 +182,7 @@
         justify-content: flex-start;
         z-index: 50;
         transform: none;
-        scale: 0.5;
+        scale: 1 !important;
     }
 
     .character-list::-webkit-scrollbar {
@@ -351,8 +354,12 @@
     }
 
     .character-display-name {
+        position: fixed;
         bottom: 430px;
+        left: 50%;
+        transform: translateX(-50%);
         font-size: 28px;
+        z-index: 30;
     }
 }
 
