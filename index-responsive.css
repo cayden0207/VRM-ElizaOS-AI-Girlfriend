@@ -154,9 +154,9 @@
     /* Character Selector - Mobile version with desktop-like navigation */
     .character-selector {
         position: fixed !important;
-        bottom: 250px !important;
-        left: -5px !important;
-        transform: none !important;
+        bottom: calc(450px - 60px) !important; /* 10px below character-display-name (450px) minus estimated height */
+        left: 50% !important;
+        transform: translateX(-50%) !important;
         display: flex !important;
         align-items: center !important;
         gap: 6px !important;
@@ -340,9 +340,9 @@
 
     /* Character selector adjustments for small screens */
     .character-selector {
-        bottom: 250px !important;
-        left: -5px !important;
-        scale: 0.45 !important;
+        bottom: calc(220px - 60px) !important; /* 10px below character-display-name (220px) minus estimated height */
+        left: 50% !important;
+        transform: translateX(-50%) !important;
     }
 
     .selected-avatar,
@@ -435,11 +435,10 @@
    UNIVERSAL PORTRAIT MOBILE - Force consistent layout
    ================================================== */
 @media (orientation: portrait) and (max-width: 767px) {
-    /* Ensure all portrait mobile devices use the ideal layout */
+    /* Ensure all portrait mobile devices have centered character-selector */
     .character-selector {
-        bottom: 250px !important;
-        left: -5px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
         scale: 0.45 !important;
-        transform: none !important;
     }
 }
