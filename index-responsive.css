@@ -340,8 +340,9 @@
 
     /* Character selector adjustments for small screens */
     .character-selector {
-        bottom: 120px !important;
-        scale: 0.6 !important;
+        bottom: 270px !important;
+        left: -10px !important;
+        scale: 0.45 !important;
     }
 
     .selected-avatar,
@@ -377,8 +378,8 @@
 
     .character-display-name {
         position: fixed;
-        bottom: 430px;
-        left: 50%;
+        bottom: 220px !important;
+        left: 50% !important;
         transform: translateX(-50%);
         font-size: 28px;
         z-index: 30;
