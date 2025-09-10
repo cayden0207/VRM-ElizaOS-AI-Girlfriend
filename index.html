@@ -2165,6 +2165,18 @@
             }
             // Initialize character profile
             updateCharacterProfile(characters[0]);
+            
+            // 移动端：将角色选择器滚动条居中
+            if (window.innerWidth <= 768) {
+                const characterList = document.querySelector('.character-list');
+                if (characterList) {
+                    // 计算滚动到中间位置
+                    const scrollWidth = characterList.scrollWidth;
+                    const clientWidth = characterList.clientWidth;
+                    const centerPosition = (scrollWidth - clientWidth) / 2;
+                    characterList.scrollLeft = centerPosition;
+                }
+            }
         });
         loadCharacter(0);
 

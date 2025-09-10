@@ -48,12 +48,16 @@
         border-radius: 20px;
     }
 
-    /* Language toggle positioning */
+    /* Language toggle positioning - 放在WAIFU标题下方 */
     .language-toggle {
         position: fixed !important;
+        top: 35px !important;
         left: 10px !important;
-        bottom: 20px !important;
+        bottom: auto !important;
         z-index: 100;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 5px 10px;
+        border-radius: 15px;
     }
 
     /* VRM display area adjustments */
@@ -100,14 +104,18 @@
         height: 60px;
     }
 
-    /* Character info panel */
+    /* Character info panel - 使用您要求的样式 */
     .character-info {
         position: fixed;
-        top: 45vh;
-        left: 0;
-        right: 0;
-        bottom: 230px;
-        overflow-y: auto;
+        top: 100px;
+        left: 20px;
+        right: 20px;
+        max-width: none;
+        transform: scale(0.4);
+        transform-origin: top center;
+        bottom: auto;
+        height: auto;
+        overflow-y: visible;
         padding: 15px;
         background: linear-gradient(to bottom, 
                     rgba(0, 0, 0, 0.8) 0%, 
@@ -258,8 +266,10 @@
     }
 
     .character-info {
-        top: 40vh;
-        bottom: 200px;
+        top: 90px;
+        left: 15px;
+        right: 15px;
+        transform: scale(0.35);
     }
 
     .character-list {
