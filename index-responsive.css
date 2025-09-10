@@ -71,6 +71,24 @@
         border-radius: 28px !important;
         z-index: 35;
         background: rgba(0, 0, 0, 0.8);
+        scale: 1; /* Default scale for 768px */
+    }
+    
+    /* Voice Selector - Overrides for very small screens (480px and below) */
+    @media (max-width: 480px) {
+        .voice-selector-floating {
+            bottom: 590px !important;
+            left: 67px !important;
+            transform: none !important;
+            scale: 0.9 !important;
+        }
+    }
+    
+    /* Voice Selector - Overrides for landscape orientation */
+    @media (orientation: landscape) {
+        .voice-selector-floating {
+            bottom: 380px !important;
+        }
     }
 
     /* Regular Voice Selector (if different from floating) */
@@ -331,12 +349,12 @@
         padding: 10px 15px;
     }
 
-    /* Adjust voice selector for small screens */
-    .voice-selector-floating {
-        bottom: 590px !important;
-        left: 67px !important;
-        transform: none !important;
-        scale: 0.9;
+    /* Small screen adjustments */
+    .character-info {
+        top: 90px;
+        left: 15px;
+        right: 15px;
+        scale: 0.3;
     }
 
     .character-display-name {
@@ -380,10 +398,7 @@
         height: 60px;
     }
 
-    /* Adjust for landscape */
-    .voice-selector-floating {
-        bottom: 380px !important;
-    }
+    /* Landscape adjustments - voice selector moved to main 768px block */
 
     .character-display-name {
         bottom: 340px;
