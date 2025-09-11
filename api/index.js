@@ -23,7 +23,7 @@ let AgentRuntime, ModelProviderName, MemoryManager;
 async function initializeEliza() {
   if (!AgentRuntime) {
     try {
-      // 检查环境变量
+      // Check环境变量
       const hasOpenAI = !!process.env.OPENAI_API_KEY;
       const hasElevenLabs = !!process.env.ELEVENLABS_API_KEY;
       console.log('🔑 API Keys 状态:', {
@@ -60,7 +60,7 @@ async function initializeEliza() {
 const agents = new Map();
 const characters = new Map();
 
-// 加载角色配置
+// Load角色配置
 // 角色数据 - 从character.md提取的完整25个角色
 const characterData = {
   alice: {
@@ -287,7 +287,7 @@ async function loadCharacter(characterId) {
   }
 }
 
-// 创建或获取ElizaOS Agent
+// Create或获取ElizaOS Agent
 async function getOrCreateAgent(characterId) {
   if (agents.has(characterId)) {
     console.log(`♻️ 使用缓存的Agent: ${characterId}`);
@@ -305,7 +305,7 @@ async function getOrCreateAgent(characterId) {
     }
     
     console.log(`🏗️ 创建AgentRuntime for ${character.name}`);
-    // 创建AgentRuntime
+    // CreateAgentRuntime
     const runtime = new AgentRuntime({
     character: {
       ...character,
@@ -435,7 +435,7 @@ async function generateVoice(text, characterId, options = {}) {
     'zwei': '0EzDWfDZDlAIeQQOjhoC'
   };
   
-  // 处理角色名中的空格和大小写问题
+  // Process角色名中的空格和大小写问题
   let normalizedCharacterId = characterId.toLowerCase().replace(/\s+/g, '');
   
   // 特殊名称映射处理
@@ -501,7 +501,7 @@ const corsHeaders = {
 };
 
 export default async function handler(req, res) {
-  // 设置 CORS
+  // Setup CORS
   Object.entries(corsHeaders).forEach(([key, value]) => {
     res.setHeader(key, value);
   });
@@ -570,7 +570,7 @@ export default async function handler(req, res) {
 
         console.log(`🎤 开始生成语音: voiceId=${voiceId}, text="${text.substring(0, 30)}..."`);
         
-        // 设置较短的超时时间
+        // Setup较短的超时时间
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 8000); // 8秒超时
 
@@ -617,10 +617,10 @@ export default async function handler(req, res) {
 
       } catch (error) {
         if (error.name === 'AbortError') {
-          console.error('❌ 请求超时');
+          console.error('❌ Request timeout');
           return res.status(408).json({
             success: false,
-            error: '请求超时，请重试'
+            error: 'Request timeout，请重试'
           });
         }
         
@@ -646,7 +646,7 @@ export default async function handler(req, res) {
       
       console.log(`🔐 认证钱包: ${walletAddress}`);
       
-      // 检查或创建用户
+      // Check或创建用户
       if (supabase) {
         const dbId = walletAddress.startsWith('wallet_') ? walletAddress : `wallet_${walletAddress}`;
         const { data: user } = await supabase
@@ -656,7 +656,7 @@ export default async function handler(req, res) {
           .maybeSingle();
         
         if (!user) {
-          // 创建新用户
+          // Create新用户
           const { data: newUser } = await supabase
             .from('users')
             .insert({
@@ -734,7 +734,7 @@ export default async function handler(req, res) {
       return res.json({ success: true, profile: data });
     }
 
-    // 创建/更新用户资料
+    // Create/更新用户资料
     if (method === 'POST' && (url === '/profiles' || url === '/api/profiles')) {
       const body = req.body;
       console.log(`💾 保存用户数据:`, body);
@@ -779,7 +779,7 @@ export default async function handler(req, res) {
       return res.json({ 
         success: true, 
         profile: data,
-        message: '用户资料保存成功'
+        message: '用户资料Saved successfully'
       });
     }
 
@@ -827,7 +827,7 @@ export default async function handler(req, res) {
             .maybeSingle();
           
           if (!data) {
-            // 创建新关系
+            // Create新关系
             const { data: newRel } = await supabase
               .from('user_character_relations')
               .insert({
@@ -903,7 +903,7 @@ export default async function handler(req, res) {
             }
           });
           
-          // 更新关系状态
+          // Update关系状态
           await supabase
             .from('user_character_relations')
             .update({
@@ -1070,7 +1070,7 @@ Language: ${actualLanguage === 'zh' ? 'Respond in Chinese' : actualLanguage === 
               // 🇯🇵 准备日文版本的回复 (用于语音)
               let voiceText = responseText;
               
-              // 检查角色的 character.md 中是否有日文示例台词
+              // Check角色的 character.md 中是否有日文示例台词
               const character = await loadCharacter(characterId);
               if (character && character.sampleJP) {
                 // 如果有日文示例，可以生成日文版本的回复

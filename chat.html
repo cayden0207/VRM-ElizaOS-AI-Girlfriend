@@ -2148,7 +2148,7 @@
         // 先设置临时背景色
         scene.background = new THREE.Color(0x87CEEB);
         
-        // 加载背景图片
+        // Load背景图片
         AppConfig.debug.log('🎨 Loading background image: BG/chatroom2.png');
         AppConfig.debug.log('🌍 Current URL:', window.location.href);
         
@@ -2206,7 +2206,7 @@
         let currentMixer = null;
         let footShadow = null;
 
-        // 创建脚底阴影函数 - 参考index.html的实现
+        // Create脚底阴影函数 - 参考index.html的实现
         function createFootShadow(vrm) {
             // 移除之前的阴影（如果存在）
             if (footShadow) {
@@ -2215,13 +2215,13 @@
                 footShadow.material.dispose();
             }
 
-            // 创建渐变圆形阴影 - 模仿index.html
+            // Create渐变圆形阴影 - 模仿index.html
             const shadowCanvas = document.createElement('canvas');
             shadowCanvas.width = 128;
             shadowCanvas.height = 128;
             const context = shadowCanvas.getContext('2d');
             
-            // 创建径向渐变阴影
+            // Create径向渐变阴影
             const gradient = context.createRadialGradient(64, 64, 0, 64, 64, 64);
             gradient.addColorStop(0, 'rgba(0, 0, 0, 0.4)'); // 中心较深
             gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0.2)'); // 中等透明度
@@ -2250,7 +2250,7 @@
             });
         }
 
-        // 更新阴影位置函数（用于动画时）
+        // Update阴影位置函数（用于动画时）
         function updateFootShadow() {
             if (!footShadow || !currentVrm) return;
             
@@ -2311,7 +2311,7 @@
                 currentVrm.expressionManager.setValue(expressionName, value);
                 // console.log(`😊 设置表情: ${expressionName} = ${value}`);
 
-                // 更新状态显示
+                // Update状态显示
                 if (value > 0.5) {
                     document.getElementById('current-expression').textContent = getEmotionText(expressionName);
                 }
@@ -2342,7 +2342,7 @@
                 return;
             }
 
-            // 重置所有表情
+            // Reset所有表情
             resetExpressions();
             
             // 尝试多种害羞相关的表情
@@ -2498,7 +2498,7 @@
                     }
                 }
 
-                // 更新状态显示
+                // Update状态显示
                 const animationName = animationUrl.split('/').pop().split('.')[0];
                 document.getElementById('current-animation').textContent = animationName;
 
@@ -2631,7 +2631,7 @@
                     // 将VRM模型位置向下移动，更贴近底部边界
                     vrm.scene.position.y = -0.8;  // 与选角页面相同的位置
                     
-                    // 创建脚底阴影
+                    // Create脚底阴影
                     createFootShadow(vrm);
 
                     currentMixer = new THREE.AnimationMixer(currentVrm.scene);
@@ -2649,13 +2649,13 @@
 
                     availableExpressions = getAvailableExpressions(vrm);
                     
-                    // 更新全局变量
+                    // Update全局变量
                     window.currentVrm = currentVrm;
                     window.availableExpressions = availableExpressions;
 
                     updateVRMStatus('✅ Loaded');
                     
-                    // 更新角色名称显示
+                    // Update角色名称显示
                     const characterNameElement = document.getElementById('character-name');
                     if (characterNameElement) {
                         characterNameElement.textContent = characterName;
@@ -2666,7 +2666,7 @@
 
                     // console.log('🎭 VRM loaded:', vrm);
                     
-                    // 初始化AI聊天系统
+                    // InitializeAI聊天系统
                     onVRMLoadComplete(currentCharacterName, vrmPath);
                 },
                 (progress) => {
@@ -2802,7 +2802,7 @@
             }
         }
         
-        // 更新流式消息内容
+        // Update流式消息内容
         function updateStreamingMessageUI(messageId, content) {
             const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
             if (messageElement) {
@@ -2877,7 +2877,7 @@
                 }
             }
             
-            // 开始打字效果
+            // Start打字效果
             speechBubbleState.timeoutId = setTimeout(typeText, 200); // 气泡出现后200ms开始打字
         }
         
@@ -2888,7 +2888,7 @@
             streamStartTime: null
         };
         
-        // 更新对话气泡内容（流式更新时使用，不重启动画）
+        // Update对话气泡内容（流式更新时使用，不重启动画）
         function updateSpeechBubbleContent(text) {
             // 标记为流式更新状态
             if (!bubbleStreamingState.isStreaming) {
@@ -2900,7 +2900,7 @@
             // 保存最新的完整文本
             bubbleStreamingState.pendingText = text;
             
-            // 设置延迟显示，避免频繁更新
+            // Setup延迟显示，避免频繁更新
             if (bubbleStreamingState.timeoutId) {
                 clearTimeout(bubbleStreamingState.timeoutId);
             }
@@ -2920,7 +2920,7 @@
 
 
         async function sendMessage() {
-            // 验证用户是否已认证
+            // Validate用户是否已认证
             if (!walletAuth.isAuthenticated) {
                 console.error('❌ 用户未认证，无法发送消息');
                 walletAuth.showUnauthorizedOverlay();
@@ -2938,7 +2938,7 @@
 
             console.log(`💬 发送消息: ${message} (用户: ${walletAuth.formatAddress(userId)}, 角色: ${character.name})`);
 
-            // 清空输入框
+            // Clear输入框
             input.value = '';
 
             // 分析情感并触发动画
@@ -3089,7 +3089,7 @@
 
             console.log(`🎭 触发情感: ${emotion}`);
 
-            // 重置按钮状态
+            // Reset按钮状态
             document.querySelectorAll('.emotion-btn').forEach(btn => btn.classList.remove('active'));
 
             // 激活对应按钮
@@ -3106,12 +3106,12 @@
                 return;
             }
 
-            // 加载对应动画
+            // Load对应动画
             if (emotionAnimationMap[emotion]) {
                 loadAnimation(emotionAnimationMap[emotion], emotion);
             }
 
-            // 设置表情
+            // Setup表情
             if (availableExpressions.includes(emotion)) {
                 resetExpressions();
                 setExpression(emotion, 1.0);
@@ -3146,7 +3146,7 @@
 
                 // 音乐加载成功事件
                 backgroundMusic.addEventListener('canplaythrough', () => {
-                    console.log('🎵 背景音乐加载完成');
+                    console.log('🎵 背景音乐Loading complete');
                 });
 
                 // 音乐加载错误事件
@@ -3230,7 +3230,7 @@
             }
         };
 
-        // 初始化语言切换器
+        // Initialize语言切换器
         function initLanguageToggle() {
             if (window.i18n) {
                 const currentLang = window.i18n.getCurrentLanguage();
@@ -3246,7 +3246,7 @@
 
         function initAnimationSelector() {
             const selector = document.getElementById('animation-selector');
-            // 清空现有选项
+            // Clear现有选项
             selector.innerHTML = '<option value="">' + i18n.t('panel.select.animation') + '</option>';
 
             // 添加所有动画选项
@@ -3260,7 +3260,7 @@
 
         function initCharacterSelector() {
             const selector = document.getElementById('character-selector');
-            // 清空现有选项
+            // Clear现有选项
             selector.innerHTML = '<option value="">' + i18n.t('panel.select.character') + '</option>';
 
             // 添加所有角色选项
@@ -3271,7 +3271,7 @@
                 selector.appendChild(option);
             });
 
-            // 设置默认选中的角色
+            // Setup默认选中的角色
             selector.value = currentCharacterName;
         }
 
@@ -3289,7 +3289,7 @@
 
             console.log(`👤 切换角色: ${currentCharacterName} -> ${selectedCharacter}`);
 
-            // 更新聊天头部的角色名称
+            // Update聊天头部的角色名称
             const characterNames = {
                 'Fliza VRM': '芙莉莎',
                 'QuQu_U': 'QuQu',
@@ -3322,10 +3322,10 @@
             const displayName = characterNames[selectedCharacter] || selectedCharacter;
             document.querySelector('.chat-user-details h1').textContent = displayName;
 
-            // 加载新角色
+            // Load新角色
             loadVRM(selectedCharacter);
 
-            // 设置角色头像
+            // Setup角色头像
             setCharacterAvatar(selectedCharacter);
 
             // 添加角色切换消息
@@ -3334,7 +3334,7 @@
             }, 2000);
         }
 
-        // 设置角色头像的函数
+        // Setup角色头像的函数
         let lastSetAvatar = null; // 防止重复设置同一个头像
         function setCharacterAvatar(characterKey) {
             // 防止重复设置相同头像
@@ -3418,7 +3418,7 @@
             }
 
             if (!currentVrm) {
-                alert('VRM模型还未加载完成！');
+                alert('VRM模型还未Loading complete！');
                 return;
             }
 
@@ -3468,7 +3468,7 @@
 
             if (currentVrm) {
                 currentVrm.update(deltaTime);
-                // 更新脚底阴影位置
+                // Update脚底阴影位置
                 updateFootShadow();
             }
 
@@ -3483,7 +3483,7 @@
                 this.selectedCharacter = null;
             }
             
-            // 检查钱包验证状态
+            // Check钱包验证状态
             checkAuthentication() {
                 AppConfig.debug.log('🔍 Starting wallet verification process...');
                 
@@ -3529,7 +3529,7 @@
                     this.selectedCharacter = JSON.parse(selectedCharacterData);
                     AppConfig.debug.log('📦 Parsed character data:', this.selectedCharacter);
                     
-                    // 验证角色数据中的钱包地址是否匹配
+                    // Validate角色数据中的钱包地址是否匹配
                     if (this.selectedCharacter.walletAddress !== this.walletAddress) {
                         console.log('⚠️ 钱包地址不匹配:');
                         console.log('  - 角色数据中的钱包:', this.selectedCharacter.walletAddress);
@@ -3569,7 +3569,7 @@
                 overlay.style.display = 'flex';
             }
             
-            // 更新钱包UI显示
+            // Update钱包UI显示
             updateWalletUI() {
                 const walletStatusInfo = document.getElementById('wallet-status-info');
                 const walletAddressElement = document.getElementById('wallet-address');
@@ -3578,14 +3578,14 @@
                     walletStatusInfo.style.display = 'flex';
                     walletAddressElement.textContent = this.formatAddress(this.walletAddress);
                     
-                    // 更新角色名称显示
+                    // Update角色名称显示
                     if (this.selectedCharacter) {
                         const characterNameElement = document.getElementById('character-name');
                         if (characterNameElement) {
                             characterNameElement.textContent = this.selectedCharacter.name;
                         }
                         
-                        // 更新欢迎消息中的角色信息
+                        // Update欢迎消息中的角色信息
                         const welcomeMessage = document.querySelector('.message-bubble.ai .bubble-content');
                         if (welcomeMessage && !welcomeMessage.dataset.updated) {
                             welcomeMessage.textContent = `你好！我是${this.selectedCharacter.name}，很高兴再次见到你~ 💕 让我们继续我们的对话吧！`;
@@ -3600,7 +3600,7 @@
                 return `${address.slice(0, 4)}...${address.slice(-4)}`;
             }
             
-            // 断开钱包连接
+            // Disconnect钱包连接
             disconnect() {
                 (window.AppConfig?.debug?.log || console.log)('walletAuth.disconnect called');
                 (window.AppConfig?.debug?.log || console.log)('localStorage snapshot taken');
@@ -3687,7 +3687,7 @@
             const chatHeader = document.querySelector('.chat-window-header');
             const chatWindow = document.getElementById('floating-chat');
             
-            // 设置聊天框的初始绝对位置，避免依赖CSS transform
+            // Setup聊天框的初始绝对位置，避免依赖CSS transform
             const windowHeight = window.innerHeight;
             const chatHeight = chatWindow.offsetHeight;
             const initialTop = Math.max(0, (windowHeight - chatHeight) / 2);
@@ -3872,12 +3872,12 @@
                 
                 const vrmExpression = expressionMap[expression] || 'neutral';
                 
-                // 重置所有表情
+                // Reset所有表情
                 Object.keys(currentVrm.expressionManager.expressionMap).forEach(name => {
                     currentVrm.expressionManager.setValue(name, 0.0);
                 });
                 
-                // 设置目标表情
+                // Setup目标表情
                 currentVrm.expressionManager.setValue(vrmExpression, 1.0);
                 
                 // 2秒后恢复中性表情
@@ -3949,7 +3949,7 @@
             return memoryEnhancedResponses[Math.floor(Math.random() * memoryEnhancedResponses.length)];
         }
         
-        // 在VRM加载完成后自动初始化AI聊天系统
+        // 在VRMLoading complete后自动初始化AI聊天系统
         function onVRMLoadComplete(characterName, vrmPath) {
             selectedCharacter = {
                 name: characterName.replace(' VRM', '').replace('_', ' '),
@@ -3958,7 +3958,7 @@
                 id: characterName
             };
             
-            // 设置角色头像
+            // Setup角色头像
             setCharacterAvatar(characterName);
             
             setTimeout(() => {
@@ -3966,7 +3966,7 @@
             }, 1500);
         }
         
-        // 更新手机状态栏时间
+        // Update手机状态栏时间
         function updatePhoneTime() {
             const timeDisplay = document.getElementById('phone-time');
             if (timeDisplay) {
@@ -3988,7 +3988,7 @@
         window.goToCharacterSelect = goToCharacterSelect;
         window.initDragAndDrop = initDragAndDrop;
 
-        // 初始化
+        // Initialize
         function init() {
             AppConfig.debug.info('🚀 AI Companion initialization started...');
             AppConfig.debug.log('🌐 Current page URL:', window.location.href);
@@ -4008,20 +4008,20 @@
             
             // 用户资料填写已移至character-select页面，index.html只处理已注册用户
             
-            // 检查是否有选择的角色，然后加载VRM
+            // Check是否有选择的角色，然后加载VRM
             loadSelectedCharacter();
             
             resizeRenderer();
             animate();
 
-            // 初始化选择器
+            // Initialize选择器
             initAnimationSelector();
             initCharacterSelector();
             
-            // 初始化拖拽功能
+            // Initialize拖拽功能
             initDragAndDrop();
 
-            // 初始化语言切换器
+            // Initialize语言切换器
             initLanguageToggle();
 
             // 延迟初始化背景音乐，确保DOM完全加载
@@ -4038,7 +4038,7 @@
             AppConfig.debug.info('🎉 AI Companion initialization completed');
         }
 
-        // 加载选择的角色
+        // Load选择的角色
         function loadSelectedCharacter() {
             try {
                 // 从钱包验证系统获取角色信息
@@ -4049,13 +4049,13 @@
                 console.log('- localStorage selectedCharacter:', localStorage.getItem('selectedCharacter'));
                 
                 if (character) {
-                    // 更新悬浮聊天框中的角色名称
+                    // Update悬浮聊天框中的角色名称
                     const characterNameElement = document.getElementById('character-name');
                     if (characterNameElement) {
                         characterNameElement.textContent = character.name;
                     }
                     
-                    // 更新欢迎消息 - 检查是否是老用户
+                    // Update欢迎消息 - 检查是否是老用户
                     const welcomeMessage = document.querySelector('.message-bubble.ai .bubble-content');
                     if (welcomeMessage && !welcomeMessage.dataset.updated) {
                         const userProfile = localStorage.getItem(`user_profile_${walletAuth.getCurrentUserId()}`);
@@ -4069,13 +4069,13 @@
                         welcomeMessage.dataset.updated = 'true';
                     }
                     
-                    // 设置默认VRM文件
+                    // Setup默认VRM文件
                     defaultVrmFile = character.file;
                     
                     console.log(`✅ 已加载角色: ${character.name} (钱包: ${walletAuth.formatAddress(character.walletAddress)})`);
                     console.log(`📁 设置defaultVrmFile: ${defaultVrmFile}`);
                     
-                    // 设置角色头像（基于character.id）
+                    // Setup角色头像（基于character.id）
                     if (character.id) {
                         setCharacterAvatar(character.id);
                     }
@@ -4100,7 +4100,7 @@
         window.resetExpressions = resetExpressions;
         window.setExpression = setExpression;
 
-        // 等待DOM加载完成后再初始化
+        // 等待DOMLoading complete后再初始化
         AppConfig.debug.log('🔍 Check DOM state:', document.readyState);
         AppConfig.debug.log('🔍 Init function exists:', typeof init);
         AppConfig.debug.log('⚙️ Module script execution completed, preparing initialization...');
@@ -4217,13 +4217,13 @@
             (window.AppConfig?.debug?.log || console.log)('Test bashful expression...');
             
             if (!window.currentVrm || !window.currentVrm.expressionManager) {
-                alert('VRM模型还未加载完成！请等待加载...');
+                alert('VRM模型还未Loading complete！请等待加载...');
                 return;
             }
 
             console.log('可用表情:', window.availableExpressions);
             
-            // 重置所有表情
+            // Reset所有表情
             if (window.resetExpressions) {
                 window.resetExpressions();
             }
@@ -4258,7 +4258,7 @@
 
         window.testHappyExpression = function() {
             if (!window.currentVrm || !window.currentVrm.expressionManager) {
-                alert('VRM模型还未加载完成！');
+                alert('VRM模型还未Loading complete！');
                 return;
             }
 
@@ -4280,7 +4280,7 @@
 
         window.testSadExpression = function() {
             if (!window.currentVrm || !window.currentVrm.expressionManager) {
-                alert('VRM模型还未加载完成！');
+                alert('VRM模型还未Loading complete！');
                 return;
             }
 
@@ -4302,7 +4302,7 @@
 
         window.resetAllExpressions = function() {
             if (!window.currentVrm || !window.currentVrm.expressionManager) {
-                alert('VRM模型还未加载完成！');
+                alert('VRM模型还未Loading complete！');
                 return;
             }
 
@@ -4350,7 +4350,7 @@
     <!-- 页面加载后初始化 -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 检查是否从角色选择页面跳转过来
+            // Check是否从角色选择页面跳转过来
             const hasStoredWallet = localStorage.getItem('wallet_address');
             const hasSelectedCharacter = localStorage.getItem('selectedCharacter');
             
