@@ -1377,7 +1377,7 @@
         }
 
         @media (max-width: 768px) {
-            /* Fullscreen chat window on mobile */
+            /* Fullscreen chat window on mobile portrait */
             .floating-chat {
                 top: 0;
                 left: 0;
@@ -1396,6 +1396,47 @@
             }
 
             .music-controls { display: none; }
+        }
+
+        /* Mobile Landscape - Compact chat window */
+        @media (orientation: landscape) and (max-width: 1200px) and (max-height: 500px) {
+            .floating-chat {
+                width: 320px !important;
+                height: 360px !important;
+                right: 10px !important;
+                top: 10px !important;
+                scale: 0.6 !important;
+                border-radius: 20px !important;
+                border-width: 5px !important;
+            }
+            
+            .chat-window-header {
+                height: 40px !important;
+                padding: 8px !important;
+                font-size: 14px !important;
+            }
+            
+            .chat-window-messages {
+                height: 240px !important;
+                font-size: 12px !important;
+                padding: 6px !important;
+            }
+            
+            .input-container {
+                padding: 6px !important;
+            }
+            
+            .input-container input {
+                font-size: 12px !important;
+                padding: 6px !important;
+                height: 32px !important;
+            }
+            
+            .send-btn {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 14px !important;
+            }
         }
 
         /* VRM状态信息 */
@@ -4481,203 +4522,6 @@
             75% { transform: rotate(90deg); }
         }
 
-        /* Mobile Landscape Layout - Optimized for phone horizontal viewing */
-        @media (orientation: landscape) and (min-width: 600px) and (max-height: 500px) {
-            /* FORCE FULL SCREEN - Multiple approaches */
-            html {
-                width: 100vw !important;
-                height: 100vh !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                box-sizing: border-box !important;
-                overflow: hidden !important;
-            }
-            
-            body {
-                width: 100vw !important;
-                height: 100vh !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                box-sizing: border-box !important;
-                overflow: hidden !important;
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-            }
-            
-            /* Background container - covers entire viewport */
-            .game-container::before {
-                content: '';
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                width: 100vw !important;
-                height: 100vh !important;
-                background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%) !important;
-                z-index: -1 !important;
-            }
-            
-            .game-container {
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                width: 100vw !important;
-                height: 100vh !important;
-                background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%) !important;
-                z-index: 0 !important;
-            }
-            
-            /* VRM container - main character display area */
-            .vrm-container {
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                width: calc(100vw - 200px) !important; /* Leave 200px for compact chat */
-                height: 100vh !important;
-                z-index: 1 !important;
-            }
-            
-            /* Compact Chat panel - much smaller for mobile landscape */
-            .chat-panel {
-                position: fixed !important;
-                top: 8px !important;
-                right: 8px !important;
-                width: 180px !important; /* Much smaller for mobile */
-                height: calc(100vh - 16px) !important;
-                background: rgba(255, 255, 255, 0.9) !important;
-                border-radius: 6px !important;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
-                backdrop-filter: blur(5px) !important;
-                z-index: 15 !important;
-                font-size: 11px !important;
-            }
-            
-            /* Compact Music control - much smaller */
-            .music-control {
-                position: fixed !important;
-                top: 8px !important;
-                left: 8px !important;
-                transform: scale(0.35) !important; /* Much smaller scale */
-                transform-origin: top left !important;
-                z-index: 10 !important;
-            }
-            
-            /* Compact Control panel */
-            .control-panel {
-                position: fixed !important;
-                top: 80px !important;
-                left: 8px !important;
-                transform: scale(0.35) !important;
-                transform-origin: top left !important;
-                z-index: 10 !important;
-            }
-            
-            /* Compact Language selector */
-            .language-selector {
-                position: fixed !important;
-                bottom: 8px !important;
-                left: 8px !important;
-                transform: scale(0.35) !important;
-                transform-origin: bottom left !important;
-                z-index: 10 !important;
-            }
-            
-            /* Compact Character selector */
-            .character-selector {
-                position: fixed !important;
-                bottom: 8px !important;
-                left: 50% !important;
-                transform: translateX(-50%) scale(0.35) !important;
-                transform-origin: center bottom !important;
-                z-index: 10 !important;
-            }
-            
-            /* Compact Emotion buttons */
-            .emotion-buttons {
-                position: fixed !important;
-                bottom: 8px !important;
-                right: 210px !important; /* Avoid chat panel */
-                transform: scale(0.35) !important;
-                transform-origin: bottom right !important;
-                z-index: 10 !important;
-            }
-            
-            /* Compact Speech bubble */
-            .speech-bubble {
-                position: fixed !important;
-                top: 50% !important;
-                left: 35% !important;
-                transform: translate(-50%, -50%) scale(0.4) !important;
-                transform-origin: center !important;
-                z-index: 5 !important;
-                max-width: 300px !important;
-            }
-            
-            /* Compact Character name */
-            .character-name {
-                position: fixed !important;
-                bottom: 50px !important;
-                left: 50% !important;
-                transform: translateX(-50%) scale(0.4) !important;
-                transform-origin: center bottom !important;
-                z-index: 5 !important;
-            }
-            
-            /* Animation selector */
-            .animation-selector {
-                position: fixed !important;
-                top: 50% !important;
-                left: 8px !important;
-                transform: translateY(-50%) scale(0.35) !important;
-                transform-origin: left center !important;
-                z-index: 10 !important;
-            }
-            
-            /* Ultra compact chat panel elements */
-            .chat-panel .character-header {
-                height: 40px !important;
-                padding: 4px !important;
-            }
-            
-            .chat-panel .character-header h3 {
-                font-size: 12px !important;
-                margin: 0 !important;
-            }
-            
-            .chat-panel .character-avatar {
-                width: 28px !important;
-                height: 28px !important;
-            }
-            
-            .chat-panel .chat-messages {
-                font-size: 10px !important;
-                line-height: 1.2 !important;
-                padding: 4px !important;
-            }
-            
-            .chat-panel .chat-input-wrapper {
-                padding: 4px !important;
-            }
-            
-            .chat-panel .chat-input-wrapper input {
-                font-size: 10px !important;
-                padding: 4px !important;
-                height: 24px !important;
-                border-radius: 4px !important;
-            }
-            
-            .chat-panel .send-btn {
-                width: 24px !important;
-                height: 24px !important;
-                font-size: 12px !important;
-                border-radius: 4px !important;
-            }
-            
-            /* Hide elements that might interfere */
-            .chat-panel .action-buttons {
-                display: none !important;
-            }
-        }
     </style>
 </body>
 
