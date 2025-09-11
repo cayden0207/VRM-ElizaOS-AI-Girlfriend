@@ -1399,6 +1399,60 @@
             .music-controls { display: none; }
         }
 
+        /* Mobile Landscape Layout - Additional Elements */
+        @media (orientation: landscape) and (max-width: 1200px) and (max-height: 500px) {
+            /* Music Controls - Compact for landscape */
+            .music-controls {
+                width: 200px !important;
+                height: 80px !important;
+                top: 15px !important;
+                left: 15px !important;
+                padding: 8px !important;
+                transform: scale(0.7) !important;
+                transform-origin: top left !important;
+            }
+            
+            .music-window-title {
+                font-size: 10px !important;
+                padding: 5px 8px !important;
+                margin: -8px -8px 5px -8px !important;
+            }
+            
+            .music-controls-row {
+                gap: 8px !important;
+            }
+            
+            .music-btn {
+                width: 28px !important;
+                height: 28px !important;
+                font-size: 12px !important;
+            }
+            
+            .volume-slider {
+                width: 80px !important;
+            }
+            
+            /* Language Toggle - Compact for landscape */
+            .language-toggle {
+                bottom: 15px !important;
+                left: 15px !important;
+                padding: 5px 8px !important;
+                font-size: 10px !important;
+                transform: scale(0.7) !important;
+                transform-origin: bottom left !important;
+            }
+            
+            .language-btn {
+                padding: 3px 6px !important;
+                font-size: 9px !important;
+            }
+            
+            /* Wallet Status Info - Hide or minimize in landscape */
+            .wallet-status-info {
+                display: none !important;
+            }
+        }
+
 
         /* VRM状态信息 */
         .vrm-status {
