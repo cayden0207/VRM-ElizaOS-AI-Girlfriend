@@ -4481,108 +4481,152 @@
             75% { transform: rotate(90deg); }
         }
 
-        /* Landscape UI Scaling - Optimize for mobile landscape */
+        /* Landscape UI - Desktop-like layout for mobile landscape */
         @media (orientation: landscape) and (max-width: 1200px) {
-            /* Optimize layout for landscape mobile */
-            body {
-                overflow-x: hidden;
+            /* Ensure full screen background */
+            html, body {
+                width: 100vw !important;
+                height: 100vh !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: hidden !important;
             }
             
-            /* Chat panel - make more compact */
+            .game-container {
+                width: 100vw !important;
+                height: 100vh !important;
+                background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%) !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+            }
+            
+            /* VRM container - full background coverage */
+            .vrm-container {
+                position: absolute !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
+                z-index: 1 !important;
+            }
+            
+            /* Chat panel - desktop-like positioning, scaled down 30% from 0.8 = 0.56 */
             .chat-panel {
-                width: 350px !important;
-                right: 10px !important;
-                top: 10px !important;
-                height: calc(100vh - 20px) !important;
-                transform: scale(0.8) !important;
+                position: fixed !important;
+                top: 15px !important;
+                right: 15px !important;
+                width: 400px !important;
+                height: calc(100vh - 30px) !important;
+                transform: scale(0.56) !important;
                 transform-origin: top right !important;
+                z-index: 10 !important;
+                background: rgba(255, 255, 255, 0.95) !important;
+                border-radius: 12px !important;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+                backdrop-filter: blur(10px) !important;
             }
             
-            /* Character info header - smaller */
-            .character-header {
-                height: 80px !important;
-                padding: 10px !important;
+            /* Music control - top left like desktop, scaled down 30% from 0.7 = 0.49 */
+            .music-control {
+                position: fixed !important;
+                top: 15px !important;
+                left: 15px !important;
+                transform: scale(0.49) !important;
+                transform-origin: top left !important;
+                z-index: 10 !important;
             }
             
-            .character-avatar {
+            /* Control panel - below music control, scaled down 30% from 0.7 = 0.49 */
+            .control-panel {
+                position: fixed !important;
+                top: 140px !important;
+                left: 15px !important;
+                transform: scale(0.49) !important;
+                transform-origin: top left !important;
+                z-index: 10 !important;
+            }
+            
+            /* Language selector - bottom left like desktop, scaled down 30% from 0.7 = 0.49 */
+            .language-selector {
+                position: fixed !important;
+                bottom: 15px !important;
+                left: 15px !important;
+                transform: scale(0.49) !important;
+                transform-origin: bottom left !important;
+                z-index: 10 !important;
+            }
+            
+            /* Character selector - bottom center like desktop, scaled down 30% from 0.7 = 0.49 */
+            .character-selector {
+                position: fixed !important;
+                bottom: 15px !important;
+                left: 50% !important;
+                transform: translateX(-50%) scale(0.49) !important;
+                transform-origin: center bottom !important;
+                z-index: 10 !important;
+            }
+            
+            /* Emotion buttons - bottom right area, scaled down 30% from 0.7 = 0.49 */
+            .emotion-buttons {
+                position: fixed !important;
+                bottom: 15px !important;
+                right: 280px !important; /* Positioned to avoid chat panel */
+                transform: scale(0.49) !important;
+                transform-origin: bottom right !important;
+                z-index: 10 !important;
+            }
+            
+            /* Speech bubble - center positioning like desktop */
+            .speech-bubble {
+                position: fixed !important;
+                top: 50% !important;
+                left: 40% !important;
+                transform: translate(-50%, -50%) scale(0.56) !important;
+                transform-origin: center !important;
+                z-index: 5 !important;
+                max-width: 500px !important;
+            }
+            
+            /* Character name display - center bottom */
+            .character-name {
+                position: fixed !important;
+                bottom: 80px !important;
+                left: 50% !important;
+                transform: translateX(-50%) scale(0.56) !important;
+                transform-origin: center bottom !important;
+                z-index: 5 !important;
+            }
+            
+            /* Animation selector if exists */
+            .animation-selector {
+                position: fixed !important;
+                top: 50% !important;
+                left: 15px !important;
+                transform: translateY(-50%) scale(0.49) !important;
+                transform-origin: left center !important;
+                z-index: 10 !important;
+            }
+            
+            /* Adjust font sizes in chat panel to compensate for scaling */
+            .chat-panel .character-header h3 {
+                font-size: 24px !important;
+            }
+            
+            .chat-panel .chat-messages {
+                font-size: 18px !important;
+                line-height: 1.4 !important;
+            }
+            
+            .chat-panel .chat-input-wrapper input {
+                font-size: 18px !important;
+                padding: 12px !important;
+            }
+            
+            .chat-panel .send-btn {
                 width: 50px !important;
                 height: 50px !important;
-            }
-            
-            .character-name {
-                font-size: 18px !important;
-            }
-            
-            /* Chat messages area */
-            .chat-messages {
-                font-size: 14px !important;
-                padding: 10px !important;
-            }
-            
-            /* Input area */
-            .chat-input-wrapper {
-                padding: 10px !important;
-            }
-            
-            .chat-input-wrapper input {
-                font-size: 14px !important;
-                padding: 8px !important;
-            }
-            
-            .send-btn {
-                width: 40px !important;
-                height: 40px !important;
-                font-size: 18px !important;
-            }
-            
-            /* Control panels - compact */
-            .control-panel {
-                transform: scale(0.7) !important;
-                transform-origin: top left !important;
-                top: 10px !important;
-                left: 10px !important;
-            }
-            
-            /* Language selector */
-            .language-selector {
-                transform: scale(0.7) !important;
-                transform-origin: bottom left !important;
-                bottom: 10px !important;
-                left: 10px !important;
-            }
-            
-            /* Music control */
-            .music-control {
-                transform: scale(0.7) !important;
-                transform-origin: top left !important;
-                top: 120px !important;
-                left: 10px !important;
-            }
-            
-            /* Emotion buttons - move to center bottom */
-            .emotion-buttons {
-                transform: scale(0.7) !important;
-                transform-origin: center bottom !important;
-                bottom: 10px !important;
-                left: 50% !important;
-                transform: translateX(-50%) scale(0.7) !important;
-            }
-            
-            /* Character selector - bottom center */
-            .character-selector {
-                transform: scale(0.7) !important;
-                transform-origin: center bottom !important;
-                bottom: 60px !important;
-                left: 50% !important;
-                transform: translateX(-50%) scale(0.7) !important;
-            }
-            
-            /* VRM container - keep full size but adjust position */
-            .vrm-container {
-                width: calc(100% - 370px) !important; /* Leave space for chat panel */
-                height: 100% !important;
-                left: 0 !important;
-                top: 0 !important;
+                font-size: 24px !important;
             }
         }
     </style>
