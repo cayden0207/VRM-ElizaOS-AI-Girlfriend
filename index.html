@@ -2244,8 +2244,8 @@
                         
                         // Use VRM v2 compatible optimization methods
                         VRMUtils.removeUnnecessaryVertices(gltf.scene);
-                        // VRMUtils.combineSkeletons 在 v2 中已移除
-                        // VRMUtils.combineMorphs 在 v2 中已移除
+                        // VRMUtils.combineSkeletons removed in v2
+                        // VRMUtils.combineMorphs removed in v2
                         
                         // Clean old VRM (but keep lights and placeholder)
                         if (currentVRM) {
@@ -2271,7 +2271,7 @@
                             obj.frustumCulled = false;
                         });
                         
-                        // VRMUtils.rotateVRM0 在 v2 中可能不需要或已更改
+                        // VRMUtils.rotateVRM0 may not be needed or changed in v2
                         // VRM 0.x format may need rotation; VRM 1.x format usually doesn't
                         try {
                             VRMUtils.rotateVRM0(vrm);
@@ -2402,14 +2402,14 @@
             return hasAny ? profile : null;
         }
 
-        // 更新角色档案信息（优先 i18n -> profile 数据 -> 兜底）
+        // Update character profile info (priority: i18n -> profile data -> fallback)
         function updateCharacterProfile(character) {
             const currentLang = getCurrentLanguage();
-            // 1) 优先从 i18n 取（按角色ID的键值）
+            // 1) Priority from i18n (by character ID key)
             const i18nProfile = getI18nProfileById(character.id);
-            // 2) 其次从内置 profilesData 取（支持 zh/en 或扁平结构）
+            // 2) Then from built-in profilesData (supports zh/en or flat structure)
             const fallbackProfile = getCharacterProfile(character.name, currentLang);
-            // 合并（i18n 优先生效）
+            // Merge (i18n takes priority)
             const profile = { ...fallbackProfile, ...i18nProfile };
 
             document.getElementById('character-name').textContent = character.name;
@@ -2443,7 +2443,7 @@
             updateVoiceSelector();
         }
 
-        // 名称规范化与别名处理（大小写、空格差异）
+        // Name normalization and alias handling (case, space differences)
         function canonicalName(name) {
             if (!name) return '';
             const key = name.toLowerCase().replace(/\s+/g, '');
@@ -2453,17 +2453,17 @@
                 'miu\u00a0miu': 'Miumiu', // 防空格变体（不影响大多数情况）
                 'yuuyii': 'Yuu Yii'
             };
-            // 默认首字母大写保持原名；优先别名
+            // Default capitalize first letter keep original name; prioritize alias
             return aliasMap[key] || name;
         }
 
-        // 从 character.md 解析英文资料（作为权威英文源）
+        // Parse English data from character.md (as authoritative English source)
         async function loadEnglishProfiles() {
             try {
                 const res = await fetch('character.md');
                 if (!res.ok) return;
                 const txt = await res.text();
-                const blocks = txt.split(/^## /m).slice(1); // 跳过文档头
+                const blocks = txt.split(/^## /m).slice(1); // Skip document header
                 const profiles = {};
                 for (const block of blocks) {
                     const lines = block.split(/\n/);
@@ -2503,7 +2503,7 @@
                     }
                 }
                 englishProfiles = profiles;
-                // 若当前语言是英文，加载完成后刷新当前角色的资料
+                // If current language is English, refresh current character profile after loading
                 if (getCurrentLanguage() === 'en' && typeof currentCharacterIndex !== 'undefined' && characters[currentCharacterIndex]) {
                     updateCharacterProfile(characters[currentCharacterIndex]);
                 }
@@ -2512,23 +2512,23 @@
             }
         }
 
-        // 获取当前语言设置
+        // Get current language setting
         function getCurrentLanguage() {
-            // 检查localStorage中的语言设置
+            // Check language setting in localStorage
             const savedLang = localStorage.getItem('language');
             if (savedLang) return savedLang;
             
-            // 检查语言按钮的active状态
+            // Check language button active state
             const activeLangBtn = document.querySelector('.language-btn.active');
             if (activeLangBtn) {
                 return activeLangBtn.id === 'lang-en' ? 'en' : 'zh';
             }
             
-            // 默认返回英文
+            // Default return English
             return 'en';
         }
 
-        // 根据角色名获取详细档案 - 基于本地配置 + character.md 英文权威
+        // Get detailed profile by character name - based on local config + character.md English authority
         function getCharacterProfile(name, language = 'en') {
             const profilesData = {
                 "Sikirei": {
@@ -2901,27 +2901,27 @@
                 }
             };
             
-            // 获取指定角色和语言的资料
+            // Get profile for specified character and language
             const characterData = profilesData[name];
 
-            // A) 如果是英文且有从 character.md 解析的权威数据，优先返回
+            // A) If English and has authoritative data from character.md, return first
             if (language === 'en' && englishProfiles) {
                 const enByCanonical = englishProfiles[canonicalName(name)];
                 if (enByCanonical) return enByCanonical;
             }
 
-            // B) 如果数据是按语言分组的
+            // B) If data is grouped by language
             if (characterData && (characterData['zh'] || characterData['en'])) {
                 const localized = characterData[language] || characterData['en'] || characterData['zh'];
                 return maybeTranslateProfile(localized, language);
             }
 
-            // C) 扁平结构（多为中文），做必要转换
+            // C) Flat structure (mostly Chinese), do necessary conversion
             if (characterData && (typeof characterData.age !== 'undefined' || typeof characterData.birthday !== 'undefined')) {
                 return maybeTranslateProfile(characterData, language);
             }
 
-            // 3) 最后的fallback（保底数据）
+            // 3) Final fallback (guaranteed data)
             return language === 'zh' ? {
                 age: 20,
                 birthday: "4月15日",
@@ -2949,7 +2949,7 @@
             };
         }
 
-        // 尝试对部分字段做最小必要的本地化转换（目前仅黄道十二宫）
+        // Try minimal necessary localization conversion for some fields (currently only zodiac signs)
         function maybeTranslateProfile(profile, language) {
             if (!profile) return profile;
             const result = { ...profile };
@@ -3044,7 +3044,7 @@
 
 
         async function playVoiceSample(language) {
-            // 停止当前播放的音频
+            // Stop currently playing audio
             if (currentAudio) {
                 currentAudio.pause();
                 currentAudio = null;
@@ -3059,19 +3059,19 @@
                 return;
             }
 
-            // 更新按钮状态
+            // Update button status
             updateLanguageButtons(language);
             currentLanguage = language;
 
-            // 显示播放提示
+            // Show play prompt
             console.log(`🎵 Playing ${character.name}'s ${language} sample: "${sampleText}"`);
 
             try {
-                // 使用 ElevenLabs API 生成语音
+                // Use ElevenLabs API to generate voice
                 const audioUrl = await generateElevenLabsVoice(sampleText, voiceId);
                 
                 if (audioUrl) {
-                    // 播放生成的音频
+                    // Play generated audio
                     const audio = new Audio(audioUrl);
                     currentAudio = audio;
                     
@@ -3179,7 +3179,7 @@
         window.nextCharacter = nextCharacter;
         window.playVoiceSample = playVoiceSample;
         window.startChat = function() {
-            // 检查钱包连接状态
+            // Check wallet connection状态
             if (!window.modernWalletUI || !window.modernWalletUI.getWalletInfo().isConnected) {
                 alert(i18n.t('error.wallet.required'));
                 // 显示钱包连接模态框
@@ -3438,11 +3438,11 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
     
-    <!-- 简化的 Solana 钱包连接组件 -->
+    <!-- Simplified Solana Wallet Connection Component -->
     <script type="text/babel">
         const { useState, useEffect } = React;
         
-        // 简单的钱包连接组件
+        // Simple wallet connection component
         function WalletConnector() {
             const [isConnected, setIsConnected] = useState(false);
             const [walletAddress, setWalletAddress] = useState(null);
@@ -3462,7 +3462,7 @@
                 }
             }, []);
             
-            // 检查钱包连接状态
+            // Check wallet connection状态
             const checkWalletConnection = async (type) => {
                 const provider = getWalletProvider(type);
                 if (provider && provider.isConnected) {
@@ -3495,7 +3495,7 @@
                 }
             };
             
-            // 连接钱包
+            // Connect wallet
             const connectWallet = async (walletType) => {
                 setIsConnecting(true);
                 try {
@@ -3607,7 +3607,7 @@
                 }
             };
             
-            // 断开连接
+            // Disconnect
             const disconnectWallet = async () => {
                 try {
                     const provider = getWalletProvider(walletType);
@@ -4175,7 +4175,7 @@
                     copyBtn.addEventListener('click', () => this.copyAddress());
                 }
 
-                // 断开连接
+                // Disconnect
                 const disconnectBtn = document.getElementById('disconnect-wallet-btn');
                 if (disconnectBtn) {
                     disconnectBtn.addEventListener('click', () => this.disconnect());
@@ -4219,10 +4219,10 @@
                         return;
                     }
                     
-                    // 更新按钮状态
+                    // Update button status
                     this.updateConnectButton(true);
                     
-                    // 连接钱包
+                    // Connect wallet
                     let response;
                     if (adapter.connect) {
                         response = await adapter.connect();
