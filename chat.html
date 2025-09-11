@@ -71,7 +71,7 @@
             transform: translateY(0);
         }
 
-        /* AI对话气泡 */
+        /* AI dialogue bubble */
         .ai-speech-bubble {
             position: absolute;
             top: 20%;
@@ -135,7 +135,7 @@
 
 
 
-        /* 复古音乐播放器 */
+        /* Retro music player */
         .music-controls {
             position: absolute;
             top: 25px;
@@ -268,7 +268,7 @@
             text-align: right;
         }
 
-        /* 语言Switching器 */
+        /* Language switcher */
         .language-toggle {
             position: absolute;
             bottom: 25px;
@@ -336,7 +336,7 @@
             color: #2d3436;
         }
 
-        /* 响应式设计 */
+        /* Responsive design */
         @media (max-width: 768px) {
             .vrm-container {
                 width: 100%;
@@ -344,7 +344,7 @@
             }
         }
 
-        /* 动画效果 */
+        /* Animation effects */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -357,7 +357,7 @@
             }
         }
 
-        /* 返回按钮 */
+        /* Back button */
         .back-button {
             position: absolute;
             bottom: 20px;
@@ -379,7 +379,7 @@
             transform: translateY(-2px);
         }
 
-        /* wallet状态显示 */
+        /* Wallet status display */
         .wallet-status-info {
             position: absolute;
             top: 20px;
@@ -423,7 +423,7 @@
             background: rgba(255, 69, 58, 1);
         }
 
-        /* 连接wallet按钮 */
+        /* Connect wallet button */
         .connect-wallet-btn {
             background: linear-gradient(135deg, #9945ff, #14f195);
             border: none;
@@ -441,7 +441,7 @@
             box-shadow: 0 5px 15px rgba(153, 69, 255, 0.4);
         }
 
-        /* 未授权界面 */
+        /* Unauthorized interface */
         .unauthorized-overlay {
             position: fixed;
             top: 0;
@@ -492,7 +492,7 @@
             box-shadow: 0 5px 15px rgba(153, 69, 255, 0.4);
         }
 
-        /* 悬浮聊天框 */
+        /* Floating chat box */
         .floating-chat {
             position: fixed;
             /* Avoid translateY-based centering to prevent vertical jitter when hovering */
@@ -522,7 +522,7 @@
             cursor: grabbing;
         }
 
-        /* 手机Top Bar风格聊天框头部 */
+        /* Mobile top bar style chat header */
         .chat-window-header {
             border-radius: 23px 23px 0 0;
             padding: 0;
@@ -540,7 +540,7 @@
             cursor: grabbing;
         }
 
-        /* 真实手机状态栏 */
+        /* Real mobile status bar */
         .phone-status-bar {
             background: #000000;
             display: flex;
@@ -608,7 +608,7 @@
             margin-right: 2px;
         }
 
-        /* 动漫风格聊天标题区域 */
+        /* Anime-style chat title area */
         .chat-title-area {
             position: relative;
             padding: 16px 20px;
@@ -627,7 +627,7 @@
             justify-content: space-between;
         }
 
-        /* 动漫风格背景装饰 */
+        /* Anime-style background decoration */
         .chat-title-area::before {
             content: '';
             position: absolute;
@@ -642,7 +642,7 @@
             pointer-events: none;
         }
 
-        /* 动漫风格星星装饰 */
+        /* Anime-style star decoration */
         .chat-title-area::after {
             content: '✨🌸✨';
             position: absolute;
@@ -666,7 +666,7 @@
             z-index: 2;
         }
 
-        /* 可爱的头像设计 - 使用聊天气泡相同头像 */
+        /* Cute avatar design - using same avatar as chat bubble */
         .chat-user-avatar {
             width: 48px;
             height: 48px;
@@ -685,7 +685,7 @@
             animation: avatarFloat 4s ease-in-out infinite;
         }
 
-        /* 为不同characterSetting标题栏头像 */
+        /* Different character avatars for title bar */
         .character-fliza .chat-user-avatar {
             background-image: url('profile-pic/fliza-pf.png');
         }
@@ -791,7 +791,7 @@
             50% { transform: translateY(-2px); }
         }
 
-        /* 头像周围的光晕 */
+        /* Avatar glow effect */
         .chat-user-avatar::before {
             content: '';
             position: absolute;
@@ -829,7 +829,7 @@
             position: relative;
         }
 
-        /* 名characters前的小装饰 */
+        /* Small decoration before character name */
         .chat-user-name::before {
             content: '💕';
             margin-right: 6px;
@@ -854,7 +854,7 @@
             gap: 6px;
         }
 
-        /* 状态指示器 */
+        /* Status indicator */
         .chat-user-status::before {
             content: '';
             width: 8px;
@@ -872,7 +872,7 @@
             50% { opacity: 0.6; }
         }
 
-        /* 可爱的动作按钮 */
+        /* Cute action buttons */
         .chat-actions {
             position: absolute;
             right: 16px;
@@ -904,7 +904,7 @@
             overflow: hidden;
         }
 
-        /* 按钮的光效 */
+        /* Button light effects */
         .chat-action-btn::before {
             content: '';
             position: absolute;
@@ -937,7 +937,7 @@
             transform: translateY(0) scale(0.98);
         }
 
-        /* 特殊效果：按钮的小装饰 */
+        /* Special effects: button decorations */
         .chat-action-btn:nth-child(1) {
             animation-delay: 0.1s;
         }
@@ -948,7 +948,7 @@
             animation-delay: 0.3s;
         }
 
-        /* 聊天消息区域 */
+        /* Chat message area */
         .chat-window-messages {
             height: 585px;
             padding: 26px 20px;
@@ -970,7 +970,7 @@
             border-radius: 3px;
         }
 
-        /* 消息气泡样式 */
+        /* Message bubble style */
         .message-bubble {
             margin-bottom: 18px;
             animation: messageSlideIn 0.4s ease-out;
@@ -1006,7 +1006,7 @@
             z-index: 1;
         }
 
-        /* 为不同characterSetting头像 */
+        /* Different character avatars */
         .character-fliza .message-bubble.ai::before {
             background-image: url('profile-pic/fliza-pf.png');
         }
@@ -1193,7 +1193,7 @@
             background: rgba(0, 0, 0, 0.3);
         }
 
-        /* 聊天输入区域 - 简约精致风格 */
+        /* Chat input area - minimalist style */
         .chat-window-input {
             padding: 12px 16px 16px;
             background: linear-gradient(180deg, #FAFAFA 0%, #F5F5F5 100%);
@@ -1245,7 +1245,7 @@
             background: transparent;
         }
 
-        /* 发送按钮 - 极简纸飞机风格 */
+        /* Send button - minimal paper plane style */
         .send-btn {
             background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
             border: none;
@@ -1290,7 +1290,7 @@
             transform: translateY(0) scale(0.96);
         }
 
-        /* 发送动画效果 */
+        /* Send animation effects */
         .send-btn.sending {
             animation: paperPlane 0.6s ease-out;
         }
@@ -1323,7 +1323,7 @@
             }
         }
 
-        /* 添加额外的功能按钮区域（可选） */
+        /* Additional function button area (optional) */
         .input-extras {
             display: flex;
             gap: 8px;
@@ -1351,7 +1351,7 @@
             color: rgba(0, 0, 0, 0.7);
         }
 
-        /* 动画效果 */
+        /* Animation effects */
         @keyframes messageSlideIn {
             from {
                 opacity: 0;
@@ -1363,7 +1363,7 @@
             }
         }
 
-        /* 响应式调整 */
+        /* Responsive adjustments */
         @media (max-width: 1200px) {
             .floating-chat {
                 width: 800px;
@@ -1436,7 +1436,7 @@
         }
 
 
-        /* VRM状态信息 */
+        /* VRM status information */
         .vrm-status {
             position: absolute;
             top: 20px;
@@ -1450,7 +1450,7 @@
             z-index: 10;
         }
 
-        /* 左侧控制面板 */
+        /* Left control panel */
         .left-panel {
             position: fixed;
             left: 20px;
@@ -1671,7 +1671,7 @@
                     </div>
                 </div>
                 
-                <!-- 动漫风格聊天标题区域 -->
+                <!-- Anime-style chat title area -->
                 <div class="chat-title-area">
                     <div class="chat-user-info">
                         <div class="chat-user-avatar"></div>
@@ -1707,15 +1707,15 @@
                 </div>
             </div>
 
-            <!-- 聊天消息区域 -->
+            <!-- Chat message area -->
             <div class="chat-window-messages" id="chat-window-messages">
-                <!-- 消息将动态添加到这里 -->
+                <!-- Messages will be dynamically added here -->
                 <div style="display: none;">
                     <span id="character-name">芙莉莎</span>
                 </div>
             </div>
 
-            <!-- 聊天输入区域 -->
+            <!-- Chat input area -->
             <div class="chat-window-input">
                 <div class="input-container">
                     <input type="text" class="chat-input-field" id="chat-input-field" data-i18n-placeholder="chat.input.placeholder" placeholder="Type your message here..." onkeypress="handleChatKeyPress(event)">
@@ -1728,7 +1728,7 @@
             </div>
         </div>
 
-        <!-- 未授权访问提示 -->
+        <!-- Unauthorized access notification -->
         <div class="unauthorized-overlay" id="unauthorized-overlay" style="display: none;">
             <div class="unauthorized-content">
                 <h2 data-i18n="wallet.verification.title">🔒 Wallet Verification Required</h2>
@@ -1814,7 +1814,7 @@
             mixamorigRightToeBase: 'rightToes',
         };
 
-        // ActorCore 到 VRM 骨骼映射
+        // ActorCore to VRM bone mapping
         const actorCoreVRMRigMap = {
             CC_Base_Hip: 'hips',
             CC_Base_Waist: 'spine',
@@ -1875,7 +1875,7 @@
             // Idle animations
             'Breathing Idle': 'mixamo animation/Breathing Idle.fbx',
             'Happy Idle': 'mixamo animation/Happy Idle.fbx',
-            // Mixamo 动画
+            // Mixamo animation
             'Acknowledging': 'mixamo animation/Acknowledging.fbx',
             'Agreeing': 'mixamo animation/Agreeing.fbx',
             'Agreeing 2': 'mixamo animation/Agreeing 2.fbx',
@@ -1901,7 +1901,7 @@
             'Thankful': 'mixamo animation/Thankful.fbx',
             'Thinking': 'mixamo animation/Thinking.fbx',
             'Yawn': 'mixamo animation/Yawn.fbx',
-            // ActorCore 动画
+            // ActorCore animation
             'Stand Happy (ActorCore)': 'actorcore animation/stand-happy-f.fbx'
         };
 
@@ -2077,11 +2077,11 @@
             });
         }
 
-        // ActorCore 动画load函数
+        // ActorCore animation load function
         function loadActorCoreAnimation(url, vrm) {
             const loader = new FBXLoader();
             return loader.loadAsync(url).then((asset) => {
-                // ActorCore动画通常第一个就是主要动画
+                // ActorCore animation usually the first one is the main animation
                 const clip = asset.animations[0];
 
                 if (!clip) {
@@ -2186,7 +2186,7 @@
         // Set temporary background color first
         scene.background = new THREE.Color(0x87CEEB);
         
-        // Load背景图片
+        // Load background image
         AppConfig.debug.log('🎨 Loading background image: BG/chatroom2.png');
         AppConfig.debug.log('🌍 Current URL:', window.location.href);
         
@@ -2244,7 +2244,7 @@
         let currentMixer = null;
         let footShadow = null;
 
-        // Create脚底阴影函数 - 参考index.html的实现
+        // Create foot shadow function - reference index.html implementation
         function createFootShadow(vrm) {
             // Remove previous shadow (if exists)
             if (footShadow) {
@@ -2259,7 +2259,7 @@
             shadowCanvas.height = 128;
             const context = shadowCanvas.getContext('2d');
             
-            // Create径向渐变阴影
+            // Create radial gradient shadow
             const gradient = context.createRadialGradient(64, 64, 0, 64, 64, 64);
             gradient.addColorStop(0, 'rgba(0, 0, 0, 0.4)'); // Darker at center
             gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0.2)'); // Medium transparency
@@ -4351,13 +4351,13 @@
         };
     </script>
     
-    <!-- user资料注册面板 -->
+    <!-- User profile registration panel -->
 
-    <!-- wallet连接遮罩层（初始隐藏） -->
+    <!-- Wallet connection overlay (initially hidden) -->
     
-    <!-- user资料管理已移至character-select页面 -->
+    <!-- User profile management moved to character-select page -->
 
-    <!-- wallet连接遮罩层（初始隐藏） -->
+    <!-- Wallet connection overlay (initially hidden) -->
     <div class="wallet-login-overlay" id="wallet-login-overlay" style="display: none;">
         <div class="wallet-login-panel">
             <div class="wallet-login-icon">🦊</div>
@@ -4385,7 +4385,7 @@
         </div>
     </div>
     
-    <!-- 页面load后初始化 -->
+    <!-- Initialize after page load -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Check是否从character selection页面跳转过来
