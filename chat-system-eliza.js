@@ -470,6 +470,14 @@ class ElizaOSChatSystem {
             return;
         }
         
+        // Add character class to container for avatar display
+        if (message.sender === 'ai' && this.currentCharacter) {
+            const characterClass = this.getCharacterClassName(this.currentCharacter.name);
+            if (characterClass) {
+                messagesContainer.className = `chat-window-messages ${characterClass}`;
+            }
+        }
+        
         (window.AppConfig?.debug?.log || console.log)('Messages container found');
         
         const messageElement = document.createElement('div');
@@ -498,6 +506,38 @@ class ElizaOSChatSystem {
                 messageElement.style.transform = 'translateY(0)';
             });
         }
+    }
+    
+    // Character name to CSS class mapping
+    getCharacterClassName(characterName) {
+        const nameMapping = {
+            '芙莉莎': 'character-fliza',
+            'Alice': 'character-alice',
+            'Ash': 'character-ash', 
+            'Bobo': 'character-bobo',
+            'Elinyaa': 'character-elinyaa',
+            'Imeris': 'character-imeris',
+            'Kyoko': 'character-kyoko',
+            'Lena': 'character-lena',
+            'Lilium': 'character-lilium',
+            'Maple': 'character-maple',
+            'Miru': 'character-miru',
+            'Miumiu': 'character-miumiu',
+            'Neco': 'character-neco',
+            'Nekona': 'character-nekona',
+            'Notia': 'character-notia',
+            'Ququ': 'character-ququ',
+            'Rainy': 'character-rainy',
+            'Rindo': 'character-rindo',
+            'Sikirei': 'character-sikirei',
+            'Vivi': 'character-vivi',
+            'Wolf': 'character-wolf',
+            'Wolferia': 'character-wolferia',
+            'Yawl': 'character-yawl',
+            'Yuu': 'character-yuu',
+            'Zwei': 'character-zwei'
+        };
+        return nameMapping[characterName] || 'character-alice';
     }
     
     triggerVRMResponse(message) {

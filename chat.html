@@ -970,175 +970,257 @@
             border-radius: 3px;
         }
 
-        /* Message bubble style */
-        .message-bubble {
+        /* Old .message-bubble styles removed - using ElizaOS .message structure instead */
+
+        /* ElizaOS Message Structure Bubble Styling */
+        .message {
             margin-bottom: 18px;
             animation: messageSlideIn 0.4s ease-out;
-        }
-
-        .message-bubble.user {
             display: flex;
+        }
+        
+        .message.user-message {
             justify-content: flex-end;
         }
-
-        .message-bubble.ai {
-            display: flex;
+        
+        .message.ai-message {
             justify-content: flex-start;
-            align-items: flex-start;
-            margin-bottom: 18px;
             position: relative;
             padding-left: 54px;
         }
         
-        .message-bubble.ai::before {
+        /* Character avatars for ElizaOS messages */
+        .message.ai-message::before {
             content: '';
             position: absolute;
             left: 0;
             top: 0;
             width: 44px;
             height: 44px;
-            background: url('profile-pic/alice-pf.png') center/cover;
             border-radius: 50%;
-            border: 3px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 4px 12px rgba(255, 176, 132, 0.4),
-                        0 2px 6px rgba(0, 0, 0, 0.15),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            z-index: 1;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid #FFD700;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
         }
-
-        /* Different character avatars */
-        .character-fliza .message-bubble.ai::before {
+        
+        .character-fliza .message.ai-message::before {
             background-image: url('profile-pic/fliza-pf.png');
         }
-
-        .character-alice .message-bubble.ai::before {
+        
+        .character-alice .message.ai-message::before {
             background-image: url('profile-pic/alice-pf.png');
         }
-
-        .character-ash .message-bubble.ai::before {
+        
+        .character-ash .message.ai-message::before {
             background-image: url('profile-pic/ash-pf.png');
         }
-
-        .character-bobo .message-bubble.ai::before {
+        
+        .character-bobo .message.ai-message::before {
             background-image: url('profile-pic/bobo-pf.png');
         }
-
-        .character-elinyaa .message-bubble.ai::before {
+        
+        .character-elinyaa .message.ai-message::before {
             background-image: url('profile-pic/elinyaa-pf.png');
         }
-
-        .character-imeris .message-bubble.ai::before {
+        
+        .character-imeris .message.ai-message::before {
             background-image: url('profile-pic/imeris-pf.png');
         }
-
-        .character-kyoko .message-bubble.ai::before {
+        
+        .character-kyoko .message.ai-message::before {
             background-image: url('profile-pic/kyoko-pf.png');
         }
-
-        .character-lena .message-bubble.ai::before {
+        
+        .character-lena .message.ai-message::before {
             background-image: url('profile-pic/lena-pf.png');
         }
-
-        .character-lilium .message-bubble.ai::before {
+        
+        .character-lilium .message.ai-message::before {
             background-image: url('profile-pic/lilium.png');
         }
-
-        .character-maple .message-bubble.ai::before {
+        
+        .character-maple .message.ai-message::before {
             background-image: url('profile-pic/maple-pf.png');
         }
-
-        .character-miru .message-bubble.ai::before {
+        
+        .character-miru .message.ai-message::before {
             background-image: url('profile-pic/Miru-pf.png');
         }
-
-        .character-miumiu .message-bubble.ai::before {
+        
+        .character-miumiu .message.ai-message::before {
             background-image: url('profile-pic/miumiu-pf.png');
         }
-
-        .character-neco .message-bubble.ai::before {
+        
+        .character-neco .message.ai-message::before {
             background-image: url('profile-pic/neco-pf.png');
         }
-
-        .character-nekona .message-bubble.ai::before {
+        
+        .character-nekona .message.ai-message::before {
             background-image: url('profile-pic/nekona.png');
         }
-
-        .character-notia .message-bubble.ai::before {
+        
+        .character-notia .message.ai-message::before {
             background-image: url('profile-pic/notia-pf.png');
         }
-
-        .character-ququ .message-bubble.ai::before {
+        
+        .character-ququ .message.ai-message::before {
             background-image: url('profile-pic/ququ-pf.png');
         }
-
-        .character-rainy .message-bubble.ai::before {
+        
+        .character-rainy .message.ai-message::before {
             background-image: url('profile-pic/rainy-pf.png');
         }
-
-        .character-rindo .message-bubble.ai::before {
+        
+        .character-rindo .message.ai-message::before {
             background-image: url('profile-pic/rindo-pf.png');
         }
-
-        .character-sikirei .message-bubble.ai::before {
+        
+        .character-sikirei .message.ai-message::before {
             background-image: url('profile-pic/sikirei-pf.png');
         }
-
-        .character-vivi .message-bubble.ai::before {
+        
+        .character-vivi .message.ai-message::before {
             background-image: url('profile-pic/vivi-pf.png');
         }
-
-        .character-wolf .message-bubble.ai::before {
+        
+        .character-wolf .message.ai-message::before {
             background-image: url('profile-pic/wolf.png');
         }
-
-        .character-wolferia .message-bubble.ai::before {
+        
+        .character-wolferia .message.ai-message::before {
             background-image: url('profile-pic/wolferia-pf.png');
         }
-
-        .character-yawl .message-bubble.ai::before {
+        
+        .character-yawl .message.ai-message::before {
             background-image: url('profile-pic/yawl-pf.png');
         }
-
-        .character-yuu .message-bubble.ai::before {
+        
+        .character-yuu .message.ai-message::before {
             background-image: url('profile-pic/yuu yii-pf.png');
         }
-
-        .character-zwei .message-bubble.ai::before {
+        
+        .character-zwei .message.ai-message::before {
             background-image: url('profile-pic/zwei-pf.png');
         }
-
-        .bubble-container {
+        
+        .message-content {
             max-width: 80%;
             position: relative;
         }
-
-        .bubble-header {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 182, 193, 0.9));
-            border-radius: 15px 15px 0 0;
-            padding: 6px 12px;
-            font-size: 12px;
-            color: rgba(0, 0, 0, 0.7);
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        
+        .message.ai-message .message-text {
+            background: linear-gradient(135deg, #FFB084 0%, #FF9D6B 50%, #FF8A50 100%) !important;
+            border-radius: 20px 20px 20px 5px !important;
+            padding: 16px 20px !important;
+            color: white !important;
+            font-size: 18px !important;
+            line-height: 1.5 !important;
+            position: relative !important;
+            max-width: 300px !important;
+            word-wrap: break-word !important;
+            margin: 0 !important;
+            box-shadow: 0 4px 12px rgba(255, 157, 107, 0.3),
+                        0 2px 6px rgba(139, 69, 19, 0.2) !important;
+            border: none !important;
+            text-shadow: 0 1px 2px rgba(139, 69, 19, 0.3) !important;
+            display: block !important;
+        }
+        
+        .message.ai-message .message-text::after {
+            content: '';
+            position: absolute;
+            bottom: 0px;
+            left: -8px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 12px 12px 0;
+            border-color: transparent #FF8A50 transparent transparent;
+        }
+        
+        .message.ai-message .message-time {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 182, 193, 0.9)) !important;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 6px 12px !important;
+            font-size: 12px !important;
+            color: rgba(0, 0, 0, 0.7) !important;
+            font-weight: bold !important;
+            display: block !important;
+            margin-bottom: 0 !important;
+        }
+        
+        .message.user-message .message-text {
+            background: linear-gradient(135deg, #F0F0F0 0%, #E0E0E0 50%, #D0D0D0 100%) !important;
+            color: #333 !important;
+            border-radius: 20px 20px 5px 20px !important;
+            padding: 16px 20px !important;
+            font-size: 18px !important;
+            box-shadow: 0 4px 12px rgba(224, 224, 224, 0.4),
+                        0 2px 6px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .message.user-message .message-time {
+            background: #E0E0E0 !important;
+            color: #333 !important;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 6px 12px !important;
+            font-size: 12px !important;
+            font-weight: bold !important;
         }
 
-        .bubble-content {
-            background: linear-gradient(135deg, #FFB084 0%, #FF9D6B 50%, #FF8A50 100%);
-            border-radius: 20px 20px 20px 5px;
-            padding: 16px 20px;
-            color: white;
-            font-size: 18px;
-            line-height: 1.5;
-            position: relative;
-            max-width: 300px;
-            word-wrap: break-word;
-            margin: 8px 0;
+
+        #chat-window-messages .message-bubble.ai .bubble-header,
+        .chat-window-messages .message-bubble.ai .bubble-header,
+        .message-bubble.ai .bubble-header,
+        .bubble-header {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 182, 193, 0.9)) !important;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 6px 12px !important;
+            font-size: 12px !important;
+            color: rgba(0, 0, 0, 0.7) !important;
+            font-weight: bold !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+        }
+
+        #chat-window-messages .message-bubble.ai .bubble-content,
+        .chat-window-messages .message-bubble.ai .bubble-content,
+        .message-bubble.ai .bubble-content {
+            background: linear-gradient(135deg, #FFB084 0%, #FF9D6B 50%, #FF8A50 100%) !important;
+            border-radius: 20px 20px 20px 5px !important;
+            padding: 16px 20px !important;
+            color: white !important;
+            font-size: 18px !important;
+            line-height: 1.5 !important;
+            position: relative !important;
+            max-width: 300px !important;
+            word-wrap: break-word !important;
+            margin: 8px 0 !important;
             box-shadow: 0 4px 12px rgba(255, 157, 107, 0.3),
-                        0 2px 6px rgba(139, 69, 19, 0.2);
-            border: none;
-            text-shadow: 0 1px 2px rgba(139, 69, 19, 0.3);
+                        0 2px 6px rgba(139, 69, 19, 0.2) !important;
+            border: none !important;
+            text-shadow: 0 1px 2px rgba(139, 69, 19, 0.3) !important;
+            display: block !important;
+        }
+        
+        .chat-window-messages .bubble-content,
+        .bubble-content {
+            background: linear-gradient(135deg, #FFB084 0%, #FF9D6B 50%, #FF8A50 100%) !important;
+            border-radius: 20px 20px 20px 5px !important;
+            padding: 16px 20px !important;
+            color: white !important;
+            font-size: 18px !important;
+            line-height: 1.5 !important;
+            position: relative !important;
+            max-width: 300px !important;
+            word-wrap: break-word !important;
+            margin: 8px 0 !important;
+            box-shadow: 0 4px 12px rgba(255, 157, 107, 0.3),
+                        0 2px 6px rgba(139, 69, 19, 0.2) !important;
+            border: none !important;
+            text-shadow: 0 1px 2px rgba(139, 69, 19, 0.3) !important;
         }
         
         .message-bubble.ai .bubble-content::after {
@@ -2830,58 +2912,55 @@
             return responseArray[Math.floor(Math.random() * responseArray.length)];
         }
 
-        // Chat UI functions
-        function addMessage(content, isUser = false, messageId = null) {
-            const messagesContainer = document.getElementById('chat-window-messages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message-bubble ${isUser ? 'user' : 'ai'}`;
-
-            // Add message ID for streaming updates
-            if (messageId) {
-                messageDiv.setAttribute('data-message-id', messageId);
-            }
-
-            const currentTime = new Date().toLocaleTimeString('zh-CN', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-
-            const characterName = document.getElementById('character-name').textContent || '芙莉莎';
-            const userName = 'user';
-
-            messageDiv.innerHTML = `
-                <div class="bubble-container">
-                    <div class="bubble-header">
-                        <span>${isUser ? userName : characterName}</span>
-                        <span>${currentTime}</span>
-                    </div>
-                    <div class="bubble-content">${content}</div>
-                </div>
-            `;
-
-            messagesContainer.appendChild(messageDiv);
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            
-            // If it's an AI message, show dialogue bubble
-            if (!isUser) {
-                showSpeechBubble(content);
-            }
+        // Character class name mapping
+        function getCharacterClassName(characterName) {
+            const nameMapping = {
+                '芙莉莎': 'character-fliza',
+                'Fliza': 'character-fliza', 
+                'Alice': 'character-alice',
+                'Ash': 'character-ash',
+                'Bobo': 'character-bobo',
+                'Elinyaa': 'character-elinyaa',
+                'Imeris': 'character-imeris',
+                'Kyoko': 'character-kyoko',
+                'Lena': 'character-lena',
+                'Lilium': 'character-lilium',
+                'Maple': 'character-maple',
+                'Miru': 'character-miru',
+                'Miumiu': 'character-miumiu',
+                'Neco': 'character-neco',
+                'Nekona': 'character-nekona',
+                'Notia': 'character-notia',
+                'Ququ': 'character-ququ',
+                'Rainy': 'character-rainy',
+                'Rindo': 'character-rindo',
+                'Sikirei': 'character-sikirei',
+                'Vivi': 'character-vivi',
+                'Wolf': 'character-wolf',
+                'Wolferia': 'character-wolferia',
+                'Yawl': 'character-yawl',
+                'Yuu': 'character-yuu',
+                'Zwei': 'character-zwei'
+            };
+            return nameMapping[characterName] || 'character-alice'; // Default to Alice
         }
+
+        // Chat UI functions
         
         // Update流式消息内容
         function updateStreamingMessageUI(messageId, content) {
             const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
             if (messageElement) {
-                const bubbleContent = messageElement.querySelector('.bubble-content');
-                if (bubbleContent) {
-                    bubbleContent.textContent = content;
+                const messageContent = messageElement.querySelector('.message-text');
+                if (messageContent) {
+                    messageContent.textContent = content;
                     
                     // Add typing effect cursor
                     if (!content.endsWith('|')) {
-                        bubbleContent.textContent += '|';
+                        messageContent.textContent += '|';
                         setTimeout(() => {
-                            if (bubbleContent.textContent.endsWith('|')) {
-                                bubbleContent.textContent = content;
+                            if (messageContent.textContent.endsWith('|')) {
+                                messageContent.textContent = content;
                             }
                         }, 500);
                     }
@@ -3077,8 +3156,7 @@
                         response = generateAIResponse(message);
                     }
 
-                    // Add AI reply
-                    addMessage(response, false);
+                    // AI reply handled by ElizaOS system
 
                     // Analyze AI reply and possibly trigger additional animation
                     const aiEmotion = analyzeMessage(response);
@@ -3099,11 +3177,7 @@
                 console.error('❌ Failed to send message:', error);
                 
                 // Final fallback handling
-                setTimeout(() => {
-                    const response = generateAIResponse(message);
-                    addMessage(response, false);
-                    saveChatHistory(userId, character.id, message, response);
-                }, 1000 + Math.random() * 2000);
+                // Fallback disabled - using ElizaOS system only
             }
         }
 
@@ -3395,9 +3469,7 @@
             setCharacterAvatar(selectedCharacter);
 
             // Add character switch message
-            setTimeout(() => {
-                addMessage(`Hello! I'm ${displayName}, nice to meet you~ 💕`, false);
-            }, 2000);
+            // Welcome message handled by ElizaOS system
         }
 
         // Setupcharacter头像的函数
@@ -3651,12 +3723,7 @@
                             characterNameElement.textContent = this.selectedCharacter.name;
                         }
                         
-                        // Update欢迎消息中的character信息
-                        const welcomeMessage = document.querySelector('.message-bubble.ai .bubble-content');
-                        if (welcomeMessage && !welcomeMessage.dataset.updated) {
-                            welcomeMessage.textContent = `你好！我是${this.selectedCharacter.name}，很高兴再次见到你~ 💕 让我们继续我们的对话吧！`;
-                            welcomeMessage.dataset.updated = 'true';
-                        }
+                        // Welcome message handled by ElizaOS system
                     }
                 }
             }
@@ -3854,7 +3921,7 @@
         window.sendChatMessage = sendChatMessage;
         window.handleKeyPress = handleKeyPress;
         window.handleChatKeyPress = handleChatKeyPress;
-        window.addMessage = addMessage;
+        // window.addMessage removed - using ElizaOS system
         window.updateStreamingMessageUI = updateStreamingMessageUI;
         
         // Integrate AI chat system
@@ -4121,19 +4188,7 @@
                         characterNameElement.textContent = character.name;
                     }
                     
-                    // Update欢迎消息 - 检查是否是老user
-                    const welcomeMessage = document.querySelector('.message-bubble.ai .bubble-content');
-                    if (welcomeMessage && !welcomeMessage.dataset.updated) {
-                        const userProfile = localStorage.getItem(`user_profile_${walletAuth.getCurrentUserId()}`);
-                        if (userProfile) {
-                            // Existing user
-                            welcomeMessage.textContent = `欢迎回来！我是${character.name}，我还记得我们之前的对话呢~ 💕`;
-                        } else {
-                            // New user
-                            welcomeMessage.textContent = `你好！我是${character.name}，很高兴认识你！让我们开始愉快的聊天吧~ 💕`;
-                        }
-                        welcomeMessage.dataset.updated = 'true';
-                    }
+                    // Welcome message handled by ElizaOS system
                     
                     // Setup默认VRM文件
                     defaultVrmFile = character.file;
