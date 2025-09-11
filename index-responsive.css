@@ -154,7 +154,7 @@
     /* Character Selector - Mobile version with desktop-like navigation */
     .character-selector {
         position: fixed !important;
-        bottom: calc(450px - 60px) !important; /* 10px below character-display-name (450px) minus estimated height */
+        top: 65vh !important; /* Position from top instead of bottom for stability */
         left: 50% !important;
         transform: translateX(-50%) !important;
         display: flex !important;
@@ -342,7 +342,7 @@
 
     /* Character selector adjustments for small screens */
     .character-selector {
-        bottom: calc(220px - 60px) !important; /* 10px below character-display-name (220px) minus estimated height */
+        top: 60vh !important; /* Slightly higher for smaller screens */
         left: 50% !important;
         transform: translateX(-50%) !important;
         max-width: calc(100vw - 40px) !important; /* Prevent overflow */
@@ -442,8 +442,9 @@
    UNIVERSAL PORTRAIT MOBILE - Force consistent layout
    ================================================== */
 @media (orientation: portrait) and (max-width: 767px) {
-    /* Ensure all portrait mobile devices have centered character-selector */
+    /* Ensure all portrait mobile devices use top positioning */
     .character-selector {
+        top: 62vh !important; /* Consistent position from top for all portrait devices */
         left: 50% !important;
         transform: translateX(-50%) !important;
         scale: 0.45 !important;
@@ -460,6 +461,8 @@
    ================================================== */
 @media (max-width: 767px) {
     .character-selector.character-selector {
+        top: 62vh !important; /* Force top positioning for stability */
+        bottom: auto !important; /* Remove any bottom positioning */
         max-width: calc(100vw - 40px) !important;
         box-sizing: border-box !important;
         left: 50% !important;
