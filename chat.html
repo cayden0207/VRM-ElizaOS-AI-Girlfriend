@@ -4481,20 +4481,16 @@
             75% { transform: rotate(90deg); }
         }
 
-        /* Landscape UI - Desktop-like layout for mobile landscape */
+        /* Mobile Landscape Layout - Optimized for phone horizontal viewing */
         @media (orientation: landscape) and (max-width: 1200px) {
-            /* Force full screen background coverage */
-            * {
-                box-sizing: border-box !important;
-            }
-            
+            /* FORCE FULL SCREEN - Multiple approaches */
             html {
                 width: 100vw !important;
                 height: 100vh !important;
                 margin: 0 !important;
                 padding: 0 !important;
+                box-sizing: border-box !important;
                 overflow: hidden !important;
-                background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%) !important;
             }
             
             body {
@@ -4502,165 +4498,184 @@
                 height: 100vh !important;
                 margin: 0 !important;
                 padding: 0 !important;
+                box-sizing: border-box !important;
                 overflow: hidden !important;
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+            }
+            
+            /* Background container - covers entire viewport */
+            .game-container::before {
+                content: '';
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100vw !important;
+                height: 100vh !important;
                 background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%) !important;
-                position: relative !important;
+                z-index: -1 !important;
             }
             
             .game-container {
                 position: fixed !important;
                 top: 0 !important;
                 left: 0 !important;
-                right: 0 !important;
-                bottom: 0 !important;
                 width: 100vw !important;
                 height: 100vh !important;
                 background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%) !important;
                 z-index: 0 !important;
             }
             
-            /* VRM container - leave space for chat panel */
+            /* VRM container - main character display area */
             .vrm-container {
-                position: absolute !important;
+                position: fixed !important;
                 top: 0 !important;
                 left: 0 !important;
-                width: calc(100vw - 310px) !important; /* Leave 310px for chat panel + margin */
+                width: calc(100vw - 200px) !important; /* Leave 200px for compact chat */
                 height: 100vh !important;
                 z-index: 1 !important;
             }
             
-            /* Chat panel - desktop-like positioning, properly sized for mobile */
+            /* Compact Chat panel - much smaller for mobile landscape */
             .chat-panel {
                 position: fixed !important;
-                top: 15px !important;
-                right: 15px !important;
-                width: 280px !important; /* Smaller base width for mobile landscape */
-                height: calc(100vh - 30px) !important;
-                transform: none !important; /* Remove scaling to prevent size calculation issues */
-                z-index: 10 !important;
-                background: rgba(255, 255, 255, 0.95) !important;
-                border-radius: 8px !important;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
-                backdrop-filter: blur(10px) !important;
-                font-size: 14px !important; /* Smaller font for compact layout */
+                top: 8px !important;
+                right: 8px !important;
+                width: 180px !important; /* Much smaller for mobile */
+                height: calc(100vh - 16px) !important;
+                background: rgba(255, 255, 255, 0.9) !important;
+                border-radius: 6px !important;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+                backdrop-filter: blur(5px) !important;
+                z-index: 15 !important;
+                font-size: 11px !important;
             }
             
-            /* Music control - top left like desktop, scaled down 30% from 0.7 = 0.49 */
+            /* Compact Music control - much smaller */
             .music-control {
                 position: fixed !important;
-                top: 15px !important;
-                left: 15px !important;
-                transform: scale(0.49) !important;
+                top: 8px !important;
+                left: 8px !important;
+                transform: scale(0.35) !important; /* Much smaller scale */
                 transform-origin: top left !important;
                 z-index: 10 !important;
             }
             
-            /* Control panel - below music control, scaled down 30% from 0.7 = 0.49 */
+            /* Compact Control panel */
             .control-panel {
                 position: fixed !important;
-                top: 140px !important;
-                left: 15px !important;
-                transform: scale(0.49) !important;
+                top: 80px !important;
+                left: 8px !important;
+                transform: scale(0.35) !important;
                 transform-origin: top left !important;
                 z-index: 10 !important;
             }
             
-            /* Language selector - bottom left like desktop, scaled down 30% from 0.7 = 0.49 */
+            /* Compact Language selector */
             .language-selector {
                 position: fixed !important;
-                bottom: 15px !important;
-                left: 15px !important;
-                transform: scale(0.49) !important;
+                bottom: 8px !important;
+                left: 8px !important;
+                transform: scale(0.35) !important;
                 transform-origin: bottom left !important;
                 z-index: 10 !important;
             }
             
-            /* Character selector - bottom center like desktop, scaled down 30% from 0.7 = 0.49 */
+            /* Compact Character selector */
             .character-selector {
                 position: fixed !important;
-                bottom: 15px !important;
+                bottom: 8px !important;
                 left: 50% !important;
-                transform: translateX(-50%) scale(0.49) !important;
+                transform: translateX(-50%) scale(0.35) !important;
                 transform-origin: center bottom !important;
                 z-index: 10 !important;
             }
             
-            /* Emotion buttons - bottom right area, avoid chat panel */
+            /* Compact Emotion buttons */
             .emotion-buttons {
                 position: fixed !important;
-                bottom: 15px !important;
-                right: 320px !important; /* Positioned to avoid chat panel */
-                transform: scale(0.49) !important;
+                bottom: 8px !important;
+                right: 210px !important; /* Avoid chat panel */
+                transform: scale(0.35) !important;
                 transform-origin: bottom right !important;
                 z-index: 10 !important;
             }
             
-            /* Speech bubble - center positioning like desktop */
+            /* Compact Speech bubble */
             .speech-bubble {
                 position: fixed !important;
                 top: 50% !important;
-                left: 40% !important;
-                transform: translate(-50%, -50%) scale(0.56) !important;
+                left: 35% !important;
+                transform: translate(-50%, -50%) scale(0.4) !important;
                 transform-origin: center !important;
                 z-index: 5 !important;
-                max-width: 500px !important;
+                max-width: 300px !important;
             }
             
-            /* Character name display - center bottom */
+            /* Compact Character name */
             .character-name {
                 position: fixed !important;
-                bottom: 80px !important;
+                bottom: 50px !important;
                 left: 50% !important;
-                transform: translateX(-50%) scale(0.56) !important;
+                transform: translateX(-50%) scale(0.4) !important;
                 transform-origin: center bottom !important;
                 z-index: 5 !important;
             }
             
-            /* Animation selector if exists */
+            /* Animation selector */
             .animation-selector {
                 position: fixed !important;
                 top: 50% !important;
-                left: 15px !important;
-                transform: translateY(-50%) scale(0.49) !important;
+                left: 8px !important;
+                transform: translateY(-50%) scale(0.35) !important;
                 transform-origin: left center !important;
                 z-index: 10 !important;
             }
             
-            /* Adjust chat panel elements for compact mobile layout */
+            /* Ultra compact chat panel elements */
             .chat-panel .character-header {
-                height: 60px !important;
-                padding: 8px !important;
+                height: 40px !important;
+                padding: 4px !important;
             }
             
             .chat-panel .character-header h3 {
-                font-size: 16px !important;
+                font-size: 12px !important;
+                margin: 0 !important;
             }
             
             .chat-panel .character-avatar {
-                width: 40px !important;
-                height: 40px !important;
+                width: 28px !important;
+                height: 28px !important;
             }
             
             .chat-panel .chat-messages {
-                font-size: 13px !important;
-                line-height: 1.3 !important;
-                padding: 8px !important;
+                font-size: 10px !important;
+                line-height: 1.2 !important;
+                padding: 4px !important;
             }
             
             .chat-panel .chat-input-wrapper {
-                padding: 8px !important;
+                padding: 4px !important;
             }
             
             .chat-panel .chat-input-wrapper input {
-                font-size: 13px !important;
-                padding: 8px !important;
-                height: 32px !important;
+                font-size: 10px !important;
+                padding: 4px !important;
+                height: 24px !important;
+                border-radius: 4px !important;
             }
             
             .chat-panel .send-btn {
-                width: 35px !important;
-                height: 35px !important;
-                font-size: 16px !important;
+                width: 24px !important;
+                height: 24px !important;
+                font-size: 12px !important;
+                border-radius: 4px !important;
+            }
+            
+            /* Hide elements that might interfere */
+            .chat-panel .action-buttons {
+                display: none !important;
             }
         }
     </style>
