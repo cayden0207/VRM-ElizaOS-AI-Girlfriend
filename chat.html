@@ -1450,6 +1450,28 @@
             z-index: 10;
         }
 
+        /* Hide voice/TTS playing notifications */
+        [data-playing-status],
+        .playing-indicator,
+        .tts-status,
+        .voice-status,
+        .audio-playing-indicator,
+        .speech-playing,
+        #playing-indicator,
+        #tts-playing,
+        #voice-playing,
+        .playing-notification {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
+
+        /* Hide any element containing "Playing" text in top-right area */
+        div[style*="position: fixed"][style*="top"][style*="right"]:contains("Playing"),
+        div[style*="position: absolute"][style*="top"][style*="right"]:contains("Playing") {
+            display: none !important;
+        }
+
         /* Left control panel */
         .left-panel {
             position: fixed;
@@ -4393,6 +4415,33 @@
     
     <!-- Initialize after page load -->
     <script>
+        // Function to hide playing notifications
+        function hidePlayingNotifications() {
+            // Hide elements with "Playing" text
+            const allElements = document.querySelectorAll('*');
+            allElements.forEach(element => {
+                if (element.textContent && element.textContent.includes('Playing')) {
+                    const computedStyle = getComputedStyle(element);
+                    if ((computedStyle.position === 'fixed' || computedStyle.position === 'absolute') &&
+                        (computedStyle.right !== 'auto' || computedStyle.top !== 'auto')) {
+                        element.style.display = 'none';
+                        console.log('Hidden playing notification:', element);
+                    }
+                }
+            });
+        }
+
+        // Run periodically to catch dynamically created playing notifications
+        setInterval(hidePlayingNotifications, 1000);
+
+        // Also run on DOM mutations
+        const observer = new MutationObserver(hidePlayingNotifications);
+        observer.observe(document.body, { 
+            childList: true, 
+            subtree: true, 
+            characterData: true 
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             // Check是否从character selection页面跳转过来
             const hasStoredWallet = localStorage.getItem('wallet_address');
