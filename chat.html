@@ -4374,6 +4374,208 @@
             }
         });
     </script>
+
+    <!-- Modern Landscape Orientation Prompt -->
+    <div id="orientation-prompt" class="orientation-prompt">
+        <div class="orientation-content">
+            <div class="phone-icon">
+                <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="25" y="15" width="50" height="70" rx="8" stroke="white" stroke-width="3"/>
+                    <circle cx="50" cy="75" r="3" fill="white"/>
+                    <path d="M65 50L75 40M75 40V48M75 40H67" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <rect x="38" y="22" width="24" height="45" rx="2" fill="white" opacity="0.3"/>
+                </svg>
+            </div>
+            <h2>Rotate Your Device</h2>
+            <p>This experience is optimized for landscape mode</p>
+            <div class="rotation-indicator">
+                <svg class="rotating-phone" width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="15" y="10" width="30" height="40" rx="4" fill="white" opacity="0.8"/>
+                    <circle cx="30" cy="45" r="2" fill="#333"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Landscape Orientation Prompt */
+        .orientation-prompt {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+            z-index: 999999;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @media (orientation: portrait) {
+            .orientation-prompt {
+                display: flex !important;
+            }
+        }
+
+        .orientation-content {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            animation: slideUp 0.5s ease;
+        }
+
+        .phone-icon {
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+
+        .orientation-content h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 20px 0 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .orientation-content p {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .rotation-indicator {
+            display: inline-block;
+            animation: rotatePhone 2s ease-in-out infinite;
+        }
+
+        .rotating-phone {
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes rotatePhone {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-15deg); }
+            75% { transform: rotate(90deg); }
+        }
+
+        /* Landscape UI Scaling - 50% for all UI except VRM */
+        @media (orientation: landscape) and (max-width: 900px) {
+            /* Scale down chat container and all UI elements by 50% */
+            .chat-container {
+                transform: scale(0.5);
+                transform-origin: right center;
+                width: 200% !important; /* Double width to compensate for scale */
+                height: 200% !important; /* Double height to compensate for scale */
+            }
+
+            /* Adjust chat panel positioning */
+            .chat-panel {
+                right: 0;
+                width: 800px !important; /* Double the desired width (400px * 2) */
+                height: 200vh !important; /* Double height */
+            }
+
+            /* Scale control buttons */
+            .control-panel {
+                transform: scale(0.5);
+                transform-origin: top left;
+                width: 200% !important;
+            }
+
+            /* Scale emotion buttons */
+            .emotion-buttons {
+                transform: scale(0.5);
+                transform-origin: bottom left;
+                width: 200% !important;
+            }
+
+            /* Scale music control */
+            .music-control {
+                transform: scale(0.5);
+                transform-origin: bottom right;
+            }
+
+            /* Scale character selector */
+            .character-selector {
+                transform: scale(0.5);
+                transform-origin: center bottom;
+                width: 200% !important;
+            }
+
+            /* Scale speech bubble */
+            .speech-bubble {
+                transform: scale(0.5);
+                transform-origin: center center;
+                width: 200% !important;
+                max-width: 600px !important; /* Double max-width */
+            }
+
+            /* Keep VRM display at original size */
+            .vrm-container {
+                transform: none !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+            /* Adjust animation selector */
+            .animation-selector {
+                transform: scale(0.5);
+                transform-origin: top left;
+                width: 200% !important;
+            }
+
+            /* Scale character name display */
+            .character-name {
+                transform: scale(0.5);
+                transform-origin: center bottom;
+            }
+
+            /* Adjust font sizes for scaled elements */
+            .chat-panel * {
+                font-size: 200% !important; /* Double font size to compensate */
+            }
+
+            .control-panel select,
+            .control-panel button {
+                font-size: 200% !important;
+            }
+
+            /* Fix input field scaling */
+            .chat-input-wrapper input {
+                font-size: 200% !important;
+                padding: 20px !important; /* Double padding */
+            }
+
+            .send-btn {
+                width: 80px !important; /* Double button size */
+                height: 80px !important;
+                font-size: 36px !important;
+            }
+        }
+    </style>
 </body>
 
 </html>
