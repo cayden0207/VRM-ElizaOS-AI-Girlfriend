@@ -1413,7 +1413,7 @@
         <div class="language-toggle" id="language-toggle">
             <span data-i18n="char.select.language">Language: </span>
             <button class="language-btn" id="lang-en" onclick="switchLanguage('en')">EN</button>
-            <button class="language-btn" id="lang-zh" onclick="switchLanguage('zh')">middle文</button>
+            <button class="language-btn" id="lang-zh" onclick="switchLanguage('zh')">中文</button>
         </div>
 
         <!-- Character Info Panel - Japanese style profile card UI -->
@@ -2534,10 +2534,10 @@
                 "Sikirei": {
                     zh: {
                         age: 24,
-                        birthday: "10月10日",
-                        zodiac: "天秤座",
-                        personality: "诱人、神秘、优雅",
-                        dailyInterests: "占星研究",
+                        birthday: "October 10th",
+                        zodiac: "Libra",
+                        personality: "Charming, Mysterious, Elegant",
+                        dailyInterests: "Astrology Research",
                         likes: "星星和夜empty",
                         dislikes: "光污染",
                         favoriteFood: "蓝莓布丁、花草茶",
@@ -2722,7 +2722,7 @@
                 "Maple": {
                     age: 22,
                     birthday: "9月25日",
-                    zodiac: "天秤座",
+                    zodiac: "Libra",
                     personality: "温暖、细心、耐心",
                     dailyInterests: "烘焙、插花",
                     likes: "枫叶图案",
@@ -2825,10 +2825,10 @@
                 },
                 "Sikirei": {
                     age: 24,
-                    birthday: "10月10日",
-                    zodiac: "天秤座",
-                    personality: "诱人、神秘、优雅",
-                    dailyInterests: "占星研究",
+                    birthday: "October 10th",
+                    zodiac: "Libra",
+                    personality: "Charming, Mysterious, Elegant",
+                    dailyInterests: "Astrology Research",
                     likes: "星星和夜empty",
                     dislikes: "光污染",
                     favoriteFood: "蓝莓布丁、花草茶",
@@ -2962,7 +2962,7 @@
                     '巨蟹座': 'Cancer',
                     '狮子座': 'Leo',
                     '处女座': 'Virgo',
-                    '天秤座': 'Libra',
+                    'Libra': 'Libra',
                     '天蠍座': 'Scorpio',
                     '天蝎座': 'Scorpio',
                     '射手座': 'Sagittarius',
@@ -3473,7 +3473,7 @@
                 }
             };
             
-            // getwallet提供者
+            // get wallet provider
             const getWalletProvider = (type) => {
                 switch(type) {
                     case 'phantom':
@@ -3519,7 +3519,7 @@
                     localStorage.setItem('wallet_address', address);
                     localStorage.setItem('wallet_type', walletType);
                     
-                    // get余额
+                    // get balance
                     await updateBalance(response.publicKey);
                     
                     // Trigger global event
@@ -3560,7 +3560,7 @@
                                     (window.AppConfig?.debug?.log || console.log)('Existing user: show welcome');
                                     (window.AppConfig?.debug?.log || console.log)('User profile detail logged');
                                     
-                                    // displayuser欢迎info
+                                    // display user welcome info
                                     window.profileManager.showUserWelcome(existingProfile);
                                 }
                             } catch (error) {
@@ -3577,7 +3577,7 @@
                                 window.profileManager = new (window.UserProfileManager || UserProfileManager)();
                                 (window.AppConfig?.debug?.log || console.log)('profileManager initialized manually');
                                 
-                                // immediate重new执行检查，none需refreshed页面
+                                // immediately re-execute check, no need to refresh page
                                 setTimeout(async () => {
                                     const userId = `wallet_${address}`;
                                     try {
@@ -3648,7 +3648,7 @@
                 }
             };
             
-            // format化address
+            // format address
             const formatAddress = (address) => {
                 if (!address) return '';
                 return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -3705,7 +3705,7 @@
                                 fallbackUsed = true;
                                 e.target.src = walletLogos[type].fallback;
                             } else {
-                                // final备用方案 - displaywalletname首字母
+                                // final fallback - display wallet name initial
                                 const div = document.createElement('div');
                                 div.style.cssText = `
                                     width: 24px; height: 24px; 
@@ -4024,7 +4024,7 @@
                 this.currentUserId = null;
             }
             
-            // Check if user needs to fill profile - 纯API驱动，nonelocalStorage
+            // Check if user needs to fill profile - pure API driven, no localStorage
             async checkUserProfile(userId) {
                 // Extract wallet address from userId
                 const walletAddress = userId.replace('wallet_', '');
@@ -4056,7 +4056,7 @@
                 }
             }
             
-            // displayuserprofile面板
+            // display user profile panel
             showProfilePanel(userId = null, existingProfile = null) {
                 (window.AppConfig?.debug?.log || console.log)('Show user profile panel');
                 const overlay = document.getElementById('user-profile-overlay');
@@ -4109,7 +4109,7 @@
                 }
             }
             
-            // displayuser欢迎info
+            // display user welcome info
             showUserWelcome(profile) {
                 (window.AppConfig?.debug?.log || console.log)('Show user welcome');
                 // Here can add welcome info display logic
@@ -4139,7 +4139,7 @@
                     closeBtn.addEventListener('click', () => this.hideWalletModal());
                 }
 
-                // modal覆盖层clickedclosed
+                // modal overlay clicked to close
                 const modal = document.getElementById('wallet-modal');
                 if (modal) {
                     modal.addEventListener('click', (e) => {
@@ -4151,7 +4151,7 @@
                     });
                 }
 
-                // wallet选项clicked
+                // wallet option clicked
                 const walletOptions = document.querySelectorAll('.wallet-option');
                 walletOptions.forEach(option => {
                     option.addEventListener('click', () => {
@@ -4160,7 +4160,7 @@
                     });
                 });
 
-                // wallet菜单button
+                // wallet menu button
                 const menuBtn = document.getElementById('wallet-menu-btn');
                 if (menuBtn) {
                     menuBtn.addEventListener('click', (e) => {
@@ -4181,7 +4181,7 @@
                     disconnectBtn.addEventListener('click', () => this.disconnect());
                 }
 
-                // clicked其他地方closeddropdown
+                // clicked elsewhere to close dropdown
                 document.addEventListener('click', () => {
                     this.hideDropdown();
                 });
@@ -4339,7 +4339,7 @@
                     if (walletAddress) walletAddress.textContent = this.formatAddress(this.selectedWallet.address);
                     if (walletAvatar) walletAvatar.textContent = this.selectedWallet.config.icon;
                 } else {
-                    // display未connectedstatus
+                    // display not connected status
                     if (connectButton) connectButton.style.display = 'flex';
                     if (walletInfo) walletInfo.style.display = 'none';
                 }
@@ -4420,14 +4420,14 @@
             }
         }
 
-        // userprofilemanagementsystem - 移to这in确保atwalletinitializedbefore定义
+        // user profile management system - moved here to ensure defined before wallet initializes
         (window.AppConfig?.debug?.log || console.log)('Start defining UserProfileManager class...');
         class UserProfileManager {
             constructor() {
                 this.currentUserId = null;
             }
             
-            // Check if user needs to fill profile - 纯API驱动，nonelocalStorage
+            // Check if user needs to fill profile - pure API driven, no localStorage
             async checkUserProfile(userId) {
                 // Extract wallet address from userId
                 const walletAddress = userId.replace('wallet_', '');
@@ -4459,7 +4459,7 @@
                 }
             }
             
-            // displayuserprofile面板
+            // display user profile panel
             showProfilePanel(userId = null, existingProfile = null) {
                 (window.AppConfig?.debug?.log || console.log)('Show user profile panel');
                 const overlay = document.getElementById('user-profile-overlay');
@@ -4512,7 +4512,7 @@
                 }
             }
             
-            // displayuser欢迎info
+            // display user welcome info
             showUserWelcome(profile) {
                 (window.AppConfig?.debug?.log || console.log)('Show user welcome');
                 // Here can add welcome info display logic
@@ -4537,7 +4537,7 @@
             window.modernWalletUI = walletManager; // For backward compatibility
         });
 
-        // compatibleold的globalfunction
+        // compatible with old global function
         window.connectWallet = function() {
             if (walletManager) {
                 walletManager.showWalletModal();
@@ -4550,13 +4550,13 @@
             }
         };
         
-        // userprofilemanagementsystem
+        // user profile management system
         class UserProfileManager {
             constructor() {
                 this.currentUserId = null;
             }
             
-            // Check if user needs to fill profile - 纯API驱动，nonelocalStorage
+            // Check if user needs to fill profile - pure API driven, no localStorage
             async checkUserProfile(userId) {
                 // Extract wallet address from userId
                 const walletAddress = userId.replace('wallet_', '');
@@ -4625,7 +4625,7 @@
                         (window.AppConfig?.debug?.log || console.log)('Profile saved to DB');
                         return savedProfile;
                     } else if (response.status === 409) {
-                        // user已exists，尝试updated
+                        // user already exists, try to update
                         (window.AppConfig?.debug?.log || console.log)('User exists, trying update');
                         return await this.updateUserProfile(userId, profileData);
                     } else {
@@ -4719,7 +4719,7 @@
                 }
             }
             
-            // displayprofileregistered面板
+            // display profile registration panel
             showProfilePanel(userId = null, existingProfile = null) {
                 const overlay = document.getElementById('user-profile-overlay');
                 if (overlay) {
@@ -4745,7 +4745,7 @@
                 }
             }
             
-            // hiddenprofileregistered面板
+            // hide profile registration panel
             hideProfilePanel() {
                 const overlay = document.getElementById('user-profile-overlay');
                 if (overlay) {
@@ -4861,7 +4861,7 @@
                 const form = document.getElementById('profile-form');
                 if (form) {
                     form.reset();
-                    // clear日期select器
+                    // clear date selector
                     const birthYear = form.querySelector('#birthYear');
                     const birthMonth = form.querySelector('#birthMonth');
                     const birthDay = form.querySelector('#birthDay');
@@ -4872,7 +4872,7 @@
                 }
             }
             
-            // displayuser欢迎info
+            // display user welcome info
             showUserWelcome(profile) {
                 // No UI toast in production; keep debug log only
                 (window.AppConfig?.debug?.log || console.log)('User welcome:', !!profile);
@@ -4952,7 +4952,7 @@
                 
                 (window.AppConfig?.debug?.log || console.log)('Prepare to save user profile');
                 
-                // savedtodata库
+                // saved to database
                 try {
                     await profileManager.saveUserProfile(userId, apiFormData);
                     (window.AppConfig?.debug?.log || console.log)('User profile saved; hide panel');
@@ -4995,7 +4995,7 @@
             }
         }
         
-        // handleProfileSubmit会at普通scriptlabelmiddle定义
+        // handleProfileSubmit will be defined in regular script label
         
         // Expose functions to global scope
         window.submitProfile = submitProfile;
@@ -5011,7 +5011,7 @@
             }
         };
         
-        // new增：testednewuser流程
+        // new addition: test new user flow
         window.testNewUserFlow = function() {
             (window.AppConfig?.debug?.log || console.log)('Test: simulate new user flow');
             const testAddress = 'TEST_NEW_USER_' + Date.now();
@@ -5039,7 +5039,7 @@
         // globalusermanagementfunction
         // ===================
         
-        // clearcurrentuserprofile（模拟首次logged in）
+        // clear current user profile (simulate first login)
         window.clearUserProfile = async function() {
             const walletAddress = localStorage.getItem('wallet_address');
             if (walletAddress) {
@@ -5063,7 +5063,7 @@
             }
         };
         
-        // clear所有userprofile
+        // clear all user profiles
         window.clearAllProfiles = function() {
             const profiles = window.profileManager.getAllUserProfiles();
             profiles.forEach(({userId}) => {
@@ -5072,7 +5072,7 @@
             (window.AppConfig?.debug?.log || console.log)(`Cleared ${profiles.length} user profiles`);
         };
         
-        // view所有userprofile
+        // view all user profiles
         window.showAllProfiles = function() {
             const profiles = window.profileManager.getAllUserProfiles();
             (window.AppConfig?.debug?.log || console.log)(`Total profiles: ${profiles.length}`);
@@ -5305,7 +5305,7 @@
     </div>
 
 <script>
-// directat这inimplementationcomplete的formsubmitted逻辑
+// directly implement complete form submission logic here
 window.handleProfileSubmit = async function(event) {
     try {
         (window.AppConfig?.debug?.log || console.log)('Form submit start');
@@ -5395,7 +5395,7 @@ window.handleProfileSubmit = async function(event) {
                     const result = await response.json();
                     (window.AppConfig?.debug?.log || console.log)('User profile saved');
                     
-                    // hidden面板
+                    // hide panel
                     const overlay = document.getElementById('user-profile-overlay');
                     if (overlay) {
                         overlay.style.display = 'none';
