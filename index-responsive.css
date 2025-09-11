@@ -462,7 +462,7 @@
         bottom: auto !important;
         max-width: calc(85vw) !important;
         box-sizing: border-box !important;
-        left: 50% !important; /* Proper centering instead of 43% */
+        left: 42% !important; /* Fine-tuned for visual balance */
         transform: translateX(-50%) scale(0.7) !important;
         transform-origin: center !important;
         gap: 9px !important;
@@ -490,7 +490,7 @@
         bottom: auto !important;
         max-width: calc(85vw) !important;
         box-sizing: border-box !important;
-        left: 50% !important; /* Proper centering */
+        left: 41% !important; /* Fine-tuned for visual balance */
         transform: translateX(-50%) scale(0.7) !important;
         transform-origin: center !important;
         gap: 9px !important;
@@ -513,11 +513,11 @@
 /* Tall screen devices (e.g., iPhone Pro Max, newer phones) - height > 880px */
 @media (max-width: 767px) and (min-height: 881px) and (orientation: portrait) {
     .character-selector.character-selector {
-        top: clamp(600px, 74vh, 700px) !important;
+        top: clamp(600px, 75vh, 700px) !important; /* Adjusted to 75vh as requested */
         bottom: auto !important;
         max-width: calc(85vw) !important;
         box-sizing: border-box !important;
-        left: 50% !important; /* Proper centering */
+        left: 47% !important; /* Fine-tuned for visual balance on tall screens */
         transform: translateX(-50%) scale(0.7) !important;
         transform-origin: center !important;
         gap: 9px !important;
@@ -530,8 +530,8 @@
     }
     
     .voice-selector-floating {
-        top: clamp(380px, 45vh, 440px) !important;
-        left: calc(3vw + 10px) !important; /* More offset for larger screens */
+        top: clamp(380px, 37vh, 440px) !important; /* Adjusted to 37vh as requested */
+        left: calc(-1vw + 10px) !important; /* Adjusted negative vw for better positioning */
         transform: none !important;
         scale: 0.85 !important;
     }
