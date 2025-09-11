@@ -1409,14 +1409,14 @@
         <!-- Top title -->
         <div class="heroes-title" data-i18n="char.select.header">WAIFU</div>
 
-        <!-- 语言切换器 -->
+        <!-- Language Toggle -->
         <div class="language-toggle" id="language-toggle">
             <span data-i18n="char.select.language">Language: </span>
             <button class="language-btn" id="lang-en" onclick="switchLanguage('en')">EN</button>
             <button class="language-btn" id="lang-zh" onclick="switchLanguage('zh')">中文</button>
         </div>
 
-        <!-- 角色信息面板 - 日式档案卡UI -->
+        <!-- Character Info Panel - Japanese style profile card UI -->
         <div class="character-info">
             <div class="character-name" id="character-name">Fliza</div>
             
@@ -1506,10 +1506,10 @@
             
         </div>
 
-        <!-- 中央角色名称 -->
+        <!-- Central Character Name -->
         <div class="character-display-name" id="character-display-name">Fliza</div>
 
-        <!-- 语音选择器 - 浮动控件 -->
+        <!-- Voice Selector - Floating Control -->
         <div class="voice-selector-floating">
             <div class="language-flags">
                 <button class="flag-btn active" data-lang="jp" onclick="playVoiceSample('jp')">🇯🇵</button>
@@ -1517,18 +1517,18 @@
             </div>
         </div>
 
-        <!-- VRM展示区域 -->
+        <!-- VRM Display Area -->
         <div class="vrm-display">
             <canvas id="vrm-canvas" class="vrm-canvas"></canvas>
             
-            <!-- 角色加载动画 -->
+            <!-- Character Loading Animation -->
             <div class="character-loader" id="character-loader">
                 <div class="spinner"></div>
                 <div class="loader-text">LOADING</div>
             </div>
         </div>
 
-        <!-- 角色选择器 -->
+        <!-- Character Selector -->
         <div class="character-selector">
             <button class="nav-button" onclick="previousCharacter()">‹</button>
             <div class="character-thumbnails" id="character-thumbnails"></div>
@@ -1544,13 +1544,13 @@
         </div>
 
 
-        <!-- Solana 官方钱包适配器 React 组件 -->
+        <!-- Solana Official Wallet Adapter React Component -->
         <div class="wallet-connect-area">
             <div id="wallet-adapter-root"></div>
         </div>
 
 
-        <!-- 开始按钮 -->
+        <!-- Start Button -->
         <button class="start-button" onclick="startChat()">
             <div class="fold"></div>
             <div class="points_wrapper">
@@ -1569,7 +1569,7 @@
         </button>
     </div>
     
-    <!-- 钱包连接模态框 - 现代化设计 -->
+    <!-- Wallet Connection Modal - Modern Design -->
     <div class="wallet-modal" id="wallet-modal">
         <div class="wallet-modal-overlay">
             <div class="wallet-modal-content">
@@ -1632,14 +1632,14 @@
         import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
         import { VRMLoaderPlugin, VRMUtils } from '@pixiv/three-vrm';
 
-        // 角色数据 - 简化版，personality由ElizaOS后端管理
+        // Character data - simplified version, personality managed by ElizaOS backend
         const characters = [
             { 
                 id: "alice", 
                 name: "Alice", 
                 file: "Main VRM/Alice.vrm", 
                 voiceId: "rEJAAHKQqr6yTNCh8xS0", 
-                description: "活泼可爱的AI女友",
+                description: "Lively and adorable AI girlfriend",
                 sampleLines: {
                     jp: "月明かりの下で二人きりで踊ろう！",
                     en: "Let's dance under the moonlight, just us two!"
@@ -1650,7 +1650,7 @@
                 name: "Ash", 
                 file: "Main VRM/Ash.vrm", 
                 voiceId: "bY4cOgafbv5vatmokfg0", 
-                description: "冷静理性的AI伙伴",
+                description: "Calm and rational AI companion",
                 sampleLines: {
                     jp: "静かな夜に本とコーヒーが最高だ。",
                     en: "A quiet night with a book and coffee is perfect."
@@ -1660,11 +1660,11 @@
                 id: "elinyaa",
                 name: "Elinyaa",
                 file: "Main VRM/Elinyaa.vrm",
-                personality: "神秘优雅的精灵少女，有着不可思议的魅力。",
-                traits: ["神秘", "优雅", "精灵", "空灵"],
+                personality: "Mysterious and elegant elf girl with incredible charm.",
+                traits: ["Mysterious", "Elegant", "Elf", "Ethereal"],
                 emoji: "🧚",
                 level: 29,
-                type: "精灵系",
+                type: "Elf Type",
                 voiceId: "4cxHntmhK38NT4QMBr9m",
                 sampleLines: {
                     jp: "魔法の世界でヒーローごっこしない？",
@@ -1675,20 +1675,20 @@
                 id: "fliza",
                 name: "Fliza",
                 file: "Main VRM/Fliza VRM.vrm",
-                personality: "温暖体贴，善解人意",
-                dailyInterests: "农作、园艺",
-                likes: "日出和晨露",
-                dislikes: "污染",
-                favoriteFood: "新鲜水果、蜂蜜柠檬水",
-                favoriteMusic: "民谣、自然音景",
-                favoriteMovies: "自然纪录片、暖心故事",
-                favoriteGames: "动物森友会",
-                age: "23歳",
-                birthday: "8月14日",
-                zodiac: "狮子座",
-                height: "好感度Lv.10开放",
-                weight: "好感度Lv.10开放",
-                measurements: "好感度Lv.20开放",
+                personality: "Warm, caring, and understanding",
+                dailyInterests: "Farming, Gardening",
+                likes: "Sunrise and morning dew",
+                dislikes: "Pollution",
+                favoriteFood: "Fresh fruit, honey lemonade",
+                favoriteMusic: "Folk songs, natural soundscapes",
+                favoriteMovies: "Nature documentaries, heartwarming stories",
+                favoriteGames: "Animal Crossing",
+                age: "23 years old",
+                birthday: "August 14",
+                zodiac: "Leo",
+                height: "Unlocked at Affection Lv.10",
+                weight: "Unlocked at Affection Lv.10",
+                measurements: "Unlocked at Affection Lv.20",
                 voiceId: "s9lrHYk7TIJ2UO7UNbje",
                 sampleLines: {
                     jp: "日の出に一緒に種をまかない？",
@@ -1699,11 +1699,11 @@
                 id: "imeris",
                 name: "Imeris",
                 file: "Main VRM/IMERIS.vrm",
-                personality: "高贵优雅的贵族少女，举止端庄。",
-                traits: ["高贵", "优雅", "端庄", "贵族"],
+                personality: "Noble and elegant aristocratic girl with graceful manners.",
+                traits: ["Noble", "Elegant", "Graceful", "Aristocratic"],
                 emoji: "👑",
                 level: 31,
-                type: "贵族系",
+                type: "Noble Type",
                 voiceId: "eVItLK1UvXctxuaRV2Oq",
                 sampleLines: {
                     jp: "体温を測らせてね—あなたのことを大事に思ってる。",
@@ -1714,11 +1714,11 @@
                 id: "maple",
                 name: "Maple",
                 file: "Main VRM/Maple.vrm",
-                personality: "温暖如秋日阳光的女孩，总是给人安全感。",
-                traits: ["温暖", "贤惠", "细心", "治愈"],
+                personality: "A girl warm as autumn sunshine, always giving a sense of security.",
+                traits: ["Warm", "Virtuous", "Careful", "Healing"],
                 emoji: "🍁",
                 level: 26,
-                type: "温暖系",
+                type: "Warm Type",
                 voiceId: "B8gJV1IhpuegLxdpXFOE",
                 sampleLines: {
                     jp: "暖炉のそばでワッフルはいかが？",
@@ -1729,11 +1729,11 @@
                 id: "nekona",
                 name: "Nekona",
                 file: "Main VRM/NEKONA.vrm",
-                personality: "可爱的猫娘，有着猫咪般的慵懒与活泼。",
-                traits: ["可爱", "猫娘", "慵懒", "活泼"],
+                personality: "Cute cat girl with cat-like laziness and liveliness.",
+                traits: ["Cute", "Catgirl", "Lazy", "Lively"],
                 emoji: "🐱",
                 level: 21,
-                type: "兽娘系",
+                type: "Beast Girl Type",
                 voiceId: "kcg1KQQGuCGzH6FUjsZQ",
                 sampleLines: {
                     jp: "夜が秘密を囁く—一緒に探検しよう？",
@@ -1744,11 +1744,11 @@
                 id: "notia",
                 name: "Notia",
                 file: "Main VRM/Notia.vrm",
-                personality: "知性冷静的研究者，对知识充满渴望。",
-                traits: ["知性", "冷静", "研究", "博学"],
+                personality: "Intellectual and calm researcher, full of thirst for knowledge.",
+                traits: ["Intellectual", "Calm", "Research", "Knowledgeable"],
                 emoji: "🔬",
                 level: 32,
-                type: "学者系",
+                type: "Scholar Type",
                 voiceId: "abz2RylgxmJx76xNpaj1",
                 sampleLines: {
                     jp: "そろそろ茶道をしませんか？心に静けさを満たそう。",
@@ -1759,11 +1759,11 @@
                 id: "ququ",
                 name: "QuQu",
                 file: "Main VRM/QuQu.vrm",
-                personality: "活泼可爱的萝莉，总是充满元气。",
-                traits: ["活泼", "可爱", "元气", "萝莉"],
+                personality: "Lively and cute loli, always full of energy.",
+                traits: ["Lively", "Cute", "Energetic", "Loli"],
                 emoji: "🎀",
                 level: 20,
-                type: "萝莉系",
+                type: "Loli Type",
                 voiceId: "tfQFvzjodQp63340jz2r",
                 sampleLines: {
                     jp: "次のワイルドライドでアドレナリンを追いかける準備は？",
@@ -1774,11 +1774,11 @@
                 id: "rindo",
                 name: "Rindo",
                 file: "Main VRM/RINDO.vrm",
-                personality: "传统和风的大和抚子，温柔贤淑。",
-                traits: ["和风", "传统", "温柔", "贤淑"],
+                personality: "Traditional Japanese Yamato Nadeshiko, gentle and virtuous.",
+                traits: ["Japanese style", "Traditional", "Gentle", "Virtuous"],
                 emoji: "🌸",
                 level: 28,
-                type: "和风系",
+                type: "Japanese Style Type",
                 voiceId: "nclQ39ewSlJMu5Nidnsf",
                 sampleLines: {
                     jp: "刀の抜き方に集中して。規律が肝心だ。",
@@ -1789,11 +1789,11 @@
                 id: "rainy",
                 name: "Rainy",
                 file: "Main VRM/Rainy.vrm",
-                personality: "活泼开朗的邻家女孩，总是充满活力。",
-                traits: ["活泼", "开朗", "运动", "阳光"],
+                personality: "Lively and cheerful girl next door, always full of vitality.",
+                traits: ["Lively", "Cheerful", "Athletic", "Sunny"],
                 emoji: "🌧️",
                 level: 22,
-                type: "活力系",
+                type: "Energetic Type",
                 voiceId: "1ghrzLZQ7Dza7Xs9OkhY",
                 sampleLines: {
                     jp: "窓を叩く雨音は私のお気に入りの子守唄。",
@@ -1804,11 +1804,11 @@
                 id: "vivi",
                 name: "Vivi",
                 file: "Main VRM/Vivi.vrm",
-                personality: "充满好奇心的探险家，总是对世界充满热情。",
-                traits: ["好奇", "冒险", "热情", "乐观"],
+                personality: "Curious explorer, always passionate about the world.",
+                traits: ["Curious", "Adventurous", "Passionate", "Optimistic"],
                 emoji: "✨",
                 level: 24,
-                type: "冒险系",
+                type: "Adventure Type",
                 voiceId: "4lWJNy00PxQAOMgQTiIS",
                 sampleLines: {
                     jp: "今夜はみんなに笑顔を届ける配信をしよう！",
@@ -1819,11 +1819,11 @@
                 id: "wolferia",
                 name: "Wolferia",
                 file: "Main VRM/Wolferia.vrm",
-                personality: "高傲的狼族公主，有着王者的气质。",
-                traits: ["高傲", "狼族", "王者", "威严"],
+                personality: "Proud wolf princess with royal temperament.",
+                traits: ["Proud", "Wolf clan", "Royal", "Majestic"],
                 emoji: "🐺",
                 level: 33,
-                type: "兽娘系",
+                type: "Beast Girl Type",
                 voiceId: "3SeVwPUl5aO6J2GETjox",
                 sampleLines: {
                     jp: "頬に雪の結晶—一緒に雪だるま作らない？",
@@ -1834,11 +1834,11 @@
                 id: "yawl",
                 name: "Yawl",
                 file: "Main VRM/Yawl.vrm",
-                personality: "神秘的魔法少女，掌握着不可思议的力量。",
-                traits: ["神秘", "魔法", "幻想", "强大"],
+                personality: "Mysterious magical girl with incredible power.",
+                traits: ["Mysterious", "Magic", "Fantasy", "Powerful"],
                 emoji: "🔮",
                 level: 30,
-                type: "魔法系",
+                type: "Magic Type",
                 voiceId: "c6wjO0u66VyvwAC4UTqx",
                 sampleLines: {
                     jp: "静かにお茶をすすり、人生の物語を味わおう。",
@@ -1849,11 +1849,11 @@
                 id: "yuuyii",
                 name: "Yuu Yii",
                 file: "Main VRM/Yuu Yii.vrm",
-                personality: "温柔可爱的双子之一，总是带着甜美的笑容。",
-                traits: ["温柔", "可爱", "双子", "甜美"],
+                personality: "One of the gentle and lovely twins, always with a sweet smile.",
+                traits: ["Gentle", "Cute", "Twin", "Sweet"],
                 emoji: "💕",
                 level: 23,
-                type: "双子系",
+                type: "Twin Type",
                 voiceId: "UPwKM85l2CG7nbF2u1or",
                 sampleLines: {
                     jp: "泡と笑い—パステルの世界を作ろう！",
@@ -1864,11 +1864,11 @@
                 id: "zwei",
                 name: "Zwei",
                 file: "Main VRM/Zwei.vrm",
-                personality: "冷酷帅气的战士少女，有着坚强的内心。",
-                traits: ["冷酷", "帅气", "战士", "坚强"],
+                personality: "Cool and handsome warrior girl with a strong heart.",
+                traits: ["Cool", "Handsome", "Warrior", "Strong"],
                 emoji: "⚔️",
                 level: 29,
-                type: "战士系",
+                type: "Warrior Type",
                 voiceId: "0EzDWfDZDlAIeQQOjhoC",
                 sampleLines: {
                     jp: "そばにいて—どんな嵐も守るよ。",
@@ -1879,11 +1879,11 @@
                 id: "bobo",
                 name: "Bobo",
                 file: "Main VRM/bobo.vrm",
-                personality: "天真无邪的小天使，总是带来欢乐。",
-                traits: ["天真", "无邪", "快乐", "天使"],
+                personality: "Innocent little angel, always bringing joy.",
+                traits: ["Innocent", "Pure", "Happy", "Angel"],
                 emoji: "😇",
                 level: 19,
-                type: "天使系",
+                type: "Angel Type",
                 voiceId: "I7CpaIqk2oGPGCKvOPO9",
                 sampleLines: {
                     jp: "ぬいぐるみを抱えて一緒にお絵描きしよう？",
@@ -1894,11 +1894,11 @@
                 id: "kyoko",
                 name: "Kyoko",
                 file: "Main VRM/kyoko.vrm",
-                personality: "成熟稳重的大姐姐，值得信赖。",
-                traits: ["成熟", "稳重", "可靠", "大姐姐"],
+                personality: "Mature and steady big sister, trustworthy.",
+                traits: ["Mature", "Steady", "Reliable", "Big sister"],
                 emoji: "💜",
                 level: 28,
-                type: "姐姐系",
+                type: "Big Sister Type",
                 voiceId: "ATSlMe1wEISLjgGhZEKK",
                 sampleLines: {
                     jp: "私に登山を挑んで、一緒に頂上を目指そう。",
@@ -1909,11 +1909,11 @@
                 id: "lena",
                 name: "Lena",
                 file: "Main VRM/lena.vrm",
-                personality: "聪明机智的学霸型女孩，总是能给你最好的建议。",
-                traits: ["聪明", "理性", "学霸", "可靠"],
+                personality: "Smart and witty academic girl, always giving the best advice.",
+                traits: ["Smart", "Rational", "Academic", "Reliable"],
                 emoji: "📚",
                 level: 30,
-                type: "智慧系",
+                type: "Wisdom Type",
                 voiceId: "uEn2ClE3OziJMlhQS91c",
                 sampleLines: {
                     jp: "今夜ワインを飲みながらアートを語らない？",
@@ -1924,11 +1924,11 @@
                 id: "lilium",
                 name: "Lilium",
                 file: "Main VRM/lilium.vrm",
-                personality: "优雅神秘的少女，有着独特的魅力。",
-                traits: ["优雅", "神秘", "艺术", "浪漫"],
+                personality: "Elegant and mysterious girl with unique charm.",
+                traits: ["Elegant", "Mysterious", "Artistic", "Romantic"],
                 emoji: "🌺",
                 level: 28,
-                type: "神秘系",
+                type: "Mysterious Type",
                 voiceId: "yRRXNdbFeQpIK5MAhenr",
                 sampleLines: {
                     jp: "ビートを感じる？踊って世界を燃やそう。",
@@ -1939,11 +1939,11 @@
                 id: "miru",
                 name: "Miru",
                 file: "Main VRM/miru.vrm",
-                personality: "软萌可爱的小萝莉，让人忍不住想保护。",
-                traits: ["软萌", "可爱", "萝莉", "纯真"],
+                personality: "Soft and cute little loli, makes people want to protect.",
+                traits: ["Soft cute", "Adorable", "Loli", "Pure"],
                 emoji: "🍼",
                 level: 18,
-                type: "萝莉系",
+                type: "Loli Type",
                 voiceId: "eVJCDcwCTZBLNdQdbdmd",
                 sampleLines: {
                     jp: "雲が踊る夢を見たよ—一緒に浮かぼう？",
@@ -1954,11 +1954,11 @@
                 id: "miumiu",
                 name: "Miu Miu",
                 file: "Main VRM/miu miu.vrm",
-                personality: "俏皮可爱的猫耳少女，喜欢撒娇。",
-                traits: ["俏皮", "可爱", "猫耳", "撒娇"],
+                personality: "Playful and cute cat-eared girl who likes to act cute.",
+                traits: ["Playful", "Cute", "Cat ears", "Coquettish"],
                 emoji: "😸",
                 level: 21,
-                type: "兽娘系",
+                type: "Beast Girl Type",
                 voiceId: "SU7BtMmgc7KhQiC6G24B",
                 sampleLines: {
                     jp: "大好きなあなたのためにキラキラクラフト作ったよ！",
@@ -1969,11 +1969,11 @@
                 id: "sikirei",
                 name: "Sikirei",
                 file: "Main VRM/sikirei.vrm",
-                personality: "如四季般多变的少女，充满神秘感。",
-                traits: ["多变", "神秘", "四季", "灵动"],
+                personality: "A girl as changeable as the four seasons, full of mystery.",
+                traits: ["Changeable", "Mysterious", "Seasonal", "Nimble"],
                 emoji: "🌷",
                 level: 27,
-                type: "自然系",
+                type: "Nature Type",
                 voiceId: "n263mAk9k8VWEuZSmuMl",
                 sampleLines: {
                     jp: "一緒に星を眺めよう—宇宙が私たちの秘密を待っている。",
@@ -1984,11 +1984,11 @@
                 id: "wolf",
                 name: "Wolf",
                 file: "Main VRM/wolf.vrm",
-                personality: "孤高的独狼，有着自己的坚持。",
-                traits: ["孤高", "独立", "坚持", "冷静"],
+                personality: "Lone wolf with her own persistence.",
+                traits: ["Aloof", "Independent", "Persistent", "Calm"],
                 emoji: "🌙",
                 level: 31,
-                type: "孤狼系",
+                type: "Lone Wolf Type",
                 voiceId: "WW3EvqkXGmu65ga8TYqa",
                 sampleLines: {
                     jp: "森の呼び声が聞こえる？自由にさまよおう。",
@@ -1999,11 +1999,11 @@
                 id: "neco",
                 name: "Neco",
                 file: "Main VRM/neco.vrm",
-                personality: "冷酷知性的优雅少女，有着独特的魅力。",
-                traits: ["冷酷", "知性", "优雅", "神秘"],
+                personality: "Cool and intellectual elegant girl with unique charm.",
+                traits: ["Cool", "Intellectual", "Elegant", "Mysterious"],
                 emoji: "🐱",
                 level: 25,
-                type: "知性系",
+                type: "Intellectual Type",
                 voiceId: "t9ZwnJtpA3lWrJ4W7pAl",
                 sampleLines: {
                     jp: "静かな隅で、影に隠れた物語を見つける。",
@@ -2012,7 +2012,7 @@
             }
         ];
 
-        // 角色头像映射
+        // Character avatar mapping
         function getProfilePicture(characterName) {
             const profileMap = {
                 'Alice': 'alice-pf.png',
@@ -2043,7 +2043,7 @@
             return `profile-pic/${profileMap[characterName] || 'default.png'}`;
         }
 
-        // 全局变量
+        // Global variables
         let scene, camera, renderer, controls;
         let currentVRM = null;
         let mixer = null;
@@ -2051,16 +2051,16 @@
         let currentCharacterIndex = 0;
         let isLoading = false;
         
-        // 语音播放功能变量 - 提前声明
+        // Voice playback variables - declared early
         let currentAudio = null;
-        let currentLanguage = 'jp'; // 默认日语
-        // 基于 character.md 的英文资料缓存（提前声明以避免 TDZ）
+        let currentLanguage = 'jp'; // Default Japanese
+        // English profile cache based on character.md (declared early to avoid TDZ)
         var englishProfiles = null;
         
-        // 后端API配置
+        // Backend API configuration
         const API_URL = window.AppConfig ? window.AppConfig.getApiUrl() : 'http://localhost:3000';
 
-        // 初始化
+        // Initialize
         init();
         generateThumbnails();
         // Initialize selected character image and profile
@@ -2072,11 +2072,11 @@
             // Initialize character profile
             updateCharacterProfile(characters[0]);
             
-            // 移动端：将角色选择器滚动条居中
+            // Mobile: center character selector scrollbar
             if (window.innerWidth <= 768) {
                 const characterList = document.querySelector('.character-list');
                 if (characterList) {
-                    // 计算滚动到中间位置
+                    // Calculate scroll to center position
                     const scrollWidth = characterList.scrollWidth;
                     const clientWidth = characterList.clientWidth;
                     const centerPosition = (scrollWidth - clientWidth) / 2;
@@ -2087,60 +2087,60 @@
         loadCharacter(0);
 
         function init() {
-            // 创建场景
+            // Create scene
             scene = new THREE.Scene();
 
-            // 获取canvas容器的实际尺寸
+            // Get actual canvas container size
             const canvas = document.getElementById('vrm-canvas');
             const container = canvas.parentElement;
             const containerRect = container.getBoundingClientRect();
             
-            // 创建相机 - 使用容器尺寸而不是窗口尺寸
+            // Create camera - use container size instead of window size
             camera = new THREE.PerspectiveCamera(30.0, containerRect.width / containerRect.height, 0.1, 20.0);
             camera.position.set(0.0, 0.5, 5.2);
 
-            // 创建渲染器 - 使用容器尺寸
+            // Create renderer - use container size
             renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
             renderer.setSize(containerRect.width, containerRect.height);
             renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.setClearColor(0x000000, 0); // 透明背景
+            renderer.setClearColor(0x000000, 0); // Transparent background
             
-            // 不需要复杂阴影系统，使用简单脚底阴影
+            // No need for complex shadow system, use simple foot shadow
             // renderer.shadowMap.enabled = true;
             // renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-            // 创建控制器 - 使用与index.html相同的设置
+            // Create controller - use same settings as index.html
             controls = new OrbitControls(camera, renderer.domElement);
             controls.screenSpacePanning = true;
             controls.target.set(0.0, 0.5, 0.0);
             controls.update();
 
-            // 添加环境光
+            // Add ambient light
             const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
             scene.add(ambientLight);
 
-            // 主光源 - 简化设置
+            // Main light source - simplified settings
             const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
             directionalLight.position.set(1, 6, 2);
             
             scene.add(directionalLight);
 
-            // 补光
+            // Fill light
             const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
             fillLight.position.set(-5, 5, -5);
             scene.add(fillLight);
 
-            // 创建渐变圆形阴影 - 模仿参考截图
+            // Create gradient circular shadow - mimic reference screenshot
             const shadowCanvas = document.createElement('canvas');
             shadowCanvas.width = 128;
             shadowCanvas.height = 128;
             const context = shadowCanvas.getContext('2d');
             
-            // 创建径向渐变阴影
+            // Create radial gradient shadow
             const gradient = context.createRadialGradient(64, 64, 0, 64, 64, 64);
-            gradient.addColorStop(0, 'rgba(0, 0, 0, 0.4)'); // 中心较深
-            gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0.2)'); // 中等透明度
-            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)'); // 边缘完全透明
+            gradient.addColorStop(0, 'rgba(0, 0, 0, 0.4)'); // Darker center
+            gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0.2)'); // Medium transparency
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)'); // Completely transparent edges
             
             context.fillStyle = gradient;
             context.fillRect(0, 0, 128, 128);
@@ -2156,16 +2156,16 @@
             
             const shadow = new THREE.Mesh(shadowGeometry, shadowMaterial);
             shadow.rotation.x = -Math.PI / 2;
-            shadow.position.set(0, -0.82, 0); // 直接贴着脚底
+            shadow.position.set(0, -0.82, 0); // Directly attached to feet
             scene.add(shadow);
             
-            // 保存阴影引用，以便后续更新位置
+            // Save shadow reference for later position updates
             window.characterShadow = shadow;
 
-            // 开始渲染循环
+            // Start render loop
             animate();
 
-            // 窗口大小调整
+            // Window resize
             window.addEventListener('resize', onWindowResize);
         }
 
@@ -2175,20 +2175,20 @@
 
             const deltaTime = 0.016;
             
-            // 更新VRM
+            // Update VRM
             if (currentVRM) {
                 currentVRM.update(deltaTime);
             }
             
-            // 更新动画混合器
+            // Update animation mixer
             if (mixer) {
                 mixer.update(deltaTime);
             }
 
-            // 更新控制器
+            // Update controller
             controls.update();
 
-            // 渲染
+            // Render
             renderer.render(scene, camera);
         }
 
@@ -2216,10 +2216,10 @@
 
             const character = characters[index];
             
-            // 显示加载动画
+            // Show loading animation
             showCharacterLoader();
 
-            // 更新UI
+            // Update UI
             const nameElement = document.getElementById('character-name');
             if (nameElement) nameElement.textContent = character.name;
             
@@ -2229,9 +2229,9 @@
             const displayNameElement = document.getElementById('character-display-name');
             if (displayNameElement) displayNameElement.textContent = character.name;
 
-            // 不需要占位符
+            // No placeholder needed
 
-            // 加载VRM
+            // Load VRM
             const loader = new GLTFLoader();
             loader.register((parser) => new VRMLoaderPlugin(parser));
 
@@ -2242,27 +2242,27 @@
                     
                     if (vrm) {
                         
-                        // 使用VRM v2兼容的优化方法
+                        // Use VRM v2 compatible optimization methods
                         VRMUtils.removeUnnecessaryVertices(gltf.scene);
                         // VRMUtils.combineSkeletons 在 v2 中已移除
                         // VRMUtils.combineMorphs 在 v2 中已移除
                         
-                        // 清理旧VRM（但保留灯光和占位符）
+                        // Clean old VRM (but keep lights and placeholder)
                         if (currentVRM) {
                             scene.remove(currentVRM.scene);
                             VRMUtils.deepDispose(currentVRM.scene);
                         }
 
-                        // 设置新VRM - 使用与index.html相同的设置
+                        // Set new VRM - use same settings as index.html
                         currentVRM = vrm;
                         
-                        // 将VRM模型放大45% (与index.html一致)
+                        // Scale VRM model up by 45% (consistent with index.html)
                         vrm.scene.scale.set(1.45, 1.45, 1.45);
                         
-                        // 将VRM模型位置向下移动，更贴近底部边界
+                        // Move VRM model position down, closer to bottom boundary
                         vrm.scene.position.y = -0.8;
                         
-                        // 先隐藏VRM，防止T-pose闪现
+                        // Hide VRM first to prevent T-pose flash
                         vrm.scene.visible = false;
                         
                         mixer = new THREE.AnimationMixer(currentVRM.scene);
@@ -2272,29 +2272,29 @@
                         });
                         
                         // VRMUtils.rotateVRM0 在 v2 中可能不需要或已更改
-                        // 如果是 VRM 0.x 格式，可能需要旋转；VRM 1.x 格式通常不需要
+                        // VRM 0.x format may need rotation; VRM 1.x format usually doesn't
                         try {
                             VRMUtils.rotateVRM0(vrm);
                         } catch (error) {
                         }
                         
-                        // 添加到场景
+                        // Add to scene
                         scene.add(vrm.scene);
                         
-                        // 立即加载默认动画，然后显示VRM
+                        // Load default animation immediately, then show VRM
                         loadDefaultAnimation().then(() => {
-                            // 等待几帧确保动画开始播放，然后显示VRM
+                            // Wait a few frames to ensure animation starts playing, then show VRM
                             setTimeout(() => {
                                 if (currentVRM && currentVRM.scene) {
                                     currentVRM.scene.visible = true;
-                                    // 隐藏加载器
+                                    // Hide loader
                                     hideCharacterLoader();
                                 }
-                            }, 150); // 增加到150ms确保动画已经应用
+                            }, 150); // Increase to 150ms to ensure animation is applied
                         });
                         
                     } else {
-                        // VRM数据不存在时也要隐藏加载器
+                        // Hide loader even when VRM data doesn't exist
                         hideCharacterLoader();
                     }
 
@@ -2314,12 +2314,12 @@
 
         function finishLoading(index, loadingStartTime) {
             const elapsedTime = Date.now() - (loadingStartTime || 0);
-            const remainingTime = Math.max(0, 3000 - elapsedTime); // 最少3秒
+            const remainingTime = Math.max(0, 3000 - elapsedTime); // Minimum 3 seconds
             
             setTimeout(() => {
                 isLoading = false;
                 
-                // 调试信息
+                // Debug info
             }, remainingTime);
         }
 
@@ -2331,9 +2331,9 @@
             containerRight.innerHTML = '';
 
             const currentIndex = currentCharacterIndex;
-            const showCount = 4; // 左右各显示4个角色
+            const showCount = 4; // Show 4 characters on each side
             
-            // 左边的角色 (当前角色之前的3个)
+            // Left characters (3 before current)
             for (let i = showCount; i > 0; i--) {
                 const index = (currentIndex - i + characters.length) % characters.length;
                 const character = characters[index];
@@ -2354,7 +2354,7 @@
                 containerLeft.appendChild(thumb);
             }
             
-            // 右边的角色 (当前角色之后的3个)
+            // Right characters (3 after current)
             for (let i = 1; i <= showCount; i++) {
                 const index = (currentIndex + i) % characters.length;
                 const character = characters[index];
@@ -2377,7 +2377,7 @@
 
         }
 
-        // 从 i18n 中按角色ID获取一组字段（若存在）
+        // Get a set of fields from i18n by character ID (if exists)
         function getI18nProfileById(charId) {
             if (!window.i18n || !charId) return null;
             const fields = ['age','birthday','zodiac','personality','interests','likes','dislikes','food','music','movies','games'];
@@ -2386,7 +2386,7 @@
             fields.forEach(f => {
                 const key = `character.${charId}.${f}`;
                 const value = i18n.t(key);
-                // 若未配置该键，i18n.t 会返回 key 本身或英文兜底；通过判断是否等于 key 粗略判断
+                // If key is not configured, i18n.t returns key itself or English fallback; roughly determine by checking if equal to key
                 if (value && value !== key) {
                     hasAny = true;
                     switch (f) {
@@ -2590,16 +2590,16 @@
                 "Fliza": {
                     zh: {
                         age: 23,
-                        birthday: "8月14日",
-                        zodiac: "狮子座",
+                        birthday: "August 14",
+                        zodiac: "Leo",
                         personality: "温暖、关怀、富有同情心",
                         dailyInterests: "农业、园艺",
-                        likes: "日出和晨露",
+                        likes: "Sunrise and morning dew",
                         dislikes: "环境污染",
-                        favoriteFood: "新鲜水果、蜂蜜柠檬水",
-                        favoriteMusic: "民谣、自然音景",
+                        favoriteFood: "Fresh fruit, honey lemonade",
+                        favoriteMusic: "Folk songs, natural soundscapes",
                         favoriteMovies: "自然纪录片、温馨故事",
-                        favoriteGames: "动物森友会"
+                        favoriteGames: "Animal Crossing"
                     },
                     en: {
                         age: 23,
@@ -2656,16 +2656,16 @@
                 },
                 "Fliza": {
                     age: 23,
-                    birthday: "8月14日",
-                    zodiac: "狮子座",
+                    birthday: "August 14",
+                    zodiac: "Leo",
                     personality: "温暖、关怀、富有同情心",
                     dailyInterests: "农业、园艺",
-                    likes: "日出和晨露",
+                    likes: "Sunrise and morning dew",
                     dislikes: "环境污染",
-                    favoriteFood: "新鲜水果、蜂蜜柠檬水",
-                    favoriteMusic: "民谣、自然音景",
+                    favoriteFood: "Fresh fruit, honey lemonade",
+                    favoriteMusic: "Folk songs, natural soundscapes",
                     favoriteMovies: "自然纪录片、温馨故事",
-                    favoriteGames: "动物森友会"
+                    favoriteGames: "Animal Crossing"
                 },
                 "Imeris": {
                     age: 25,
@@ -2983,7 +2983,7 @@
             containerRight.innerHTML = '';
 
             const currentIndex = currentCharacterIndex;
-            const showCount = 4; // 左右各显示4个角色
+            const showCount = 4; // Show 4 characters on each side
             
             // Update selected character image
             const selectedAvatar = document.getElementById('selected-avatar-img');
@@ -2992,7 +2992,7 @@
             // Update character profile information
             updateCharacterProfile(characters[currentIndex]);
             
-            // 左边的角色 (当前角色之前的3个)
+            // Left characters (3 before current)
             for (let i = showCount; i > 0; i--) {
                 const index = (currentIndex - i + characters.length) % characters.length;
                 const character = characters[index];
@@ -3013,7 +3013,7 @@
                 containerLeft.appendChild(thumb);
             }
             
-            // 右边的角色 (当前角色之后的3个)
+            // Right characters (3 after current)
             for (let i = 1; i <= showCount; i++) {
                 const index = (currentIndex + i) % characters.length;
                 const character = characters[index];
@@ -3399,7 +3399,7 @@
             }
         };
 
-        // 初始化语言切换器
+        // Initialize语言切换器
         function initLanguageToggle() {
             if (window.i18n) {
                 const currentLang = window.i18n.getCurrentLanguage();
@@ -3962,7 +3962,7 @@
             );
         }
         
-        // 渲染 React 组件
+        // Render React 组件
         // Mount React wallet UI safely (after ReactDOM is available)
         function mountWalletUI() {
             const container = document.getElementById('wallet-adapter-root');
@@ -4249,7 +4249,7 @@
                     
                     (window.AppConfig?.debug?.log || console.log)(`Wallet connected: ${walletName}`, address);
                     
-                    // 更新UI
+                    // Update UI
                     this.updateUI();
                     this.hideWalletModal();
                     this.showToast(`${walletName} 连接成功!`, 'success');
@@ -4283,7 +4283,7 @@
                     localStorage.removeItem('wallet_type');
                     localStorage.removeItem('selectedCharacter');
 
-                    // 更新UI
+                    // Update UI
                     this.updateUI();
                     this.hideDropdown();
                     this.showToast(i18n.t('wallet.disconnected'), 'success');
@@ -4529,7 +4529,7 @@
         window.profileManager = profileManager;
         (window.AppConfig?.debug?.log || console.log)('ProfileManager initialized');
 
-        // 初始化钱包管理器
+        // Initialize钱包管理器
         let walletManager;
         document.addEventListener('DOMContentLoaded', () => {
             walletManager = new SolanaWalletManager();
@@ -4736,7 +4736,7 @@
                         if (title) title.textContent = i18n.t('registration.title');
                     }
                     
-                    // 初始化月份和日期选择器
+                    // Initialize月份和日期选择器
                     setTimeout(() => {
                         this.initDateSelectors();
                     }, 100);
@@ -4753,7 +4753,7 @@
                 }
             }
             
-            // 初始化月份和日期选择器
+            // Initialize月份和日期选择器
             initDateSelectors() {
                 const yearSelect = document.getElementById('birthYear');
                 const monthSelect = document.getElementById('birthMonth');
@@ -5269,7 +5269,7 @@
                     <label class="field-label" data-i18n="registration.language">Language Setting</label>
                     <select class="profile-select" id="language" required>
                         <option value="" data-i18n="registration.language.select">Select Language</option>
-                        <option value="中文">中文</option>
+                        <option value="CN">中文</option>
                         <option value="English">English</option>
                         <option value="日本語">日本語</option>
                         <option value="한국어">한국어</option>
