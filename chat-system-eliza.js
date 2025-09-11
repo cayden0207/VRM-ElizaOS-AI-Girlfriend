@@ -840,7 +840,7 @@ class ElizaOSChatSystem {
             
         } catch (fallbackError) {
             console.error('❌ All voice playback methods failed:', fallbackError);
-            // 创建用户交互播放按钮
+            // Create用户交互播放按钮
             this.showInteractivePlayButton(audioData);
         }
     }
@@ -950,7 +950,7 @@ class ElizaOSChatSystem {
     
     // 显示语音状态
     showVoiceStatus(message) {
-        // 创建或更新语音状态显示
+        // Create或更新语音状态显示
         let voiceStatus = document.getElementById('voice-status');
         if (!voiceStatus) {
             voiceStatus = document.createElement('div');
@@ -983,7 +983,7 @@ class ElizaOSChatSystem {
     }
 }
 
-// 创建全局实例
+// Create全局实例
 window.ElizaOSChatSystem = ElizaOSChatSystem;
 
 // 自动初始化

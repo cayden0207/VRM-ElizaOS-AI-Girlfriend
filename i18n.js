@@ -239,7 +239,7 @@ class I18n {
             'chat.send': '发送',
             'chat.voice.play': '🎵 播放语音',
             'chat.connecting': '连接中...',
-            'chat.loading': '加载中...',
+            'chat.loading': 'Loading...',
             
             // Buttons and controls
             'btn.back': '返回',
@@ -274,9 +274,9 @@ class I18n {
             'char.zwei.desc': '坚定忠诚的守护者',
             
             // Error messages
-            'error.network': '网络连接失败，请检查网络后刷新页面',
-            'error.save': '保存失败，请重试',
-            'error.delete': '删除失败，请重试',
+            'error.network': '网络Connection failed，请检查网络后刷新页面',
+            'error.save': 'Save failed，请重试',
+            'error.delete': 'Delete failed，请重试',
             'error.load': '加载失败，请刷新页面',
             'error.wallet.required': '请先连接钱包后再开始聊天！',
             
@@ -293,7 +293,7 @@ class I18n {
 
             // Status indicators
             'status.vrm': 'VRM状态: ',
-            'status.loading': '加载中...',
+            'status.loading': 'Loading...',
             'status.current.animation': '当前动画: ',
             'status.none': '无',
             'status.expression': '表情状态: ',
@@ -314,7 +314,7 @@ class I18n {
             'eliza.initializing': '初始化ElizaOS聊天系统...',
             'eliza.init.complete': 'ElizaOS聊天系统初始化完成',
             'eliza.init.failed': 'ElizaOS系统初始化失败',
-            'eliza.connection.failed': 'ElizaOS API连接失败',
+            'eliza.connection.failed': 'ElizaOS APIConnection failed',
             'eliza.connection.normal': 'ElizaOS连接正常',
             'eliza.send.failed': '发送消息失败',
 
@@ -421,7 +421,7 @@ class I18n {
     };
 
     init() {
-        // 设置HTML lang属性
+        // SetupHTML lang属性
         document.documentElement.lang = this.currentLang === 'zh' ? 'zh-CN' : 'en';
     }
 
@@ -430,7 +430,7 @@ class I18n {
         return this.texts[this.currentLang][key] || this.texts['en'][key] || key;
     }
 
-    // 切换语言
+    // Switch语言
     switchLanguage(lang) {
         if (lang === this.currentLang) return;
         
@@ -438,10 +438,10 @@ class I18n {
         localStorage.setItem('language', lang);
         document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
         
-        // 触发语言切换事件
+        // Trigger语言切换事件
         window.dispatchEvent(new CustomEvent('languageChanged', { detail: lang }));
         
-        // 刷新页面以应用新语言
+        // Refresh页面以应用新语言
         location.reload();
     }
 
@@ -457,10 +457,10 @@ class I18n {
     }
 }
 
-// 创建全局实例
+// Create全局实例
 const i18n = new I18n();
 
-// 页面加载完成后初始化翻译
+// 页面Loading complete后初始化翻译
 document.addEventListener('DOMContentLoaded', function() {
     // 翻译所有带有 data-i18n 属性的元素
     document.querySelectorAll('[data-i18n]').forEach(element => {
