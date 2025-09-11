@@ -2828,7 +2828,13 @@
             const userName = 'user';
 
             messageDiv.innerHTML = `
-                <div class="bubble-content">${content}</div>
+                <div class="bubble-container">
+                    <div class="bubble-header">
+                        <span>${isUser ? userName : characterName}</span>
+                        <span>${currentTime}</span>
+                    </div>
+                    <div class="bubble-content">${content}</div>
+                </div>
             `;
 
             messagesContainer.appendChild(messageDiv);
