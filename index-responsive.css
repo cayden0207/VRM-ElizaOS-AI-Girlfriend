@@ -159,17 +159,19 @@
         transform: translateX(-50%) !important;
         display: flex !important;
         align-items: center !important;
-        gap: 4px !important; /* Reduced gap for mobile */
-        padding: 6px 12px !important; /* Reduced padding for mobile */
+        gap: 2px !important; /* Compact gap for mobile */
+        padding: 4px 8px !important; /* Compact padding for mobile */
         background: rgba(255, 255, 255, 0.1) !important;
         backdrop-filter: blur(4px) !important;
-        border-radius: 60px !important;
+        border-radius: 25px !important; /* Smaller radius to match scaled size */
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
         z-index: 90;
-        scale: 0.45 !important;
+        /* Removed scale: 0.45 - using native sizing for proper centering */
         box-shadow: 0 1px 7px rgba(0, 0, 0, 0.1) !important;
         max-width: calc(100vw - 40px) !important; /* Prevent overflow with more margin */
         box-sizing: border-box !important;
+        width: auto !important; /* Let content determine width */
+        height: auto !important; /* Let content determine height */
     }
 
     /* Navigation buttons - Mobile */
@@ -177,11 +179,11 @@
         background: none !important;
         border: none !important;
         color: white !important;
-        font-size: 20px !important;
+        font-size: 12px !important; /* Smaller size to match removed scale */
         cursor: pointer !important;
-        padding: 5px !important;
-        min-width: 30px !important;
-        height: 30px !important;
+        padding: 2px !important; /* Smaller padding */
+        min-width: 16px !important; /* Smaller size */
+        height: 16px !important; /* Smaller size */
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -202,11 +204,11 @@
     }
 
     .character-selector .selected-avatar {
-        width: 50px !important;
-        height: 50px !important;
+        width: 24px !important; /* Smaller size to match removed scale */
+        height: 24px !important; /* Smaller size to match removed scale */
         border-radius: 50% !important;
         overflow: hidden !important;
-        margin-bottom: 4px !important;
+        margin-bottom: 2px !important; /* Smaller margin */
     }
 
     .character-selector .selected-avatar img {
@@ -216,7 +218,7 @@
     }
 
     .character-selector .selected-badge {
-        font-size: 10px !important;
+        font-size: 6px !important; /* Smaller font to match removed scale */
         color: white !important;
     }
 
@@ -447,11 +449,11 @@
         top: 62vh !important; /* Consistent position from top for all portrait devices */
         left: 50% !important;
         transform: translateX(-50%) !important;
-        scale: 0.45 !important;
+        /* Removed scale: 0.45 - using native sizing for proper centering */
         max-width: calc(100vw - 40px) !important; /* Prevent overflow - match main rule */
         box-sizing: border-box !important;
-        gap: 4px !important; /* Force compact spacing */
-        padding: 6px 12px !important; /* Force compact padding */
+        gap: 2px !important; /* Force compact spacing */
+        padding: 4px 8px !important; /* Force compact padding */
         overflow: hidden !important; /* Extra safety */
     }
 }
@@ -467,9 +469,10 @@
         box-sizing: border-box !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
-        gap: 3px !important; /* Even more compact */
-        padding: 4px 8px !important; /* Even more compact */
+        gap: 2px !important; /* Even more compact */
+        padding: 3px 6px !important; /* Even more compact */
         overflow: hidden !important;
         white-space: nowrap !important;
+        /* Removed scale - using native sizing for proper centering */
     }
 }
