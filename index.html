@@ -5439,6 +5439,29 @@ window.handleProfileSubmit = async function(event) {
         alert('submittedfailed：' + error.message);
     }
 };
+
+// Initialize character-selector scroll to center
+function initializeCharacterSelectorScroll() {
+    const characterSelector = document.querySelector('.character-selector');
+    if (characterSelector) {
+        // Wait for thumbnails to load
+        setTimeout(() => {
+            const scrollableWidth = characterSelector.scrollWidth - characterSelector.clientWidth;
+            const centerPosition = scrollableWidth / 2;
+            characterSelector.scrollLeft = centerPosition;
+        }, 500); // Delay to ensure content is loaded
+    }
+}
+
+// Add event listener for when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    initializeCharacterSelectorScroll();
+});
+
+// Also initialize when characters are loaded (after VRM loading)
+window.addEventListener('load', () => {
+    setTimeout(initializeCharacterSelectorScroll, 1000);
+});
 </script>
 
 </body>
