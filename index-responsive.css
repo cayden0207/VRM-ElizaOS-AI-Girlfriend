@@ -151,23 +151,24 @@
 
     /* ========== CHARACTER SELECTOR ========== */
     
-    /* Character Selector - Mobile version with horizontal scroll */
+    /* Character Selector - Mobile version scaled down 30% with horizontal scroll */
     .character-selector {
         position: fixed !important;
         top: 65vh !important; /* Position from top instead of bottom for stability */
         left: 50% !important;
-        transform: translateX(-50%) !important;
+        transform: translateX(-50%) scale(0.7) !important; /* Scale down entire UI by 30% */
+        transform-origin: center !important;
         display: flex !important;
         align-items: center !important;
-        gap: 1px !important; /* Even more compact gap - 30% smaller */
-        padding: 3px 6px !important; /* 30% smaller padding */
+        gap: 9px !important; /* Original desktop gap - will be scaled by transform */
+        padding: 12px 31px !important; /* Original desktop padding - will be scaled by transform */
         background: rgba(255, 255, 255, 0.1) !important;
         backdrop-filter: blur(4px) !important;
-        border-radius: 18px !important; /* 30% smaller radius (25px * 0.7 = 17.5px ≈ 18px) */
+        border-radius: 60px !important; /* Original desktop radius - will be scaled by transform */
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
         z-index: 90;
         box-shadow: 0 1px 7px rgba(0, 0, 0, 0.1) !important;
-        max-width: calc(70vw - 28px) !important; /* 30% smaller width limit */
+        max-width: calc(85vw) !important; /* Max width before scaling to allow scrolling */
         box-sizing: border-box !important;
         width: auto !important;
         height: auto !important;
@@ -191,7 +192,7 @@
     /* Character thumbnails - Mobile with scroll */
     .character-selector .character-thumbnails {
         display: flex !important;
-        gap: 3px !important; /* 30% smaller gap (4px * 0.7 = 2.8px ≈ 3px) */
+        gap: 9px !important; /* Keep original desktop gap - will be scaled by transform */
         flex-shrink: 0 !important; /* Prevent shrinking during scroll */
     }
 
@@ -200,16 +201,16 @@
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
-        margin: 0 5px !important; /* 30% smaller margin (8px * 0.7 = 5.6px ≈ 5px) */
+        margin: 0 8px !important; /* Original margin - will be scaled by transform */
         flex-shrink: 0 !important; /* Prevent shrinking during scroll */
     }
 
     .character-selector .selected-avatar {
-        width: 17px !important; /* 30% smaller (24px * 0.7 = 16.8px ≈ 17px) */
-        height: 17px !important; /* 30% smaller */
+        width: 50px !important; /* Original size - will be scaled by transform */
+        height: 50px !important; /* Original size - will be scaled by transform */
         border-radius: 50% !important;
         overflow: hidden !important;
-        margin-bottom: 1px !important; /* 30% smaller margin (2px * 0.7 = 1.4px ≈ 1px) */
+        margin-bottom: 4px !important; /* Original margin - will be scaled by transform */
     }
 
     .character-selector .selected-avatar img {
@@ -219,7 +220,7 @@
     }
 
     .character-selector .selected-badge {
-        font-size: 4px !important; /* 30% smaller font (6px * 0.7 = 4.2px ≈ 4px) */
+        font-size: 10px !important; /* Original font size - will be scaled by transform */
         color: white !important;
     }
 
@@ -449,13 +450,17 @@
     .character-selector {
         top: 62vh !important; /* Consistent position from top for all portrait devices */
         left: 50% !important;
-        transform: translateX(-50%) !important;
-        /* Removed scale: 0.45 - using native sizing for proper centering */
-        max-width: calc(100vw - 40px) !important; /* Prevent overflow - match main rule */
+        transform: translateX(-50%) scale(0.7) !important; /* Scale down entire UI by 30% */
+        transform-origin: center !important;
+        max-width: calc(85vw) !important; /* Max width before scaling to allow scrolling */
         box-sizing: border-box !important;
-        gap: 2px !important; /* Force compact spacing */
-        padding: 4px 8px !important; /* Force compact padding */
-        overflow: hidden !important; /* Extra safety */
+        gap: 9px !important; /* Original gap - will be scaled by transform */
+        padding: 12px 31px !important; /* Original padding - will be scaled by transform */
+        overflow-x: auto !important; /* Enable horizontal scrolling */
+        overflow-y: hidden !important;
+        /* Hide scrollbar but keep functionality */
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
     }
 }
 
@@ -466,14 +471,23 @@
     .character-selector.character-selector {
         top: 62vh !important; /* Force top positioning for stability */
         bottom: auto !important; /* Remove any bottom positioning */
-        max-width: calc(100vw - 40px) !important;
+        max-width: calc(85vw) !important; /* Max width before scaling to allow scrolling */
         box-sizing: border-box !important;
         left: 50% !important;
-        transform: translateX(-50%) !important;
-        gap: 2px !important; /* Even more compact */
-        padding: 3px 6px !important; /* Even more compact */
-        overflow: hidden !important;
+        transform: translateX(-50%) scale(0.7) !important; /* Scale down entire UI by 30% */
+        transform-origin: center !important;
+        gap: 9px !important; /* Original gap - will be scaled by transform */
+        padding: 12px 31px !important; /* Original padding - will be scaled by transform */
+        overflow-x: auto !important; /* Enable horizontal scrolling */
+        overflow-y: hidden !important;
         white-space: nowrap !important;
-        /* Removed scale - using native sizing for proper centering */
+        /* Hide scrollbar but keep functionality */
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+    
+    /* Hide scrollbar for WebKit browsers */
+    .character-selector.character-selector::-webkit-scrollbar {
+        display: none !important;
     }
 }
