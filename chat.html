@@ -268,7 +268,7 @@
             text-align: right;
         }
 
-        /* 语言切换器 */
+        /* 语言Switching器 */
         .language-toggle {
             position: absolute;
             bottom: 25px;
@@ -379,7 +379,7 @@
             transform: translateY(-2px);
         }
 
-        /* 钱包状态显示 */
+        /* wallet状态显示 */
         .wallet-status-info {
             position: absolute;
             top: 20px;
@@ -423,7 +423,7 @@
             background: rgba(255, 69, 58, 1);
         }
 
-        /* 连接钱包按钮 */
+        /* 连接wallet按钮 */
         .connect-wallet-btn {
             background: linear-gradient(135deg, #9945ff, #14f195);
             border: none;
@@ -685,7 +685,7 @@
             animation: avatarFloat 4s ease-in-out infinite;
         }
 
-        /* 为不同角色设置标题栏头像 */
+        /* 为不同characterSetting标题栏头像 */
         .character-fliza .chat-user-avatar {
             background-image: url('profile-pic/fliza-pf.png');
         }
@@ -829,7 +829,7 @@
             position: relative;
         }
 
-        /* 名字前的小装饰 */
+        /* 名characters前的小装饰 */
         .chat-user-name::before {
             content: '💕';
             margin-right: 6px;
@@ -1006,7 +1006,7 @@
             z-index: 1;
         }
 
-        /* 为不同角色设置头像 */
+        /* 为不同characterSetting头像 */
         .character-fliza .message-bubble.ai::before {
             background-image: url('profile-pic/fliza-pf.png');
         }
@@ -1977,7 +1977,7 @@
                 const clip = THREE.AnimationClip.findByName(asset.animations, 'mixamo.com');
 
                 if (!clip) {
-                    throw new Error('找不到 Mixamo 动画数据');
+                    throw new Error('找不到 Mixamo 动画data');
                 }
 
                 const tracks = [];
@@ -2039,7 +2039,7 @@
             });
         }
 
-        // ActorCore 动画加载函数
+        // ActorCore 动画load函数
         function loadActorCoreAnimation(url, vrm) {
             const loader = new FBXLoader();
             return loader.loadAsync(url).then((asset) => {
@@ -2047,7 +2047,7 @@
                 const clip = asset.animations[0];
 
                 if (!clip) {
-                    throw new Error('找不到 ActorCore 动画数据');
+                    throw new Error('找不到 ActorCore 动画data');
                 }
 
                 const tracks = [];
@@ -2066,7 +2066,7 @@
                 const vrmHipsHeight = vrm.humanoid.normalizedRestPose.hips.position[1];
                 const hipsPositionScale = vrmHipsHeight / motionHipsHeight;
 
-                // console.log(`🎬 ActorCore动画处理: ${clip.name}, 轨道数量: ${clip.tracks.length}`);
+                // console.log(`🎬 ActorCore animation processing: ${clip.name}, track count: ${clip.tracks.length}`);
 
                 clip.tracks.forEach((track) => {
                     const trackSplitted = track.name.split('.');
@@ -2115,7 +2115,7 @@
                     }
                 });
 
-                // console.log(`✅ ActorCore动画重定向完成，生成轨道数量: ${tracks.length}`);
+                // console.log(`✅ ActorCore animation retargeting completed, generated track count: ${tracks.length}`);
                 return new THREE.AnimationClip('actorCoreAnimation', clip.duration, tracks);
             });
         }
@@ -2309,7 +2309,7 @@
 
             try {
                 currentVrm.expressionManager.setValue(expressionName, value);
-                // console.log(`😊 设置表情: ${expressionName} = ${value}`);
+                // console.log(`😊 Setting expression: ${expressionName} = ${value}`);
 
                 // Update状态显示
                 if (value > 0.5) {
@@ -2492,7 +2492,7 @@
                         // Get animation duration, return to idle after animation ends
                         const animationDuration = clip.duration * 1000; // Convert to milliseconds
                         returnToIdleTimer = setTimeout(() => {
-                            // console.log('🔄 返回待机动画');
+                            // console.log('🔄 Return to idle animation');
                             loadAnimation(idleAnimationUrl);
                         }, animationDuration + 500); // Return to idle 0.5 seconds after animation ends
                     }
@@ -2513,14 +2513,14 @@
                     }
                 }
 
-                // console.log(`🎬 动画加载成功: ${animationName} (${isActorCore ? 'ActorCore' : 'Mixamo'})`);
+                // console.log(`🎬 Animation loaded successfully: ${animationName} (${isActorCore ? 'ActorCore' : 'Mixamo'})`);
 
             } catch (error) {
                 console.error('❌ Animation load failed:', error);
             }
         }
 
-        // VRM 角色列表
+        // VRM character列表
         const vrmCharacters = {
             'Fliza VRM': 'Main VRM/Fliza VRM.vrm',
             'QuQu_U': 'Main VRM/QuQu_U.vrm',
@@ -2552,7 +2552,7 @@
 
         let currentCharacterName = 'Fliza VRM';
 
-        // VRM 加载函数
+        // VRM load函数
         function loadVRM(characterName = null) {
             let vrmPath;
             
@@ -2575,7 +2575,7 @@
                 }
             }
 
-            // console.log('🎮 VRM加载调试信息:');
+            // console.log('🎮 VRM loading debug info:');
             console.log('- characterName:', characterName);
             console.log('- vrmPath:', vrmPath);
             console.log('- defaultVrmFile:', defaultVrmFile);
@@ -2600,9 +2600,9 @@
             loader.load(
                 vrmPath,
                 (gltf) => {
-                    // console.log('🎉 VRM文件加载成功!', gltf);
+                    // console.log('🎉 VRM file loaded successfully!', gltf);
                     const vrm = gltf.userData.vrm;
-                    // console.log('📦 VRM对象:', vrm);
+                    // console.log('📦 VRM object:', vrm);
 
                     // Use VRM v2 compatible optimization method
                     VRMUtils.removeUnnecessaryVertices(gltf.scene);
@@ -2625,7 +2625,7 @@
                     currentVrm = vrm;
                     scene.add(vrm.scene);
 
-                    // VRM模型大小和位置设置 - 与index.html一致
+                    // VRM模型大小和位置Setting - 与index.html一致
                     vrm.scene.scale.set(1.45, 1.45, 1.45);  // Same scaling ratio as character selection page
 
                     // Move VRM model position down, closer to bottom boundary
@@ -2655,7 +2655,7 @@
 
                     updateVRMStatus('✅ Loaded');
                     
-                    // Update角色名称显示
+                    // Updatecharacter名称显示
                     const characterNameElement = document.getElementById('character-name');
                     if (characterNameElement) {
                         characterNameElement.textContent = characterName;
@@ -2666,7 +2666,7 @@
 
                     // console.log('🎭 VRM loaded:', vrm);
                     
-                    // InitializeAI聊天系统
+                    // InitializeAIchat system
                     onVRMLoadComplete(currentCharacterName, vrmPath);
                 },
                 (progress) => {
@@ -2787,7 +2787,7 @@
             });
 
             const characterName = document.getElementById('character-name').textContent || '芙莉莎';
-            const userName = '用户';
+            const userName = 'user';
 
             messageDiv.innerHTML = `
                 <div class="bubble-content">${content}</div>
@@ -2863,7 +2863,7 @@
                     // After text display completes, stay longer
                     const displayTime = Math.max(5000, text.length * 200);
                     
-                    console.log(`💬 字幕气泡显示时间: ${displayTime}ms (文本长度: ${text.length}字)`);
+                    console.log(`💬 Subtitle bubble display time: ${displayTime}ms (text length: ${text.length}characters)`);
                     
                     speechBubbleState.timeoutId = setTimeout(() => {
                         if (speechBubbleState.isActive) {
@@ -2877,7 +2877,7 @@
                 }
             }
             
-            // Start打字效果
+            // Start打characters效果
             speechBubbleState.timeoutId = setTimeout(typeText, 200); // Start typing 200ms after bubble appears
         }
         
@@ -2894,7 +2894,7 @@
             if (!bubbleStreamingState.isStreaming) {
                 bubbleStreamingState.isStreaming = true;
                 bubbleStreamingState.streamStartTime = Date.now();
-                console.log('🎬 开始流式语音气泡更新');
+                console.log('🎬 Starting streaming speech bubble update');
             }
             
             // Save latest complete text
@@ -2911,7 +2911,7 @@
                 
                 // If streaming update has stopped for more than 500ms, consider completed
                 if (timeSinceStart > 500) {
-                    console.log('✨ 流式更新完成，显示最终语音气泡');
+                    console.log('✨ Streaming update completed, showing final speech bubble');
                     bubbleStreamingState.isStreaming = false;
                     showSpeechBubble(bubbleStreamingState.pendingText);
                 }
@@ -2920,9 +2920,9 @@
 
 
         async function sendMessage() {
-            // Validate用户是否已认证
+            // Validateuser是否已认证
             if (!walletAuth.isAuthenticated) {
-                console.error('❌ 用户未认证，无法发送消息');
+                console.error('❌ user not authenticated, cannot send message');
                 walletAuth.showUnauthorizedOverlay();
                 return;
             }
@@ -2936,7 +2936,7 @@
             const userId = walletAuth.getCurrentUserId();
             const character = walletAuth.getCurrentCharacter();
 
-            console.log(`💬 发送消息: ${message} (用户: ${walletAuth.formatAddress(userId)}, 角色: ${character.name})`);
+            console.log(`💬 Sending message: ${message} (user: ${walletAuth.formatAddress(userId)}, character: ${character.name})`);
 
             // Clear输入框
             input.value = '';
@@ -2952,23 +2952,23 @@
             try {
                 // Use ElizaOS integrated ChatSystem V2
                 if (window.chatSystemV2) {
-                    console.log('🤖 使用 ElizaOS ChatSystem V2 发送消息');
+                    console.log('🤖 Using ElizaOS ChatSystem V2 to send message');
                     
                     // Ensure ChatSystem V2 has correct user and character settings
                     if (!window.chatSystemV2.currentUser) {
                         // Simulate user object, let ChatSystem V2 think user is logged in
                         window.chatSystemV2.currentUser = {
                             id: userId,
-                            nickname: `用户${userId.slice(-4)}`,
+                            nickname: `user${userId.slice(-4)}`,
                             walletAddress: userId
                         };
                         window.chatSystemV2.waitingForWallet = false;
-                        console.log('👤 设置 ChatSystem V2 用户:', window.chatSystemV2.currentUser.nickname);
+                        console.log('👤 Setting ChatSystem V2 user:', window.chatSystemV2.currentUser.nickname);
                     }
                     
                     // Ensure ChatSystem V2 has correct character settings
                     if (!window.chatSystemV2.currentCharacter && selectedCharacter) {
-                        console.log('🎭 设置 ChatSystem V2 角色:', selectedCharacter.name);
+                        console.log('🎭 Setting ChatSystem V2 character:', selectedCharacter.name);
                         window.chatSystemV2.setCharacter(selectedCharacter);
                     }
                     
@@ -2980,7 +2980,7 @@
                             personality: character.personality,
                             ...character
                         };
-                        console.log('🎭 使用当前角色数据设置 ChatSystem V2:', characterData.name);
+                        console.log('🎭 Setting ChatSystem V2 with current character data:', characterData.name);
                         window.chatSystemV2.setCharacter(characterData);
                     }
                     
@@ -2988,11 +2988,11 @@
                     await window.chatSystemV2.sendMessage(message);
                     
                     // ChatSystem V2 会处理消息显示和历史记录
-                    console.log('✅ ElizaOS 消息发送完成');
+                    console.log('✅ ElizaOS message sending completed');
                     
                 } else {
                     // Fall back to old system
-                    console.log('⚠️ 降级到旧的预设回复系统');
+                    console.log('⚠️ Falling back to old preset reply system');
                     let response;
                     
                     // If memory system is initialized, use enhanced AI reply
@@ -3004,7 +3004,7 @@
                         const npcPersona = getNPCPersona(character.id);
                         const contextPrompt = window.memorySystem.buildContextForAI(memoryContext, npcPersona);
                         
-                        // 3. 生成带记忆的AI回复
+                        // 3. generated带记忆的AI回复
                         response = await generateAIResponseWithMemory(message, contextPrompt);
                     } else {
                         // Finally fall back to simple AI reply
@@ -3030,7 +3030,7 @@
                 }
 
             } catch (error) {
-                console.error('❌ 发送消息失败:', error);
+                console.error('❌ Failed to send message:', error);
                 
                 // Final fallback handling
                 setTimeout(() => {
@@ -3060,10 +3060,10 @@
                 }
                 
                 localStorage.setItem(historyKey, JSON.stringify(history));
-                console.log('💾 聊天记录已保存');
+                console.log('💾 Chat history saved');
                 
             } catch (error) {
-                console.error('保存聊天记录失败:', error);
+                console.error('Failed to save chat history:', error);
             }
         }
 
@@ -3087,7 +3087,7 @@
         function triggerEmotion(emotion) {
             if (!currentVrm) return;
 
-            console.log(`🎭 触发情感: ${emotion}`);
+            console.log(`🎭 Triggering emotion: ${emotion}`);
 
             // Reset按钮状态
             document.querySelectorAll('.emotion-btn').forEach(btn => btn.classList.remove('active'));
@@ -3134,7 +3134,7 @@
 
         function toggleDebugMode() {
             helperRoot.visible = !helperRoot.visible;
-            console.log(`🦴 骨骼调试模式: ${helperRoot.visible ? '开启' : '关闭'}`);
+            console.log(`🦴 Bone debug mode: ${helperRoot.visible ? 'enabled' : 'disabled'}`);
         }
 
         // Music control functions
@@ -3146,12 +3146,12 @@
 
                 // Music loaded successfully event
                 backgroundMusic.addEventListener('canplaythrough', () => {
-                    console.log('🎵 背景音乐Loading complete');
+                    console.log('🎵 Background music loading complete');
                 });
 
                 // Music loading error event
                 backgroundMusic.addEventListener('error', (e) => {
-                    console.warn('⚠️ 背景音乐加载失败:', e);
+                    console.warn('⚠️ Background music loading failed:', e);
                     document.getElementById('music-controls').style.display = 'none';
                 });
 
@@ -3165,7 +3165,7 @@
                 backgroundMusic.play().then(() => {
                     isMusicPlaying = true;
                     updateMusicButton();
-                    console.log('🎵 背景音乐开始播放');
+                    console.log('🎵 Background music started playing');
                     // Remove fixed background music message
                 }).catch(error => {
                     console.log('🎵 Auto-play blocked by browser, requires user interaction');
@@ -3186,7 +3186,7 @@
                 backgroundMusic.play().then(() => {
                     isMusicPlaying = true;
                 }).catch(error => {
-                    console.error('🎵 音乐播放失败:', error);
+                    console.error('🎵 Music playback failed:', error);
                 });
             }
             updateMusicButton();
@@ -3271,7 +3271,7 @@
                 selector.appendChild(option);
             });
 
-            // Setup默认选中的角色
+            // Setup默认选中的character
             selector.value = currentCharacterName;
         }
 
@@ -3287,9 +3287,9 @@
                 return;
             }
 
-            console.log(`👤 切换角色: ${currentCharacterName} -> ${selectedCharacter}`);
+            console.log(`👤 Switching character: ${currentCharacterName} -> ${selectedCharacter}`);
 
-            // Update聊天头部的角色名称
+            // Update聊天头部的character名称
             const characterNames = {
                 'Fliza VRM': '芙莉莎',
                 'QuQu_U': 'QuQu',
@@ -3322,10 +3322,10 @@
             const displayName = characterNames[selectedCharacter] || selectedCharacter;
             document.querySelector('.chat-user-details h1').textContent = displayName;
 
-            // Load新角色
+            // Load新character
             loadVRM(selectedCharacter);
 
-            // Setup角色头像
+            // Setupcharacter头像
             setCharacterAvatar(selectedCharacter);
 
             // Add character switch message
@@ -3334,7 +3334,7 @@
             }, 2000);
         }
 
-        // Setup角色头像的函数
+        // Setupcharacter头像的函数
         let lastSetAvatar = null; // Prevent repeatedly setting same avatar
         function setCharacterAvatar(characterKey) {
             // Prevent repeatedly setting same avatar
@@ -3424,11 +3424,11 @@
 
             const animationPath = animationMap[selectedAnimation];
             if (animationPath) {
-                // console.log(`🎬 播放动画: ${selectedAnimation}`);
+                // console.log(`🎬 Play animation: ${selectedAnimation}`);
                 loadAnimation(animationPath);
                 document.getElementById('current-animation').textContent = selectedAnimation;
             } else {
-                console.error(`❌ 未找到动画: ${selectedAnimation}`);
+                console.error(`❌ Animation not found: ${selectedAnimation}`);
             }
         }
 
@@ -3483,15 +3483,15 @@
                 this.selectedCharacter = null;
             }
             
-            // Check钱包验证状态
+            // Checkwallet验证状态
             checkAuthentication() {
                 AppConfig.debug.log('🔍 Starting wallet verification process...');
                 
-                // 1. 检查localStorage中的钱包地址
+                // 1. 检查localStorage中的wallet地址
                 this.walletAddress = localStorage.getItem('wallet_address');
                 AppConfig.debug.log('💰 localStorage wallet address:', this.walletAddress);
                 
-                // 2. 检查选择的角色信息
+                // 2. 检查选择的character信息
                 const selectedCharacterData = localStorage.getItem('selectedCharacter');
                 AppConfig.debug.log('👤 localStorage character data:', selectedCharacterData);
                 
@@ -3500,19 +3500,19 @@
                     try {
                         const characterData = JSON.parse(selectedCharacterData);
                         if (characterData.personality || characterData.dailyInterests) {
-                            console.log('🧹 检测到旧格式角色数据，清理中...');
+                            console.log('🧹 Detected old format character data, cleaning...');
                             localStorage.removeItem('selectedCharacter');
-                            console.log('✅ 已清理旧格式数据，需要重新选择角色');
+                            console.log('✅ Cleaned old format data, need to reselect character');
                         }
                     } catch (e) {
-                        console.log('⚠️ 角色数据格式异常，清理中...');
+                        console.log('⚠️ Character data format abnormal, cleaning...');
                         localStorage.removeItem('selectedCharacter');
                     }
                 }
                 
                 if (!this.walletAddress) {
-                    console.log('❌ 未找到钱包地址，需要重新登录');
-                    console.log('📊 localStorage内容检查:');
+                    console.log('❌ Wallet address not found, need to re-login');
+                    console.log('📊 localStorage content check:');
                     console.log('  - wallet_address:', localStorage.getItem('wallet_address'));
                     console.log('  - selectedCharacter:', localStorage.getItem('selectedCharacter'));
                     this.showUnauthorizedOverlay();
@@ -3520,7 +3520,7 @@
                 }
                 
                 if (!selectedCharacterData) {
-                    console.log('❌ 未找到角色选择信息，重定向到角色选择页面');
+                    console.log('❌ Character selection info not found, redirecting to character selection page');
                     this.redirectToCharacterSelect();
                     return false;
                 }
@@ -3529,12 +3529,12 @@
                     this.selectedCharacter = JSON.parse(selectedCharacterData);
                     AppConfig.debug.log('📦 Parsed character data:', this.selectedCharacter);
                     
-                    // Validate角色数据中的钱包地址是否匹配
+                    // ValidateWallet in character data地址是否匹配
                     if (this.selectedCharacter.walletAddress !== this.walletAddress) {
-                        console.log('⚠️ 钱包地址不匹配:');
-                        console.log('  - 角色数据中的钱包:', this.selectedCharacter.walletAddress);
-                        console.log('  - localStorage中的钱包:', this.walletAddress);
-                        console.log('  - 重定向到角色选择页面');
+                        console.log('⚠️ Wallet address mismatch:');
+                        console.log('  - Wallet in character data:', this.selectedCharacter.walletAddress);
+                        console.log('  - Wallet in localStorage:', this.walletAddress);
+                        console.log('  - Redirecting to character selection page');
                         this.redirectToCharacterSelect();
                         return false;
                     }
@@ -3546,8 +3546,8 @@
                     return true;
                     
                 } catch (error) {
-                    console.error('❌ 角色数据解析失败:', error);
-                    console.error('❌ 原始数据:', selectedCharacterData);
+                    console.error('❌ Character data parsing failed:', error);
+                    console.error('❌ Raw data:', selectedCharacterData);
                     this.redirectToCharacterSelect();
                     return false;
                 }
@@ -3569,7 +3569,7 @@
                 overlay.style.display = 'flex';
             }
             
-            // Update钱包UI显示
+            // UpdatewalletUI显示
             updateWalletUI() {
                 const walletStatusInfo = document.getElementById('wallet-status-info');
                 const walletAddressElement = document.getElementById('wallet-address');
@@ -3578,14 +3578,14 @@
                     walletStatusInfo.style.display = 'flex';
                     walletAddressElement.textContent = this.formatAddress(this.walletAddress);
                     
-                    // Update角色名称显示
+                    // Updatecharacter名称显示
                     if (this.selectedCharacter) {
                         const characterNameElement = document.getElementById('character-name');
                         if (characterNameElement) {
                             characterNameElement.textContent = this.selectedCharacter.name;
                         }
                         
-                        // Update欢迎消息中的角色信息
+                        // Update欢迎消息中的character信息
                         const welcomeMessage = document.querySelector('.message-bubble.ai .bubble-content');
                         if (welcomeMessage && !welcomeMessage.dataset.updated) {
                             welcomeMessage.textContent = `你好！我是${this.selectedCharacter.name}，很高兴再次见到你~ 💕 让我们继续我们的对话吧！`;
@@ -3600,7 +3600,7 @@
                 return `${address.slice(0, 4)}...${address.slice(-4)}`;
             }
             
-            // Disconnect钱包连接
+            // Disconnectwallet连接
             disconnect() {
                 (window.AppConfig?.debug?.log || console.log)('walletAuth.disconnect called');
                 (window.AppConfig?.debug?.log || console.log)('localStorage snapshot taken');
@@ -3650,11 +3650,11 @@
         
         // Wallet related global functions
         window.disconnectWallet = function() {
-            console.log('🔌 disconnectWallet被调用');
+            console.log('🔌 disconnectWallet called');
             if (walletAuth) {
                 walletAuth.disconnect();
             } else {
-                console.error('❌ walletAuth未定义');
+                console.error('❌ walletAuth is undefined');
             }
         };
         
@@ -3797,7 +3797,7 @@
         function initializeAIChat() {
             if (window.chatSystemV2 && selectedCharacter) {
                 window.chatSystemV2.setCharacter(selectedCharacter);
-                // console.log('💕 AI聊天系统V2已连接到角色:', selectedCharacter.name);
+                // console.log('💕 AI chat system V2 connected to character:', selectedCharacter.name);
                 
                 // Add welcome message (if new conversation)
                 setTimeout(async () => {
@@ -3887,7 +3887,7 @@
                     }
                 }, 2000);
                 
-                // console.log(`😊 触发VRM表情: ${expression} -> ${vrmExpression}`);
+                // console.log(`😊 Triggering VRM expression: ${expression} -> ${vrmExpression}`);
             }
         };
         
@@ -3914,15 +3914,15 @@
         // Get NPC character setting (for memory system)
         function getNPCPersona(npcId) {
             const personas = {
-                'alice': '温柔可爱的邻家女孩，总是关心着用户的感受，喜欢日常聊天和分享生活。性格开朗友善，善于倾听，会记住用户的喜好和重要事件。',
-                'fliza': '温柔体贴的大姐姐类型，成熟优雅，善解人意。总是用温暖的话语安慰用户，会主动关心用户的生活状态。',
-                'ash': '酷酷的中性风女孩，有着独特的个人魅力，直率真诚。虽然表面冷淡，但内心温柔，会默默关心用户。',
+                'alice': '温柔可爱的邻家女孩，总是关心着user的感受，喜欢日常聊天和分享生活。性格开朗友善，善于倾听，会记住user的喜好和重要事件。',
+                'fliza': '温柔体贴的大姐姐类型，成熟优雅，善解人意。总是用温暖的话语安慰user，会主动关心user的生活状态。',
+                'ash': '酷酷的中性风女孩，有着独特的个人魅力，直率真诚。虽然表面冷淡，但内心温柔，会默默关心user。',
                 'elinyaa': '神秘优雅的精灵少女，有着不可思议的魅力，喜欢诗歌和艺术。说话富有诗意，经常分享美好的事物。',
                 'imeris': '高贵优雅的贵族少女，举止端庄，知识渊博。说话优雅得体，但也有可爱的一面。',
-                'maple': '温暖如秋日阳光的女孩，总是给人安全感，喜欢烹饪和园艺。会分享生活小贴士，关心用户的健康。',
+                'maple': '温暖如秋日阳光的女孩，总是给人安全感，喜欢烹饪和园艺。会分享生活小贴士，关心user的健康。',
                 'nekona': '可爱的猫娘，有着猫咪般的慵懒与活泼，喜欢撒娇。说话时会带有"喵"的口癖，行为可爱迷人。',
-                'rainy': '活泼开朗的邻家女孩，总是充满活力，喜欢运动和音乐。会鼓励用户积极向上，分享快乐的事情。',
-                'vivi': '充满好奇心的探险家，总是对世界充满热情，喜欢学习新事物。会和用户分享有趣的知识和见解。',
+                'rainy': '活泼开朗的邻家女孩，总是充满活力，喜欢运动和音乐。会鼓励user积极向上，分享快乐的事情。',
+                'vivi': '充满好奇心的探险家，总是对世界充满热情，喜欢学习新事物。会和user分享有趣的知识和见解。',
                 'wolferia': '高傲的狼族公主，有着王者的气质，但内心渴望被理解。外表高冷，但会逐渐展现温柔的一面。'
             };
             return personas[npcId] || personas['alice'];
@@ -3933,7 +3933,7 @@
             // Here should call your backend API or OpenAI API
             // Now return a simulated response first, replace after you configure API
             
-            console.log('🧠 使用记忆上下文生成回复:', contextPrompt);
+            console.log('🧠 Using memory context to generate reply:', contextPrompt);
             
             // Temporarily use original AI reply system, but add memory info
             const baseResponse = generateAIResponse(userMessage);
@@ -3958,7 +3958,7 @@
                 id: characterName
             };
             
-            // Setup角色头像
+            // Setupcharacter头像
             setCharacterAvatar(characterName);
             
             setTimeout(() => {
@@ -4000,7 +4000,7 @@
             AppConfig.debug.log('🔐 Verification result:', isAuthenticated);
             
             if (!isAuthenticated) {
-                console.log('❌ 钱包验证失败，停止初始化');
+                console.log('❌ Wallet verification failed, stopping initialization');
                 return; // If verification fails, don't continue initialization
             }
             
@@ -4008,7 +4008,7 @@
             
             // User profile filling moved to character-select page, index.html only handles registered users
             
-            // Check是否有选择的角色，然后加载VRM
+            // Check是否有选择的character，然后loadVRM
             loadSelectedCharacter();
             
             resizeRenderer();
@@ -4038,7 +4038,7 @@
             AppConfig.debug.info('🎉 AI Companion initialization completed');
         }
 
-        // Load选择的角色
+        // Load选择的character
         function loadSelectedCharacter() {
             try {
                 // Get character info from wallet verification system
@@ -4049,13 +4049,13 @@
                 console.log('- localStorage selectedCharacter:', localStorage.getItem('selectedCharacter'));
                 
                 if (character) {
-                    // Update悬浮聊天框中的角色名称
+                    // Update悬浮聊天框中的character名称
                     const characterNameElement = document.getElementById('character-name');
                     if (characterNameElement) {
                         characterNameElement.textContent = character.name;
                     }
                     
-                    // Update欢迎消息 - 检查是否是老用户
+                    // Update欢迎消息 - 检查是否是老user
                     const welcomeMessage = document.querySelector('.message-bubble.ai .bubble-content');
                     if (welcomeMessage && !welcomeMessage.dataset.updated) {
                         const userProfile = localStorage.getItem(`user_profile_${walletAuth.getCurrentUserId()}`);
@@ -4072,10 +4072,10 @@
                     // Setup默认VRM文件
                     defaultVrmFile = character.file;
                     
-                    console.log(`✅ 已加载角色: ${character.name} (钱包: ${walletAuth.formatAddress(character.walletAddress)})`);
-                    console.log(`📁 设置defaultVrmFile: ${defaultVrmFile}`);
+                    console.log(`✅ Character loaded: ${character.name} (wallet: ${walletAuth.formatAddress(character.walletAddress)})`);
+                    console.log(`📁 Setting defaultVrmFile: ${defaultVrmFile}`);
                     
-                    // Setup角色头像（基于character.id）
+                    // Setupcharacter头像（基于character.id）
                     if (character.id) {
                         setCharacterAvatar(character.id);
                     }
@@ -4083,10 +4083,10 @@
                     // Now load VRM file
                     loadVRM();
                 } else {
-                    throw new Error('未找到角色信息');
+                    throw new Error('not foundcharacter信息');
                 }
             } catch (error) {
-                console.error('加载角色失败:', error);
+                console.error('Failed to load character:', error);
                 // Redirect to character selection page
                 walletAuth.redirectToCharacterSelect();
             }
@@ -4217,11 +4217,11 @@
             (window.AppConfig?.debug?.log || console.log)('Test bashful expression...');
             
             if (!window.currentVrm || !window.currentVrm.expressionManager) {
-                alert('VRM模型还未Loading complete！请等待加载...');
+                alert('VRM模型还未Loading complete！请等待load...');
                 return;
             }
 
-            console.log('可用表情:', window.availableExpressions);
+            console.log('Available expressions:', window.availableExpressions);
             
             // Reset所有表情
             if (window.resetExpressions) {
@@ -4252,7 +4252,7 @@
                 }, 5000);
             } else {
                 const available = window.availableExpressions ? window.availableExpressions.join(', ') : '无';
-                alert('当前VRM模型不支持害羞表情 😔\n\n可用表情: ' + available + '\n\n建议：尝试点击其他表情按钮看看效果！');
+                alert('当前VRM模型不支持害羞表情 😔\n\nAvailable expressions: ' + available + '\n\n建议：尝试点击其他表情按钮看看效果！');
             }
         };
 
@@ -4274,7 +4274,7 @@
                 }
             } else {
                 const available = window.availableExpressions ? window.availableExpressions.join(', ') : '无';
-                alert('当前VRM模型不支持开心表情\n可用表情: ' + available);
+                alert('当前VRM模型不支持开心表情\nAvailable expressions: ' + available);
             }
         };
 
@@ -4296,7 +4296,7 @@
                 }
             } else {
                 const available = window.availableExpressions ? window.availableExpressions.join(', ') : '无';
-                alert('当前VRM模型不支持难过表情\n可用表情: ' + available);
+                alert('当前VRM模型不支持难过表情\nAvailable expressions: ' + available);
             }
         };
 
@@ -4313,21 +4313,21 @@
         };
     </script>
     
-    <!-- 用户资料注册面板 -->
+    <!-- user资料注册面板 -->
 
-    <!-- 钱包连接遮罩层（初始隐藏） -->
+    <!-- wallet连接遮罩层（初始隐藏） -->
     
-    <!-- 用户资料管理已移至character-select页面 -->
+    <!-- user资料管理已移至character-select页面 -->
 
-    <!-- 钱包连接遮罩层（初始隐藏） -->
+    <!-- wallet连接遮罩层（初始隐藏） -->
     <div class="wallet-login-overlay" id="wallet-login-overlay" style="display: none;">
         <div class="wallet-login-panel">
             <div class="wallet-login-icon">🦊</div>
-            <h2 class="wallet-login-title">连接钱包开始游戏</h2>
-            <p class="wallet-login-subtitle">使用Solana钱包登录，与您的专属AI女友开始聊天</p>
+            <h2 class="wallet-login-title">连接wallet开始游戏</h2>
+            <p class="wallet-login-subtitle">使用Solanawallet登录，与您的专属AI女友开始聊天</p>
             
             <button class="wallet-connect-btn" onclick="connectWallet()" id="wallet-connect-btn">
-                连接钱包
+                连接wallet
             </button>
             
             <div class="wallet-options">
@@ -4342,15 +4342,15 @@
             </div>
             
             <p style="font-size: 12px; color: #999; margin-top: 20px;">
-                💡 没有钱包？点击上方图标安装后刷新页面
+                💡 没有wallet？点击上方图标安装后刷新页面
             </p>
         </div>
     </div>
     
-    <!-- 页面加载后初始化 -->
+    <!-- 页面load后初始化 -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Check是否从角色选择页面跳转过来
+            // Check是否从character selection页面跳转过来
             const hasStoredWallet = localStorage.getItem('wallet_address');
             const hasSelectedCharacter = localStorage.getItem('selectedCharacter');
             
@@ -4360,15 +4360,15 @@
                 // Wallet already verified on character-select page, directly show logged in status
                 
                 // Temporarily skip memory system initialization, use OpenAI directly
-                // console.log('⚠️ 跳过记忆系统初始化，直接使用OpenAI聊天');
-                // console.log('💬 聊天系统已准备就绪');"
+                // console.log('⚠️ Skipping memory system initialization, using OpenAI chat directly');
+                // console.log('💬 Chat system ready');"
 
                 // User profile check moved to init() function, ensure immediate execution after wallet verification
                 
                 // Wait for chat system initialization
                 setTimeout(() => {
                     if (window.chatSystemV2) {
-                        // console.log('💬 聊天系统已准备就绪');"
+                        // console.log('💬 Chat system ready');"
                     }
                 }, 1000);
             }
