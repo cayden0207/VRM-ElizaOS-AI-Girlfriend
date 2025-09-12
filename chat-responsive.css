@@ -43,33 +43,67 @@
 }
 
 /* ==================================================
-   MOBILE STYLES (max-width: 768px)
+   MOBILE PORTRAIT STYLES (max-width: 768px) - OPTIMIZED
    ================================================== */
-@media (max-width: 768px) {
-    /* ========== MOBILE LAYOUT STRUCTURE ========== */
+@media (max-width: 768px) and (orientation: portrait) {
+    /* ========== OPTIMIZED MOBILE PORTRAIT LAYOUT ========== */
     
-    /* VRM container takes full viewport */
+    /* VRM container optimized for portrait chat */
     .vrm-container {
         width: 100vw;
-        height: 100vh;
+        height: 50vh; /* Reduced to leave space for chat */
         position: fixed;
         top: 0;
         left: 0;
+        background: linear-gradient(180deg, 
+            rgba(255, 255, 255, 0.05) 0%, 
+            rgba(255, 255, 255, 0) 100%);
     }
 
-    /* ========== MOBILE CHAT WINDOW ========== */
+    /* ========== OPTIMIZED MOBILE CHAT WINDOW ========== */
     .floating-chat {
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
         width: 100%;
-        height: 50vh;
+        height: 55vh; /* Increased height for better chat experience */
         border-radius: 20px 20px 0 0;
         box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
         z-index: 1000;
         transform: translateY(0);
         transition: transform 0.3s ease, height 0.3s ease;
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    /* ========== MOBILE SPEECH BUBBLE OPTIMIZATION ========== */
+    .ai-speech-bubble {
+        top: 25vh !important; /* Position in VRM area */
+        max-width: 80vw !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        font-size: 14px !important;
+        padding: 12px 20px !important;
+        z-index: 1100 !important;
+    }
+
+    /* ========== MOBILE CHAT MESSAGES OPTIMIZATION ========== */
+    .chat-window-messages {
+        padding: 15px !important;
+        max-height: 30vh !important;
+        overflow-y: auto !important;
+    }
+
+    .message-bubble {
+        margin-bottom: 12px !important;
+        max-width: 85% !important;
+    }
+
+    .bubble-content {
+        padding: 10px 14px !important;
+        font-size: 14px !important;
+        line-height: 1.4 !important;
     }
 
     /* Chat collapsed state */
