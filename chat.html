@@ -89,7 +89,7 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
             opacity: 0;
             animation: bubbleFadeIn 0.5s forwards;
-            z-index: 100;
+            z-index: 1100;
             line-height: 1.5;
             letter-spacing: 0.5px;
         }
@@ -2984,7 +2984,13 @@
         
         // Show AI dialogue bubble
         function showSpeechBubble(text) {
+            console.log('🗨️ showSpeechBubble called with text:', text);
             const bubble = document.getElementById('ai-speech-bubble');
+            
+            if (!bubble) {
+                console.error('❌ Speech bubble element not found!');
+                return;
+            }
             
             // Clear previous state
             if (speechBubbleState.timeoutId) {
@@ -3923,6 +3929,8 @@
         window.handleChatKeyPress = handleChatKeyPress;
         // window.addMessage removed - using ElizaOS system
         window.updateStreamingMessageUI = updateStreamingMessageUI;
+        window.showSpeechBubble = showSpeechBubble;
+        window.updateSpeechBubbleContent = updateSpeechBubbleContent;
         
         // Integrate AI chat system
         let selectedCharacter = null;

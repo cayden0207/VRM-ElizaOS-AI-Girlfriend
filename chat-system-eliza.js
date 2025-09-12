@@ -508,8 +508,14 @@ class ElizaOSChatSystem {
         }
         
         // Trigger speech bubble for AI messages
-        if (message.sender === 'ai' && typeof window.showSpeechBubble === 'function') {
-            window.showSpeechBubble(message.content);
+        if (message.sender === 'ai') {
+            console.log('🎯 AI message detected, checking for speech bubble function...');
+            if (typeof window.showSpeechBubble === 'function') {
+                console.log('✅ Calling showSpeechBubble with:', message.content);
+                window.showSpeechBubble(message.content);
+            } else {
+                console.warn('⚠️ showSpeechBubble function not found on window object');
+            }
         }
     }
     
