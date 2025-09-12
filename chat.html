@@ -1142,9 +1142,9 @@
         }
         
         .message.ai-message .message-time {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 182, 193, 0.9)) !important;
-            border-radius: 15px 15px 0 0 !important;
-            padding: 6px 12px !important;
+            background: none !important;
+            border-radius: none !important;
+            padding: 0 !important;
             font-size: 12px !important;
             color: rgba(0, 0, 0, 0.7) !important;
             font-weight: bold !important;
@@ -1464,11 +1464,11 @@
 
         @media (max-width: 768px) {
             .floating-chat {
-                top: -170px;
-                left: 150px;
-                right: 0;
-                width: 100vw;
-                height: 190dvh;
+                bottom: 30px;
+                left: -105px;
+                right: 0px;
+                width: 160vw;
+                height: 365dvh;
                 border-radius: -10px;
                 border-width: -15px;
                 transform: none;
@@ -1485,10 +1485,38 @@
 
         /* Mobile Portrait Layout - UI Optimization */
         @media (max-width: 768px) and (orientation: portrait) {
-            /* Language Toggle - More compact for portrait */
+            /* Floating Chat - Transparent glass effect for portrait */
+            .floating-chat {
+                background: rgba(255, 255, 255, 0.1) !important;
+                backdrop-filter: blur(20px) saturate(180%) !important;
+                -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+                border: 1px solid rgba(255, 255, 255, 0.2) !important;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+            }
+
+            /* Chat Messages Area - Transparent glass effect */
+            .chat-window-messages {
+                background: rgba(255, 255, 255, 0.05) !important;
+                backdrop-filter: blur(15px) saturate(160%) !important;
+                -webkit-backdrop-filter: blur(15px) saturate(160%) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-radius: 12px !important;
+            }
+
+            /* Chat Input Area - Transparent glass effect */
+            .chat-window-input {
+                background: rgba(255, 255, 255, 0.05) !important;
+                backdrop-filter: blur(15px) saturate(160%) !important;
+                -webkit-backdrop-filter: blur(15px) saturate(160%) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                border-radius: 12px !important;
+            }
+
+            /* Language Toggle - Top left corner for portrait */
             .language-toggle {
-                bottom: 15px !important;
+                top: 15px !important;
                 left: 15px !important;
+                bottom: auto !important;
                 padding: 6px 10px !important;
                 font-size: 10px !important;
                 scale: 0.5 !important;
@@ -1503,9 +1531,16 @@
                 scale: 0.5 !important;
             }
 
-            /* Music Controls - Hide in portrait to save space */
+            /* Music Controls - Show in portrait with custom positioning */
             .music-controls {
-                display: none !important;
+                display: block !important;
+                position: fixed !important;
+                top: 60px !important;
+                right: 15px !important;
+                width: 200px !important;
+                height: 80px !important;
+                scale: 0.7 !important;
+                z-index: 1050 !important;
             }
 
             /* Left Panel - Minimize for portrait */
@@ -1766,10 +1801,6 @@
         </div>
 
 
-        <!-- Mobile Controls Toggle Button -->
-        <button class="mobile-controls-toggle mobile-only" id="mobile-controls-toggle" style="display: none;">
-            Controls
-        </button>
 
         <!-- Floating chat window -->
         <div class="floating-chat" id="floating-chat">
@@ -4296,22 +4327,10 @@
         function initMobileControls() {
             // Show mobile controls toggle button on mobile devices
             if (window.innerWidth <= 768) {
-                const mobileToggle = document.getElementById('mobile-controls-toggle');
-                if (mobileToggle) {
-                    mobileToggle.style.display = 'block';
-                }
+                // Mobile toggle button removed
             }
 
-            // Mobile controls toggle functionality
-            const controlsToggle = document.getElementById('mobile-controls-toggle');
-            const controlPanel = document.querySelector('.control-panel');
-            
-            if (controlsToggle && controlPanel) {
-                controlsToggle.addEventListener('click', () => {
-                    controlPanel.classList.toggle('visible');
-                    controlsToggle.textContent = controlPanel.classList.contains('visible') ? 'Hide' : 'Controls';
-                });
-            }
+            // Mobile controls toggle functionality removed
 
             // Mobile chat drag functionality
             initMobileChatDrag();
@@ -4369,11 +4388,7 @@
         function handleResponsiveLayout() {
             function updateLayout() {
                 const isMobile = window.innerWidth <= 768;
-                const mobileToggle = document.getElementById('mobile-controls-toggle');
-                
-                if (mobileToggle) {
-                    mobileToggle.style.display = isMobile ? 'block' : 'none';
-                }
+                // Mobile toggle button removed
                 
                 // Update body class for mobile layout
                 document.body.classList.toggle('mobile-layout', isMobile);
