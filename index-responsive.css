@@ -328,8 +328,8 @@
 @media (max-width: 768px) and (min-height: 751px) and (max-height: 850px) and (orientation: portrait) {
     .character-selector {
         position: fixed !important;
-        top: 65vh !important;
-        left: 50% !important;
+        top: 73vh !important;
+        left: 43% !important;
         transform: translateX(-50%) scale(0.72) !important;
         transform-origin: center !important;
         display: flex !important;
@@ -453,7 +453,7 @@
 @media (max-width: 768px) and (min-height: 751px) and (max-height: 850px) and (orientation: portrait) {
     .voice-selector-floating {
         position: fixed !important;
-        top: 22vh !important;
+        top: 40vh !important;
         left: 2vw !important;
         transform: none !important;
         right: auto !important;
