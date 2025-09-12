@@ -1,6 +1,6 @@
 /* ==================================================
-   INDEX.HTML - CLEAN RESPONSIVE STYLES
-   Single @media query for all mobile styles
+   INDEX.HTML - RESPONSIVE STYLES - REORGANIZED
+   Separate @media queries for different screen heights
    ================================================== */
 
 /* ==================================================
@@ -9,7 +9,7 @@
 /* Desktop styles are in the main index.html <style> section */
 
 /* ==================================================
-   ALL MOBILE STYLES (max-width: 768px) - SINGLE BLOCK
+   BASIC MOBILE STYLES - All mobile devices
    ================================================== */
 @media (max-width: 768px) {
     /* ========== LAYOUT STRUCTURE ========== */
@@ -47,8 +47,6 @@
         border-radius: 15px;
     }
 
-    /* ========== CHARACTER DISPLAY ========== */
-    
     /* Character Display Name */
     .character-display-name {
         position: fixed;
@@ -57,36 +55,6 @@
         transform: translateX(-50%);
         font-size: 32px;
         z-index: 30;
-    }
-
-    /* Voice Selector - Above character-display-name with top positioning */
-    .voice-selector-floating {
-        position: fixed !important;
-        top: 20vh !important; /* Position from top for stability */
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        right: auto !important;
-        bottom: auto !important;
-        padding: 8px 12px !important;
-        border-radius: 28px !important;
-        z-index: 35;
-        background: rgba(0, 0, 0, 0.8);
-        scale: 1; /* Default scale for 768px */
-    }
-    
-    /* Voice Selector - Default mobile styles (will be overridden below for smaller screens) */
-
-    /* Regular Voice Selector (if different from floating) */
-    .voice-selector {
-        position: fixed !important;
-        bottom: 100px !important;
-        right: 10px !important;
-        left: auto !important;
-        transform: none !important;
-        z-index: 99;
-        background: rgba(0, 0, 0, 0.8);
-        padding: 5px 10px;
-        border-radius: 20px;
     }
 
     /* ========== CHARACTER INFO ========== */
@@ -149,91 +117,6 @@
         width: 100%;
     }
 
-    /* ========== CHARACTER SELECTOR ========== */
-    
-    /* Character Selector - Mobile version scaled down 30% with horizontal scroll */
-    .character-selector {
-        position: fixed !important;
-        top: 65vh !important; /* Position from top instead of bottom for stability */
-        left: 50% !important;
-        transform: translateX(-50%) scale(0.7) !important; /* Scale down entire UI by 30% */
-        transform-origin: center !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 9px !important; /* Original desktop gap - will be scaled by transform */
-        padding: 12px 31px !important; /* Original desktop padding - will be scaled by transform */
-        background: rgba(255, 255, 255, 0.1) !important;
-        backdrop-filter: blur(4px) !important;
-        border-radius: 60px !important; /* Original desktop radius - will be scaled by transform */
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        z-index: 90;
-        box-shadow: 0 1px 7px rgba(0, 0, 0, 0.1) !important;
-        max-width: calc(85vw) !important; /* Max width before scaling to allow scrolling */
-        box-sizing: border-box !important;
-        width: auto !important;
-        height: auto !important;
-        overflow-x: auto !important; /* Enable horizontal scrolling */
-        overflow-y: hidden !important;
-        /* Hide scrollbar but keep functionality */
-        scrollbar-width: none !important; /* Firefox */
-        -ms-overflow-style: none !important; /* IE/Edge */
-    }
-    
-    /* Hide scrollbar for WebKit browsers */
-    .character-selector::-webkit-scrollbar {
-        display: none !important;
-    }
-
-    /* Navigation buttons - Hidden for scroll mode */
-    .character-selector .nav-button {
-        display: none !important; /* Hide navigation buttons, using scroll instead */
-    }
-
-    /* Character thumbnails - Mobile with scroll */
-    .character-selector .character-thumbnails {
-        display: flex !important;
-        gap: 9px !important; /* Keep original desktop gap - will be scaled by transform */
-        flex-shrink: 0 !important; /* Prevent shrinking during scroll */
-    }
-
-    /* Selected indicator - Mobile */
-    .character-selector .selected-indicator {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        margin: 0 8px !important; /* Original margin - will be scaled by transform */
-        flex-shrink: 0 !important; /* Prevent shrinking during scroll */
-    }
-
-    .character-selector .selected-avatar {
-        width: 50px !important; /* Original size - will be scaled by transform */
-        height: 50px !important; /* Original size - will be scaled by transform */
-        border-radius: 50% !important;
-        overflow: hidden !important;
-        margin-bottom: 4px !important; /* Original margin - will be scaled by transform */
-    }
-
-    .character-selector .selected-avatar img {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: cover !important;
-    }
-
-    .character-selector .selected-badge {
-        font-size: 10px !important; /* Original font size - will be scaled by transform */
-        color: white !important;
-    }
-
-    .character-selector .selected-text {
-        display: none !important;
-    }
-
-    /* Hide old character-list in mobile when using new selector */
-    .character-list {
-        display: none !important;
-    }
-
-
     /* ========== BUTTONS ========== */
     
     /* Voice Play Button */
@@ -254,6 +137,11 @@
         padding: 12px 20px;
         font-size: 14px;
         z-index: 60;
+    }
+
+    /* Hide old character-list in mobile when using new selector */
+    .character-list {
+        display: none !important;
     }
 
     /* ========== MODALS ========== */
@@ -332,7 +220,6 @@
    SMALL MOBILE WIDTH (max-width: 480px) - Additional refinements
    ================================================== */
 @media (max-width: 480px) {
-    /* Only override what's absolutely necessary */
     .vrm-display {
         height: 40vh;
     }
@@ -343,9 +230,6 @@
         right: 15px;
         scale: 0.3;
     }
-    
-    /* Note: Character selector positioning now handled by height-based queries above */
-    /* This ensures consistent layout regardless of screen width */
 
     .selected-avatar,
     .selected-avatar-img {
@@ -362,17 +246,6 @@
         padding: 10px 15px;
     }
 
-    /* Voice Selector - Small screen adjustments (now handled by height-based queries) */
-    /* Note: Specific positioning moved to height-based media queries for better stability */
-
-    /* Small screen adjustments */
-    .character-info {
-        top: 90px;
-        left: 15px;
-        right: 15px;
-        scale: 0.3;
-    }
-
     .character-display-name {
         position: fixed;
         bottom: 220px !important;
@@ -384,7 +257,299 @@
 }
 
 /* ==================================================
-   LANDSCAPE ORIENTATION (optional)
+   CHARACTER SELECTOR - Height-based Portrait Queries
+   ================================================== */
+
+/* Short portrait screens (height ≤ 680px) - Very compact phones */
+@media (max-width: 768px) and (max-height: 680px) and (orientation: portrait) {
+    .character-selector {
+        position: fixed !important;
+        top: 58vh !important;
+        left: 50% !important;
+        transform: translateX(-50%) scale(0.65) !important;
+        transform-origin: center !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        padding: 10px 25px !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(4px) !important;
+        border-radius: 50px !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        z-index: 90;
+        box-shadow: 0 1px 7px rgba(0, 0, 0, 0.1) !important;
+        max-width: calc(90vw) !important;
+        box-sizing: border-box !important;
+        width: auto !important;
+        height: auto !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+}
+
+/* Medium portrait screens (681px - 750px) - Standard phones */
+@media (max-width: 768px) and (min-height: 681px) and (max-height: 750px) and (orientation: portrait) {
+    .character-selector {
+        position: fixed !important;
+        top: 62vh !important;
+        left: 50% !important;
+        transform: translateX(-50%) scale(0.7) !important;
+        transform-origin: center !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 9px !important;
+        padding: 12px 28px !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(4px) !important;
+        border-radius: 55px !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        z-index: 90;
+        box-shadow: 0 1px 7px rgba(0, 0, 0, 0.1) !important;
+        max-width: calc(87vw) !important;
+        box-sizing: border-box !important;
+        width: auto !important;
+        height: auto !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+}
+
+/* Tall portrait screens (751px - 850px) - iPhone 14 size */
+@media (max-width: 768px) and (min-height: 751px) and (max-height: 850px) and (orientation: portrait) {
+    .character-selector {
+        position: fixed !important;
+        top: 65vh !important;
+        left: 50% !important;
+        transform: translateX(-50%) scale(0.72) !important;
+        transform-origin: center !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 9px !important;
+        padding: 12px 30px !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(4px) !important;
+        border-radius: 58px !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        z-index: 90;
+        box-shadow: 0 1px 7px rgba(0, 0, 0, 0.1) !important;
+        max-width: calc(85vw) !important;
+        box-sizing: border-box !important;
+        width: auto !important;
+        height: auto !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+}
+
+/* Very tall portrait screens (851px - 950px) - iPhone Pro Max */
+@media (max-width: 768px) and (min-height: 851px) and (max-height: 950px) and (orientation: portrait) {
+    .character-selector {
+        position: fixed !important;
+        top: 68vh !important;
+        left: 50% !important;
+        transform: translateX(-50%) scale(0.75) !important;
+        transform-origin: center !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        padding: 12px 32px !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(4px) !important;
+        border-radius: 60px !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        z-index: 90;
+        box-shadow: 0 1px 7px rgba(0, 0, 0, 0.1) !important;
+        max-width: calc(83vw) !important;
+        box-sizing: border-box !important;
+        width: auto !important;
+        height: auto !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+}
+
+/* Ultra tall portrait screens (> 950px) - Foldable phones, tablets */
+@media (max-width: 768px) and (min-height: 951px) and (orientation: portrait) {
+    .character-selector {
+        position: fixed !important;
+        top: 70vh !important;
+        left: 50% !important;
+        transform: translateX(-50%) scale(0.78) !important;
+        transform-origin: center !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        padding: 14px 34px !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(4px) !important;
+        border-radius: 62px !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        z-index: 90;
+        box-shadow: 0 1px 7px rgba(0, 0, 0, 0.1) !important;
+        max-width: calc(80vw) !important;
+        box-sizing: border-box !important;
+        width: auto !important;
+        height: auto !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+    }
+}
+
+/* ==================================================
+   VOICE SELECTOR - Height-based Portrait Queries
+   ================================================== */
+
+/* Short portrait screens (height ≤ 680px) */
+@media (max-width: 768px) and (max-height: 680px) and (orientation: portrait) {
+    .voice-selector-floating {
+        position: fixed !important;
+        top: 18vh !important;
+        left: 3vw !important;
+        transform: none !important;
+        right: auto !important;
+        bottom: auto !important;
+        padding: 6px 10px !important;
+        border-radius: 24px !important;
+        z-index: 35;
+        background: rgba(0, 0, 0, 0.8);
+        scale: 0.8 !important;
+    }
+}
+
+/* Medium portrait screens (681px - 750px) */
+@media (max-width: 768px) and (min-height: 681px) and (max-height: 750px) and (orientation: portrait) {
+    .voice-selector-floating {
+        position: fixed !important;
+        top: 20vh !important;
+        left: 4vw !important;
+        transform: none !important;
+        right: auto !important;
+        bottom: auto !important;
+        padding: 7px 11px !important;
+        border-radius: 26px !important;
+        z-index: 35;
+        background: rgba(0, 0, 0, 0.8);
+        scale: 0.85 !important;
+    }
+}
+
+/* Tall portrait screens (751px - 850px) */
+@media (max-width: 768px) and (min-height: 751px) and (max-height: 850px) and (orientation: portrait) {
+    .voice-selector-floating {
+        position: fixed !important;
+        top: 22vh !important;
+        left: 2vw !important;
+        transform: none !important;
+        right: auto !important;
+        bottom: auto !important;
+        padding: 8px 12px !important;
+        border-radius: 28px !important;
+        z-index: 35;
+        background: rgba(0, 0, 0, 0.8);
+        scale: 0.9 !important;
+    }
+}
+
+/* Very tall portrait screens (851px - 950px) */
+@media (max-width: 768px) and (min-height: 851px) and (max-height: 950px) and (orientation: portrait) {
+    .voice-selector-floating {
+        position: fixed !important;
+        top: 24vh !important;
+        left: 1vw !important;
+        transform: none !important;
+        right: auto !important;
+        bottom: auto !important;
+        padding: 8px 12px !important;
+        border-radius: 30px !important;
+        z-index: 35;
+        background: rgba(0, 0, 0, 0.8);
+        scale: 0.92 !important;
+    }
+}
+
+/* Ultra tall portrait screens (> 950px) */
+@media (max-width: 768px) and (min-height: 951px) and (orientation: portrait) {
+    .voice-selector-floating {
+        position: fixed !important;
+        top: 25vh !important;
+        left: 0vw !important;
+        transform: none !important;
+        right: auto !important;
+        bottom: auto !important;
+        padding: 9px 13px !important;
+        border-radius: 32px !important;
+        z-index: 35;
+        background: rgba(0, 0, 0, 0.8);
+        scale: 0.95 !important;
+    }
+}
+
+/* ==================================================
+   COMMON CHARACTER SELECTOR STYLES - All portrait mobile
+   ================================================== */
+@media (max-width: 768px) and (orientation: portrait) {
+    /* Navigation buttons - Hidden for scroll mode */
+    .character-selector .nav-button {
+        display: none !important;
+    }
+
+    /* Character thumbnails - Mobile with scroll */
+    .character-selector .character-thumbnails {
+        display: flex !important;
+        gap: 9px !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Selected indicator - Mobile */
+    .character-selector .selected-indicator {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        margin: 0 8px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .character-selector .selected-avatar {
+        width: 50px !important;
+        height: 50px !important;
+        border-radius: 50% !important;
+        overflow: hidden !important;
+        margin-bottom: 4px !important;
+    }
+
+    .character-selector .selected-avatar img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+    }
+
+    .character-selector .selected-badge {
+        font-size: 10px !important;
+        color: white !important;
+    }
+
+    .character-selector .selected-text {
+        display: none !important;
+    }
+
+    /* Hide scrollbar for WebKit browsers */
+    .character-selector::-webkit-scrollbar {
+        display: none !important;
+    }
+}
+
+/* ==================================================
+   LANDSCAPE ORIENTATION
    ================================================== */
 @media (max-width: 768px) and (orientation: landscape) {
     .vrm-display {
@@ -397,7 +562,6 @@
         padding: 10px;
     }
 
-    /* Character selector - landscape adjustments */
     .character-selector {
         bottom: 60px !important;
     }
@@ -418,129 +582,11 @@
         height: 60px;
     }
 
-    /* Voice Selector - Landscape adjustments */
     .voice-selector-floating {
-        top: 25vh !important; /* Higher position for landscape */
+        top: 25vh !important;
     }
 
     .character-display-name {
         bottom: 340px;
-    }
-}
-
-/* ==================================================
-   UNIVERSAL PORTRAIT MOBILE - Force consistent layout
-   ================================================== */
-@media (orientation: portrait) and (max-width: 767px) {
-    /* Ensure all portrait mobile devices use top positioning */
-    .character-selector {
-        top: 62vh !important; /* Consistent position from top for all portrait devices */
-        left: 50% !important;
-        transform: translateX(-50%) scale(0.7) !important; /* Scale down entire UI by 30% */
-        transform-origin: center !important;
-        max-width: calc(85vw) !important; /* Max width before scaling to allow scrolling */
-        box-sizing: border-box !important;
-        gap: 9px !important; /* Original gap - will be scaled by transform */
-        padding: 12px 31px !important; /* Original padding - will be scaled by transform */
-        overflow-x: auto !important; /* Enable horizontal scrolling */
-        overflow-y: hidden !important;
-        /* Hide scrollbar but keep functionality */
-        scrollbar-width: none !important;
-        -ms-overflow-style: none !important;
-    }
-}
-
-/* ==================================================
-   HEIGHT-BASED RESPONSIVE POSITIONING - For stable layout across devices
-   ================================================== */
-
-/* Short screen devices (e.g., iPhone SE, older phones) - height ≤ 700px */
-@media (max-width: 767px) and (max-height: 700px) and (orientation: portrait) {
-    .character-selector.character-selector {
-        /* Use clamp to prevent extreme positioning */
-        top: clamp(450px, 68vh, 480px) !important;
-        bottom: auto !important;
-        max-width: calc(85vw) !important;
-        box-sizing: border-box !important;
-        left: 42% !important; /* Fine-tuned for visual balance */
-        transform: translateX(-50%) scale(0.7) !important;
-        transform-origin: center !important;
-        gap: 9px !important;
-        padding: 12px 31px !important;
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-        white-space: nowrap !important;
-        scrollbar-width: none !important;
-        -ms-overflow-style: none !important;
-    }
-    
-    .voice-selector-floating {
-        top: clamp(250px, 38vh, 280px) !important;
-        left: calc(3vw + 5px) !important; /* Responsive left positioning */
-        transform: none !important;
-        scale: 0.85 !important;
-    }
-}
-
-/* Medium screen devices (e.g., iPhone 14, standard phones) - 701px to 880px */
-@media (max-width: 767px) and (min-height: 701px) and (max-height: 880px) and (orientation: portrait) {
-    .character-selector.character-selector {
-        /* Your ideal positioning for 390x844 screens */
-        top: clamp(520px, 72vh, 640px) !important;
-        bottom: auto !important;
-        max-width: calc(85vw) !important;
-        box-sizing: border-box !important;
-        left: 41% !important; /* Fine-tuned for visual balance */
-        transform: translateX(-50%) scale(0.7) !important;
-        transform-origin: center !important;
-        gap: 9px !important;
-        padding: 12px 31px !important;
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-        white-space: nowrap !important;
-        scrollbar-width: none !important;
-        -ms-overflow-style: none !important;
-    }
-    
-    .voice-selector-floating {
-        top: clamp(320px, 43vh, 380px) !important;
-        left: calc(3vw + 8px) !important; /* Slightly more offset for medium screens */
-        transform: none !important;
-        scale: 0.85 !important;
-    }
-}
-
-/* Tall screen devices (e.g., iPhone Pro Max, newer phones) - height > 880px */
-@media (max-width: 767px) and (min-height: 881px) and (orientation: portrait) {
-    .character-selector.character-selector {
-        top: clamp(600px, 75vh, 700px) !important; /* Adjusted to 75vh as requested */
-        bottom: auto !important;
-        max-width: calc(85vw) !important;
-        box-sizing: border-box !important;
-        left: 47% !important; /* Fine-tuned for visual balance on tall screens */
-        transform: translateX(-50%) scale(0.7) !important;
-        transform-origin: center !important;
-        gap: 9px !important;
-        padding: 12px 31px !important;
-        overflow-x: auto !important;
-        overflow-y: hidden !important;
-        white-space: nowrap !important;
-        scrollbar-width: none !important;
-        -ms-overflow-style: none !important;
-    }
-    
-    .voice-selector-floating {
-        top: clamp(380px, 37vh, 440px) !important; /* Adjusted to 37vh as requested */
-        left: calc(-1vw + 10px) !important; /* Adjusted negative vw for better positioning */
-        transform: none !important;
-        scale: 0.85 !important;
-    }
-}
-
-/* Fallback for any portrait mobile device */
-@media (max-width: 767px) and (orientation: portrait) {
-    /* Hide scrollbar for WebKit browsers */
-    .character-selector.character-selector::-webkit-scrollbar {
-        display: none !important;
     }
 }
