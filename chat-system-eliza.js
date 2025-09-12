@@ -506,6 +506,11 @@ class ElizaOSChatSystem {
                 messageElement.style.transform = 'translateY(0)';
             });
         }
+        
+        // Trigger speech bubble for AI messages
+        if (message.sender === 'ai' && typeof window.showSpeechBubble === 'function') {
+            window.showSpeechBubble(message.content);
+        }
     }
     
     // Character name to CSS class mapping
