@@ -1551,7 +1551,7 @@
 
 
         <!-- Start Button -->
-        <button class="start-button" onclick="startChat()">
+        <button class="start-button" onclick="startChat()" ontouchstart="this.click()">
             <div class="fold"></div>
             <div class="points_wrapper">
                 <span class="point"></span>
@@ -3179,9 +3179,15 @@
         window.nextCharacter = nextCharacter;
         window.playVoiceSample = playVoiceSample;
         window.startChat = function() {
+            console.log('🚀 Start button clicked!');
+            console.log('Current character index:', currentCharacterIndex);
+            console.log('Characters length:', characters.length);
+            console.log('Wallet UI available:', !!window.modernWalletUI);
+            
             // Check wallet connection status
             if (!window.modernWalletUI || !window.modernWalletUI.getWalletInfo().isConnected) {
-                alert(i18n.t('error.wallet.required'));
+                console.log('❌ Wallet not connected');
+                alert(i18n.t('error.wallet.required') || 'Please connect your wallet first');
                 // Show wallet connection modal
                 if (window.modernWalletUI) {
                     window.modernWalletUI.showWalletModal();
@@ -3191,9 +3197,12 @@
             
             // Check if character is selected
             if (currentCharacterIndex < 0 || !characters[currentCharacterIndex]) {
+                console.log('❌ No character selected');
                 alert('Please select a character first!');
                 return;
             }
+            
+            console.log('✅ All checks passed, proceeding to chat...');
             
             // getcurrentwalletinfo
             const walletInfo = window.modernWalletUI.getWalletInfo();
