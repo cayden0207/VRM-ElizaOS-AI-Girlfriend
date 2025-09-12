@@ -80,6 +80,8 @@ class I18n {
             'error.delete': 'Delete failed, please try again',
             'error.load': 'Load failed, please refresh the page',
             'error.wallet.required': 'Please connect your wallet first to start chatting!',
+            'error.wallet.install': 'Please install {wallet} wallet extension first',
+            'wallet.disconnect': 'Disconnect',
             
             // Language options
             'lang.english': 'English',
@@ -274,11 +276,13 @@ class I18n {
             'char.zwei.desc': '坚定忠诚的守护者',
             
             // Error messages
-            'error.network': '网络Connection failed，请检查网络后刷新页面',
-            'error.save': 'Save failed，请重试',
-            'error.delete': 'Delete failed，请重试',
+            'error.network': '网络连接失败，请检查网络后刷新页面',
+            'error.save': '保存失败，请重试',
+            'error.delete': '删除失败，请重试',
             'error.load': '加载失败，请刷新页面',
             'error.wallet.required': '请先连接钱包后再开始聊天！',
+            'error.wallet.install': '请先安装 {wallet} 钱包扩展',
+            'wallet.disconnect': '断开连接',
             
             // Language options
             'lang.english': 'English',
@@ -314,7 +318,7 @@ class I18n {
             'eliza.initializing': '初始化ElizaOS聊天系统...',
             'eliza.init.complete': 'ElizaOS聊天系统初始化完成',
             'eliza.init.failed': 'ElizaOS系统初始化失败',
-            'eliza.connection.failed': 'ElizaOS APIConnection failed',
+            'eliza.connection.failed': 'ElizaOS API连接失败',
             'eliza.connection.normal': 'ElizaOS连接正常',
             'eliza.send.failed': '发送消息失败',
 
