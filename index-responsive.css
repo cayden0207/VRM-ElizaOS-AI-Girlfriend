@@ -136,7 +136,9 @@
         max-width: 200px;
         padding: 12px 20px;
         font-size: 14px;
-        z-index: 60;
+        z-index: 999 !important; /* Ensure it's on top */
+        pointer-events: auto !important; /* Ensure it's clickable */
+        touch-action: manipulation !important; /* Optimize for touch */
     }
 
     /* Hide old character-list in mobile when using new selector */
@@ -244,6 +246,10 @@
     .start-button {
         font-size: 13px;
         padding: 10px 15px;
+        z-index: 999 !important;
+        pointer-events: auto !important;
+        touch-action: manipulation !important;
+        min-height: 44px; /* iOS minimum touch target */
     }
 
     .character-display-name {
@@ -570,6 +576,10 @@
         bottom: 5px;
         padding: 8px 15px;
         font-size: 13px;
+        z-index: 999 !important;
+        pointer-events: auto !important;
+        touch-action: manipulation !important;
+        min-height: 40px;
     }
 
     .profile-header {
