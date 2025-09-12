@@ -357,8 +357,8 @@
 @media (max-width: 768px) and (min-height: 851px) and (max-height: 950px) and (orientation: portrait) {
     .character-selector {
         position: fixed !important;
-        top: 68vh !important;
-        left: 50% !important;
+        top: 74vh !important;
+        left: 44% !important;
         transform: translateX(-50%) scale(0.75) !important;
         transform-origin: center !important;
         display: flex !important;
@@ -374,7 +374,7 @@
         max-width: calc(83vw) !important;
         box-sizing: border-box !important;
         width: auto !important;
-        height: auto !important;
+        height: 120px !important;
         overflow-x: auto !important;
         overflow-y: hidden !important;
         scrollbar-width: none !important;
@@ -470,8 +470,8 @@
 @media (max-width: 768px) and (min-height: 851px) and (max-height: 950px) and (orientation: portrait) {
     .voice-selector-floating {
         position: fixed !important;
-        top: 24vh !important;
-        left: 1vw !important;
+        top: 38vh !important;
+        left: 3vw !important;
         transform: none !important;
         right: auto !important;
         bottom: auto !important;
