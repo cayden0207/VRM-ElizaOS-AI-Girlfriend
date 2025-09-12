@@ -3511,7 +3511,7 @@
                     const provider = getWalletProvider(walletType);
                     
                     if (!provider) {
-                        alert(`请先installed ${walletType} walletextended`);
+                        alert(i18n.t('error.wallet.install').replace('{wallet}', walletType));
                         return;
                     }
                     
@@ -3955,6 +3955,7 @@
                     </div>
                     <button
                         onClick={disconnectWallet}
+                        data-i18n="wallet.disconnect"
                         style={{
                             background: 'transparent',
                             border: '1px solid #444444',
@@ -3965,7 +3966,7 @@
                             fontSize: '12px'
                         }}
                     >
-                        断on
+Disconnect
                     </button>
                 </div>
             );
