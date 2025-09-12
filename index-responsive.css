@@ -345,7 +345,7 @@
         max-width: calc(85vw) !important;
         box-sizing: border-box !important;
         width: auto !important;
-        height: auto !important;
+        height: 120px !important;
         overflow-x: auto !important;
         overflow-y: hidden !important;
         scrollbar-width: none !important;
