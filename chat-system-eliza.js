@@ -722,6 +722,13 @@ class ElizaOSChatSystem {
     }
     
     async sendMessage(message) {
+        console.log('🔥 ChatSystem V2 sendMessage被调用!', {
+            message: message,
+            hasUser: !!this.currentUser,
+            hasCharacter: !!this.currentCharacter,
+            apiBaseURL: this.apiBaseURL
+        });
+
         (window.AppConfig?.debug?.log || console.log)('Compat call: sendMessage ->', message);
         
         if (!this.currentUser || !this.currentCharacter) {
