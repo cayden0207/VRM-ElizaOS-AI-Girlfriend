@@ -1031,10 +1031,17 @@ Language: ${actualLanguage === 'zh' ? 'Respond in Chinese' : actualLanguage === 
             }
 
             // 调用OpenAI API
+            // 检查OpenAI API密钥
             if (!process.env.OPENAI_API_KEY) {
-              throw new Error('OpenAI API Key 未配置');
+              console.error('❌ OPENAI_API_KEY未设置');
+              throw new Error('OpenAI API key not configured');
             }
-            
+
+            console.log('🔑 OpenAI API密钥状态:', {
+              hasKey: !!process.env.OPENAI_API_KEY,
+              keyPrefix: process.env.OPENAI_API_KEY?.substring(0, 7)
+            });
+
             const OpenAI = (await import('openai')).default;
             const openai = new OpenAI({
               apiKey: process.env.OPENAI_API_KEY
@@ -1064,7 +1071,13 @@ Language: ${actualLanguage === 'zh' ? 'Respond in Chinese' : actualLanguage === 
             
           } catch (aiError) {
             console.error('❌ OpenAI智能模式失败:', aiError.message);
-            console.error('❌ 详细错误信息:', aiError);
+            console.error('❌ 详细错误信息:', {
+              name: aiError.name,
+              message: aiError.message,
+              code: aiError.code,
+              status: aiError.status,
+              type: aiError.type
+            });
 
             // 如果OpenAI也失败，使用多样化的后备回复
             const fallbackResponses = {
