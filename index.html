@@ -5657,8 +5657,17 @@ window.handleProfileSubmit = async function(event) {
                     }, 3000);
                     
                 } else {
-                    const errorData = await response.json();
-                    throw new Error(errorData.message || `APISave failed: ${response.status}`);
+                    let errorMessage = `APISave failed: ${response.status}`;
+                    try {
+                        const errorData = await response.json();
+                        errorMessage = errorData.details || errorData.error || errorData.message || errorMessage;
+                        if (errorData.troubleshooting) {
+                            console.error('❌ 故障排除建议:', errorData.troubleshooting);
+                        }
+                    } catch (parseError) {
+                        console.error('❌ 无法解析错误响应:', parseError);
+                    }
+                    throw new Error(errorMessage);
                 }
             } catch (error) {
                 console.error('❌ Save user profile failed:', error);

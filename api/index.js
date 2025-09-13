@@ -15,7 +15,19 @@ import { createClient } from '@supabase/supabase-js';
 // Supabase 客户端
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+console.log('🔍 Supabase配置检查:', {
+  hasUrl: !!supabaseUrl,
+  hasKey: !!supabaseKey,
+  urlFirst6: supabaseUrl?.substring(0, 6),
+  keyFirst6: supabaseKey?.substring(0, 6)
+});
+
 const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+
+if (!supabase) {
+  console.warn('⚠️ Supabase未配置，用户档案保存功能将不可用');
+}
 
 // 动态导入ElizaOS（避免初始化时的导入问题）
 let AgentRuntime, ModelProviderName, MemoryManager;
@@ -740,7 +752,12 @@ export default async function handler(req, res) {
       console.log(`💾 保存用户数据:`, body);
 
       if (!supabase) {
-        return res.status(500).json({ error: 'Supabase not configured' });
+        console.error('❌ Supabase未配置 - 缺少环境变量');
+        return res.status(500).json({
+          error: 'Database not configured',
+          details: 'SUPABASE_URL或SUPABASE_ANON_KEY环境变量未设置',
+          troubleshooting: '请在Vercel环境变量中配置Supabase相关设置'
+        });
       }
 
       const walletAddress = body.walletAddress;
