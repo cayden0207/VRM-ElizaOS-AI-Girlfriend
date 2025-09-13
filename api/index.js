@@ -829,9 +829,23 @@ export default async function handler(req, res) {
       });
     }
 
-    // ElizaOS Chat API  
+    // ElizaOS Chat API
     if (method === 'POST' && (url === '/chat' || url === '/api/chat')) {
+      console.log('🎯 API /api/chat请求到达！', {
+        method,
+        url,
+        bodyKeys: Object.keys(req.body || {}),
+        timestamp: new Date().toISOString()
+      });
+
       const { userId, characterId, message, language = 'en' } = req.body;
+
+      console.log('📝 提取的请求参数:', {
+        userId: userId?.substring(0, 10) + '...',
+        characterId,
+        message: message?.substring(0, 50) + '...',
+        language
+      });
       
       if (!userId || !characterId || !message) {
         return res.status(400).json({
