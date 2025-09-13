@@ -13,7 +13,7 @@ const characters = [
     { id: "maple", name: "Maple", file: "Main VRM/Maple.vrm", voiceId: "B8gJV1IhpuegLxdpXFOE", descriptionKey: "char.maple.desc" },
     { id: "miru", name: "Miru", file: "Main VRM/Miru.vrm", voiceId: "eVJCDcwCTZBLNdQdbdmd", descriptionKey: "char.miru.desc" },
     { id: "miumiu", name: "Miumiu", file: "Main VRM/Miumiu.vrm", voiceId: "SU7BtMmgc7KhQiC6G24B", descriptionKey: "char.miumiu.desc" },
-    { id: "neco", name: "Neco", file: "Main VRM/Neco.vrm", voiceId: "t9ZwnJtpA3lWrJ4W7pAl", descriptionKey: "char.neco.desc" },
+    { id: "neco", name: "Neco", file: "Main VRM/NEKO.vrm", voiceId: "t9ZwnJtpA3lWrJ4W7pAl", descriptionKey: "char.neco.desc" },
     { id: "nekona", name: "Nekona", file: "Main VRM/NEKONA.vrm", voiceId: "kcg1KQQGuCGzH6FUjsZQ", descriptionKey: "char.nekona.desc" },
     { id: "notia", name: "Notia", file: "Main VRM/Notia.vrm", voiceId: "abz2RylgxmJx76xNpaj1", descriptionKey: "char.notia.desc" },
     { id: "ququ", name: "QuQu", file: "Main VRM/QuQu.vrm", voiceId: "tfQFvzjodQp63340jz2r", descriptionKey: "char.ququ.desc" },
