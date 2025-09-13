@@ -3577,10 +3577,31 @@
                     console.log('🎵 Background music started playing');
                     // Remove fixed background music message
                 }).catch(error => {
-                    console.log('🎵 Auto-play blocked by browser, requires user interaction');
+                    console.log('🎵 Auto-play blocked by browser, waiting for user interaction');
                     isMusicPlaying = false;
                     updateMusicButton();
-                    // Music tip removed to reduce notifications
+                    
+                    // Add user interaction listeners to start music
+                    function startMusicOnInteraction() {
+                        if (backgroundMusic && !isMusicPlaying) {
+                            backgroundMusic.play().then(() => {
+                                isMusicPlaying = true;
+                                updateMusicButton();
+                                console.log('🎵 Background music started after user interaction');
+                            }).catch(e => {
+                                console.log('⚠️ Could not start background music:', e);
+                            });
+                        }
+                        // Remove event listeners after first successful play
+                        document.removeEventListener('click', startMusicOnInteraction);
+                        document.removeEventListener('keydown', startMusicOnInteraction);
+                        document.removeEventListener('touchstart', startMusicOnInteraction);
+                    }
+
+                    // Add event listeners for user interaction
+                    document.addEventListener('click', startMusicOnInteraction);
+                    document.addEventListener('keydown', startMusicOnInteraction);
+                    document.addEventListener('touchstart', startMusicOnInteraction);
                 });
             }
         }
