@@ -3689,6 +3689,11 @@
 
         function initAnimationSelector() {
             const selector = document.getElementById('animation-selector');
+            // 检查元素是否存在，如果不存在则跳过
+            if (!selector) {
+                console.log('🎭 Animation selector element not found, skipping initialization');
+                return;
+            }
             // Clear现有选项
             selector.innerHTML = '<option value="">' + i18n.t('panel.select.animation') + '</option>';
 
@@ -3851,6 +3856,10 @@
 
         function playSelectedAnimation() {
             const selector = document.getElementById('animation-selector');
+            if (!selector) {
+                console.log('🎭 Animation selector element not found');
+                return;
+            }
             const selectedAnimation = selector.value;
 
             if (!selectedAnimation) {
