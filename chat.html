@@ -1714,12 +1714,166 @@
             box-shadow: 0 4px 12px rgba(116, 185, 255, 0.4);
         }
 
+        /* Mobile Optimization Notice Modal - Game Style */
+        .mobile-notice-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            backdrop-filter: blur(5px);
+        }
+
+        .mobile-notice-modal {
+            background: #f4d03f;
+            border: 6px solid #2d1b3d;
+            border-radius: 20px;
+            padding: 0;
+            max-width: 320px;
+            width: 90%;
+            position: relative;
+            animation: modalBounceIn 0.5s ease-out;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .mobile-notice-header {
+            background: linear-gradient(135deg, #2d1b3d 0%, #4a2c5a 100%);
+            color: #f4d03f;
+            padding: 15px 20px;
+            border-radius: 14px 14px 0 0;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 3px solid #f4d03f;
+            border-bottom: none;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+        }
+
+        .mobile-notice-content {
+            padding: 20px;
+            color: #2d1b3d;
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .mobile-notice-close {
+            background: linear-gradient(135deg, #2d1b3d 0%, #4a2c5a 100%);
+            color: #f4d03f;
+            border: 3px solid #2d1b3d;
+            border-radius: 15px;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px auto 0;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 0px #1a0f1f, 0 6px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .mobile-notice-close:hover {
+            background: linear-gradient(135deg, #4a2c5a 0%, #6c4a7a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0px #1a0f1f, 0 8px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .mobile-notice-close:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0px #1a0f1f, 0 3px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes modalBounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3) translateY(-50px);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.1) translateY(0);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        /* Show mobile notice only on mobile devices */
+        @media (max-width: 768px) {
+            .mobile-notice-overlay.show {
+                display: flex;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <!-- Mobile Optimization Notice Modal -->
+    <div class="mobile-notice-overlay" id="mobile-notice-overlay">
+        <div class="mobile-notice-modal">
+            <div class="mobile-notice-header">
+                MOBILE NOTICE
+            </div>
+            <div class="mobile-notice-content">
+                The mobile experience is currently being optimized and requires a DApp browser for full functionality. 
+                <br><br>
+                <strong>We recommend using desktop for the best experience.</strong>
+            </div>
+            <button class="mobile-notice-close" onclick="closeMobileNotice()">CLOSE</button>
+        </div>
+    </div>
+
     <!-- Include chat system - AI integration handled by ElizaOS -->
     <script type="module" src="chat-system-eliza.js"></script>
+    
+    <!-- Mobile Notice Modal JavaScript -->
+    <script>
+        // Mobile Notice Modal Functions
+        window.showMobileNotice = function() {
+            const overlay = document.getElementById('mobile-notice-overlay');
+            if (overlay && window.innerWidth <= 768) {
+                overlay.classList.add('show');
+            }
+        }
+
+        window.closeMobileNotice = function() {
+            const overlay = document.getElementById('mobile-notice-overlay');
+            if (overlay) {
+                overlay.classList.remove('show');
+                // Remember user closed the notice (optional - store in sessionStorage)
+                sessionStorage.setItem('mobileNoticeShown', 'true');
+            }
+        }
+
+        // Show mobile notice on page load for mobile devices
+        window.addEventListener('load', () => {
+            // Check if notice was already shown in this session
+            const noticeShown = sessionStorage.getItem('mobileNoticeShown');
+            if (!noticeShown && window.innerWidth <= 768) {
+                // Delay showing notice for better UX after page loads
+                setTimeout(window.showMobileNotice, 2000);
+            }
+        });
+
+        // Handle window resize to show/hide notice appropriately
+        window.addEventListener('resize', () => {
+            const overlay = document.getElementById('mobile-notice-overlay');
+            if (overlay && window.innerWidth > 768) {
+                overlay.classList.remove('show');
+            }
+        });
+    </script>
     <div class="game-container">
         <!-- Left VRM display area -->
         <div class="vrm-container">
