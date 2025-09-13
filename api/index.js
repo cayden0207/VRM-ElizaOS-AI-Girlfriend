@@ -857,8 +857,16 @@ export default async function handler(req, res) {
       console.log(`💬 ElizaOS Chat: ${userId} -> ${characterId}: ${message}`);
 
       try {
-        console.log(`💬 ElizaOS Chat处理: ${userId} -> ${characterId}: "${message}"`);
-        
+        console.log(`💬 处理聊天请求: ${userId} -> ${characterId}: "${message}"`);
+
+        // 🔥 直接使用OpenAI，跳过ElizaOS Agent
+        const FORCE_OPENAI = true; // 强制使用OpenAI模式
+
+        if (FORCE_OPENAI) {
+          console.log('🚀 强制使用OpenAI智能模式，跳过ElizaOS');
+          throw new Error('FORCE_OPENAI_MODE');
+        }
+
         // 获取或创建ElizaOS Agent (保持原有逻辑)
         const agent = await getOrCreateAgent(characterId);
         
@@ -1019,13 +1027,15 @@ export default async function handler(req, res) {
         return res.json(apiResponse);
         
       } catch (error) {
-        console.error('❌ ElizaOS Chat处理错误:', error);
-        console.error('错误详情:', error.message);
-        console.error('错误堆栈:', error.stack);
-        console.error('🚨 进入后备模式，将返回模板回复');
-        
-        // 🔄 ElizaOS后备机制：保持记忆和用户资料功能
-        console.log('🔄 启用ElizaOS后备模式...');
+        // 检查是否是强制OpenAI模式
+        if (error.message !== 'FORCE_OPENAI_MODE') {
+          console.error('❌ ElizaOS Chat处理错误:', error);
+          console.error('错误详情:', error.message);
+          console.error('错误堆栈:', error.stack);
+        }
+
+        // 🔄 直接使用OpenAI智能模式
+        console.log('🤖 启用OpenAI智能模式...');
         
         try {
           // 获取用户资料（保持个性化）
