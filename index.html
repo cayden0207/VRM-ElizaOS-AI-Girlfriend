@@ -1508,7 +1508,7 @@
 
 <body>
     <!-- Background Music -->
-    <audio id="background-music" autoplay loop>
+    <audio id="background-music" loop preload="auto">
         <source src="BG/main-bgm.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
@@ -2194,6 +2194,27 @@
             if (bgMusic) {
                 bgMusic.volume = 0.4;
             }
+
+            // Function to start music on user interaction
+            function startBackgroundMusic() {
+                const bgMusic = document.getElementById('background-music');
+                if (bgMusic) {
+                    bgMusic.play().then(() => {
+                        console.log('🎵 Background music started playing');
+                    }).catch(e => {
+                        console.log('⚠️ Could not start background music:', e);
+                    });
+                }
+                // Remove event listeners after first play
+                document.removeEventListener('click', startBackgroundMusic);
+                document.removeEventListener('keydown', startBackgroundMusic);
+                document.removeEventListener('touchstart', startBackgroundMusic);
+            }
+
+            // Add event listeners for user interaction
+            document.addEventListener('click', startBackgroundMusic);
+            document.addEventListener('keydown', startBackgroundMusic);
+            document.addEventListener('touchstart', startBackgroundMusic);
 
             const selectedAvatar = document.getElementById('selected-avatar-img');
             if (selectedAvatar && characters[0]) {
