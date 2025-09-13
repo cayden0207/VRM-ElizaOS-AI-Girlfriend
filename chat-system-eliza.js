@@ -734,15 +734,29 @@ class ElizaOSChatSystem {
             const currentLanguage = window.i18n ? window.i18n.getCurrentLanguage() : 'en';
             
             // Call ElizaOS chat API
+            const requestData = {
+                userId: this.currentUser.id,
+                characterId: this.currentCharacter.id,
+                message: message,
+                language: currentLanguage
+            };
+
+            console.log('📤 发送API请求:', {
+                url: `${this.apiBaseURL}/api/chat`,
+                method: 'POST',
+                requestData
+            });
+
             const response = await fetch(`${this.apiBaseURL}/api/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    userId: this.currentUser.id,
-                    characterId: this.currentCharacter.id,
-                    message: message,
-                    language: currentLanguage // pass language to backend
-                })
+                body: JSON.stringify(requestData)
+            });
+
+            console.log('📥 收到API响应:', {
+                status: response.status,
+                statusText: response.statusText,
+                ok: response.ok
             });
             
             if (!response.ok) {
