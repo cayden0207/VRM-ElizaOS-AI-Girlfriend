@@ -317,11 +317,33 @@ async function getOrCreateAgent(characterId) {
     }
     
     console.log(`🏗️ 创建AgentRuntime for ${character.name}`);
+    console.log('🔍 Character配置详情:', {
+      name: character.name,
+      bio: character.bio,
+      hasMessageExamples: !!character.messageExamples?.length,
+      model: character.settings?.model,
+      plugins: character.plugins
+    });
+
+    // 检查OpenAI密钥
+    console.log('🔑 ElizaOS OpenAI密钥检查:', {
+      hasEnvKey: !!process.env.OPENAI_API_KEY,
+      modelProvider: ModelProviderName.OPENAI
+    });
+
     // CreateAgentRuntime
     const runtime = new AgentRuntime({
     character: {
       ...character,
-      modelProvider: ModelProviderName.OPENAI
+      modelProvider: ModelProviderName.OPENAI,
+      // 确保传递API密钥
+      settings: {
+        ...character.settings,
+        secrets: {
+          ...character.settings?.secrets,
+          openai: process.env.OPENAI_API_KEY
+        }
+      }
     },
     
     // 数据库适配器（使用Supabase）
@@ -387,8 +409,15 @@ async function getOrCreateAgent(characterId) {
     console.log(`⚙️ 初始化AgentRuntime...`);
     await runtime.initialize();
     
-    agents.set(characterId, runtime);
     console.log(`🤖 Agent创建成功: ${character.name}`);
+    console.log('🔧 Runtime配置验证:', {
+      hasCharacter: !!runtime.character,
+      modelProvider: runtime.character?.modelProvider,
+      hasSecrets: !!runtime.character?.settings?.secrets?.openai,
+      pluginsCount: runtime.character?.plugins?.length
+    });
+
+    agents.set(characterId, runtime);
     
     return runtime;
     
@@ -882,7 +911,13 @@ export default async function handler(req, res) {
         };
         
         // 使用ElizaOS Agent处理消息
-        console.log(`💬 处理消息: ${roomId}`);
+        console.log(`💬 处理消息: ${roomId}`, {
+          userId,
+          characterId,
+          message: message.substring(0, 50) + '...',
+          hasAgent: !!agent,
+          agentType: agent?.constructor?.name
+        });
         const response = await agent.processMessage(messageObj);
         console.log('🔍 ElizaOS原始响应:', {
           text: response.text,
