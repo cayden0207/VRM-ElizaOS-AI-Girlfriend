@@ -771,6 +771,13 @@ class ElizaOSChatSystem {
             }
             
             const data = await response.json();
+            console.log('📦 API响应数据:', {
+                success: data.success,
+                responseText: data.data?.response?.substring(0, 100),
+                hasData: !!data.data,
+                dataKeys: Object.keys(data.data || {}),
+                fullResponse: data
+            });
             (window.AppConfig?.debug?.log || console.log)('Compat ElizaOS response received');
             
             if (data.success && data.data) {

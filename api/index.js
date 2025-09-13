@@ -1022,6 +1022,7 @@ export default async function handler(req, res) {
         console.error('❌ ElizaOS Chat处理错误:', error);
         console.error('错误详情:', error.message);
         console.error('错误堆栈:', error.stack);
+        console.error('🚨 进入后备模式，将返回模板回复');
         
         // 🔄 ElizaOS后备机制：保持记忆和用户资料功能
         console.log('🔄 启用ElizaOS后备模式...');
