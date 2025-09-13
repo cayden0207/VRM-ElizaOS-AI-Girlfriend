@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: blob: https://mintlify.s3.us-west-1.amazonaws.com https://assets.coingecko.com https://cdn.jsdelivr.net https://raw.githubusercontent.com https://images.ctfassets.net https://avatars.githubusercontent.com https://backpack.app https://www.madlads.com https://pbs.twimg.com https://static.okx.com https://img.bitgetimg.com https://tp-statics.tokenpocket.pro; media-src 'self' blob: data:; connect-src 'self' blob: http://localhost:3000 https://api.devnet.solana.com https://api.elevenlabs.io https://vrm-eliza-ai-girlfriend.vercel.app;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: blob: https://mintlify.s3.us-west-1.amazonaws.com https://assets.coingecko.com https://cdn.jsdelivr.net https://raw.githubusercontent.com https://images.ctfassets.net https://avatars.githubusercontent.com https://backpack.app https://www.madlads.com https://pbs.twimg.com https://static.okx.com https://img.bitgetimg.com https://tp-statics.tokenpocket.pro https://trustwallet.com; media-src 'self' blob: data:; connect-src 'self' blob: http://localhost:3000 https://rpc.xlayer.tech https://api.elevenlabs.io https://vrm-eliza-ai-girlfriend.vercel.app;">
     <title data-i18n-title="char.select.title">WAIFU - Choose Your Girlfriend</title>
     <link rel="stylesheet" href="wallet-ui.css">
     <link rel="stylesheet" href="responsive-standard.css">
@@ -1696,27 +1696,27 @@
                 </div>
                 
                 <div class="wallet-list">
-                    <div class="wallet-option" data-provider="phantom">
-                        <div class="wallet-option-icon">👻</div>
-                        <span class="wallet-option-name">Phantom</span>
+                    <div class="wallet-option" data-provider="metamask">
+                        <div class="wallet-option-icon">🦊</div>
+                        <span class="wallet-option-name">MetaMask</span>
                         <div class="wallet-option-arrow">→</div>
                     </div>
                     
-                    <div class="wallet-option" data-provider="solflare">
-                        <div class="wallet-option-icon">☀️</div>
-                        <span class="wallet-option-name">Solflare</span>
+                    <div class="wallet-option" data-provider="okx">
+                        <div class="wallet-option-icon">⭕</div>
+                        <span class="wallet-option-name">OKX Wallet</span>
+                        <div class="wallet-option-arrow">→</div>
+                    </div>
+                    
+                    <div class="wallet-option" data-provider="trust">
+                        <div class="wallet-option-icon">💙</div>
+                        <span class="wallet-option-name">Trust Wallet</span>
                         <div class="wallet-option-arrow">→</div>
                     </div>
                     
                     <div class="wallet-option" data-provider="coinbase">
                         <div class="wallet-option-icon">🔷</div>
-                        <span class="wallet-option-name">Coinbase</span>
-                        <div class="wallet-option-arrow">→</div>
-                    </div>
-                    
-                    <div class="wallet-option" data-provider="backpack">
-                        <div class="wallet-option-icon">🎒</div>
-                        <span class="wallet-option-name">Backpack</span>
+                        <span class="wallet-option-name">Coinbase Wallet</span>
                         <div class="wallet-option-arrow">→</div>
                     </div>
                 </div>
@@ -3562,9 +3562,8 @@
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
     
-    <!-- Simplified Solana Wallet Connection Component -->
+    <!-- X Layer Wallet Connection Component -->
     <script type="text/babel">
         const { useState, useEffect } = React;
         
@@ -3588,52 +3587,117 @@
                 }
             }, []);
             
-            // Check wallet connection status
+            // Check wallet connection status - X Layer compatible
             const checkWalletConnection = async (type) => {
-                const provider = getWalletProvider(type);
-                if (provider && provider.isConnected) {
-                    setIsConnected(true);
-                    setWalletAddress(provider.publicKey.toString());
-                    setWalletType(type);
-                    await updateBalance(provider.publicKey);
+                try {
+                    const provider = getWalletProvider(type);
+                    if (!provider) return;
+                    
+                    // Check if accounts are available
+                    const accounts = await provider.request({ 
+                        method: 'eth_accounts' 
+                    });
+                    
+                    if (accounts && accounts.length > 0) {
+                        const address = accounts[0];
+                        setIsConnected(true);
+                        setWalletAddress(address);
+                        setWalletType(type);
+                        await updateBalance(address);
+                        console.log('🔗 Wallet already connected:', address);
+                    }
+                } catch (error) {
+                    console.log('No existing wallet connection found');
                 }
             };
             
-            // get wallet provider
+            // X Layer Network Configuration
+            const X_LAYER_CONFIG = {
+                chainId: '0xc4', // 196 in hex
+                chainName: 'X Layer Mainnet',
+                rpcUrls: ['https://rpc.xlayer.tech'],
+                nativeCurrency: {
+                    name: 'OKB',
+                    symbol: 'OKB',
+                    decimals: 18
+                },
+                blockExplorerUrls: ['https://www.okx.com/web3/explorer/xlayer']
+            };
+
+            // Switch to X Layer network
+            const switchToXLayer = async (provider) => {
+                try {
+                    // Try to switch to X Layer
+                    await provider.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: X_LAYER_CONFIG.chainId }],
+                    });
+                    console.log('✅ Switched to X Layer network');
+                } catch (switchError) {
+                    // If network doesn't exist, add it
+                    if (switchError.code === 4902) {
+                        try {
+                            await provider.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [X_LAYER_CONFIG],
+                            });
+                            console.log('✅ Added and switched to X Layer network');
+                        } catch (addError) {
+                            console.error('❌ Failed to add X Layer network:', addError);
+                            throw addError;
+                        }
+                    } else {
+                        console.error('❌ Failed to switch to X Layer:', switchError);
+                        throw switchError;
+                    }
+                }
+            };
+
+            // get wallet provider - X Layer (Ethereum) compatible
             const getWalletProvider = (type) => {
                 switch(type) {
-                    case 'phantom':
-                        return window.phantom?.solana;
-                    case 'solflare':
-                        return window.solflare;
-                    case 'coinbase':
-                        return window.coinbaseSolana;
-                    case 'backpack':
-                        return window.backpack;
+                    case 'metamask':
+                        return window.ethereum;
                     case 'okx':
-                        return window.okxwallet?.solana;
+                        return window.okxwallet?.ethereum || window.ethereum;
+                    case 'trust':
+                        return window.trustwallet?.ethereum || window.ethereum;
+                    case 'coinbase':
+                        return window.coinbaseWallet?.ethereum || window.ethereum;
                     case 'bitget':
-                        return window.bitkeep?.solana;
+                        return window.bitkeep?.ethereum || window.ethereum;
                     case 'tokenpocket':
-                        return window.tokenpocket?.solana;
+                        return window.tokenpocket?.ethereum || window.ethereum;
                     default:
-                        return null;
+                        return window.ethereum; // fallback to injected provider
                 }
             };
             
-            // Connect wallet
+            // Connect wallet - X Layer (Ethereum) compatible
             const connectWallet = async (walletType) => {
                 setIsConnecting(true);
                 try {
                     const provider = getWalletProvider(walletType);
                     
                     if (!provider) {
-                        alert(i18n.t('error.wallet.install').replace('{wallet}', walletType));
+                        alert(`Please install ${walletType} wallet extension`);
                         return;
                     }
+
+                    // Switch to X Layer network first
+                    await switchToXLayer(provider);
                     
-                    const response = await provider.connect();
-                    const address = response.publicKey.toString();
+                    // Request account access
+                    const accounts = await provider.request({ 
+                        method: 'eth_requestAccounts' 
+                    });
+                    
+                    if (!accounts || accounts.length === 0) {
+                        throw new Error('No accounts found');
+                    }
+                    
+                    const address = accounts[0];
+                    console.log('🔗 Connected to X Layer wallet:', address);
                     
                     // Save state
                     setIsConnected(true);
@@ -3645,8 +3709,8 @@
                     localStorage.setItem('wallet_address', address);
                     localStorage.setItem('wallet_type', walletType);
                     
-                    // get balance
-                    await updateBalance(response.publicKey);
+                    // get balance (X Layer OKB)
+                    await updateBalance(address);
                     
                     // Trigger global event
                     window.dispatchEvent(new CustomEvent('walletConnected', {
@@ -3760,17 +3824,26 @@
                 }
             };
             
-            // Update balance
-            const updateBalance = async (publicKey) => {
+            // Update balance - X Layer (Ethereum) compatible
+            const updateBalance = async (address) => {
                 try {
-                    const connection = new window.solanaWeb3.Connection(
-                        'https://api.devnet.solana.com',
-                        'confirmed'
-                    );
-                    const balance = await connection.getBalance(publicKey);
-                    setBalance(balance / window.solanaWeb3.LAMPORTS_PER_SOL);
+                    const provider = getWalletProvider(walletType);
+                    if (!provider) return;
+                    
+                    // Get OKB balance on X Layer
+                    const balance = await provider.request({
+                        method: 'eth_getBalance',
+                        params: [address, 'latest']
+                    });
+                    
+                    // Convert from Wei to OKB (18 decimals)
+                    const balanceInOKB = parseInt(balance, 16) / Math.pow(10, 18);
+                    setBalance(balanceInOKB);
+                    
+                    console.log('💰 X Layer balance:', balanceInOKB, 'OKB');
                 } catch (error) {
-                    console.error('Failed to get balance:', error);
+                    console.error('Failed to get X Layer balance:', error);
+                    setBalance(0);
                 }
             };
             
@@ -3940,34 +4013,28 @@
                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                                         {[
                                             { 
-                                                id: 'phantom', 
-                                                name: 'Phantom', 
-                                                logo: 'https://mintlify.s3.us-west-1.amazonaws.com/phantom-e50e2e68/resources/images/Phantom_SVG_Icon.svg',
-                                                fallback: 'https://assets.coingecko.com/coins/images/33067/large/phantom.png'
-                                            },
-                                            { 
-                                                id: 'solflare', 
-                                                name: 'Solflare', 
-                                                logo: './assets/wallet/solflare.png',
-                                                fallback: './assets/wallet/solflare.png'
-                                            },
-                                            { 
-                                                id: 'coinbase', 
-                                                name: 'Coinbase Wallet', 
-                                                logo: './assets/wallet/coinbase logo.webp',
-                                                fallback: './assets/wallet/coinbase logo.webp'
-                                            },
-                                            { 
-                                                id: 'backpack', 
-                                                name: 'Backpack', 
-                                                logo: 'https://backpack.app/favicon.ico',
-                                                fallback: 'https://www.madlads.com/mad_logo.svg'
+                                                id: 'metamask', 
+                                                name: 'MetaMask', 
+                                                logo: 'https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg',
+                                                fallback: 'https://avatars.githubusercontent.com/u/11744586?s=200&v=4'
                                             },
                                             { 
                                                 id: 'okx', 
                                                 name: 'OKX Wallet', 
                                                 logo: 'https://static.okx.com/cdn/assets/imgs/247/58E63FEA47A2B7D7.png',
                                                 fallback: 'https://avatars.githubusercontent.com/u/33663881?s=200&v=4'
+                                            },
+                                            { 
+                                                id: 'trust', 
+                                                name: 'Trust Wallet', 
+                                                logo: 'https://trustwallet.com/assets/images/media/assets/trust_platform.svg',
+                                                fallback: 'https://avatars.githubusercontent.com/u/33588527?s=200&v=4'
+                                            },
+                                            { 
+                                                id: 'coinbase', 
+                                                name: 'Coinbase Wallet', 
+                                                logo: './assets/wallet/coinbase logo.webp',
+                                                fallback: './assets/wallet/coinbase logo.webp'
                                             },
                                             { 
                                                 id: 'bitget', 
@@ -4067,7 +4134,7 @@
                             {formatAddress(walletAddress)}
                         </div>
                         <div style={{ color: '#888888', fontSize: '12px' }}>
-                            {balance.toFixed(4)} SOL
+                            {balance.toFixed(4)} OKB
                         </div>
                     </div>
                     <button
