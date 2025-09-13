@@ -884,13 +884,34 @@ export default async function handler(req, res) {
         // 使用ElizaOS Agent处理消息
         console.log(`💬 处理消息: ${roomId}`);
         const response = await agent.processMessage(messageObj);
-        
+        console.log('🔍 ElizaOS原始响应:', {
+          text: response.text,
+          content: response.content,
+          message: response.message,
+          fullResponse: response
+        });
+
         // 提取回复
-        const responseText = response.text || 
-                           response.content?.text || 
+        const responseText = response.text ||
+                           response.content?.text ||
                            response.message ||
                            "...";
-        
+
+        console.log('📝 ElizaOS提取的回复:', responseText);
+
+        // 检查ElizaOS回复质量，如果是重复或无效回复，强制使用OpenAI后备
+        const isLowQualityResponse =
+          !responseText ||
+          responseText === "..." ||
+          responseText.length < 10 ||
+          (responseText.includes('宝贝哥哥') && responseText.includes('Alice来陪你聊天啦')) ||
+          (responseText.includes('虽然系统有点小问题'));
+
+        if (isLowQualityResponse) {
+          console.log('⚠️ ElizaOS回复质量低，强制使用OpenAI后备模式');
+          throw new Error('ElizaOS response quality too low, fallback to OpenAI');
+        }
+
         // 检测情感
         const emotion = detectEmotion(responseText);
         
