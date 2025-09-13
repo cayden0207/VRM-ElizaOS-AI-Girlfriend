@@ -1925,8 +1925,8 @@
             
 
             <!-- Background music element -->
-            <audio id="background-music" loop preload="auto">
-                <source src="BG/bgm.mp3" type="audio/mpeg">
+            <audio id="background-music" loop preload="auto" controls style="display: none;">
+                <source src="BG/bgm-compressed.mp3" type="audio/mpeg">
                 Your browser does not support audio playback.
             </audio>
             
@@ -4462,9 +4462,38 @@
             // Initialize language switcher
             initLanguageToggle();
 
+            // Initialize background music with multiple attempts
+            function attemptMusicInit() {
+                initBackgroundMusic();
+
+                // Also try after user first interaction
+                let userInteracted = false;
+                function onFirstInteraction() {
+                    if (!userInteracted) {
+                        userInteracted = true;
+                        console.log('🎵 User interaction detected, attempting BGM start...');
+                        setTimeout(() => {
+                            if (backgroundMusic && !isMusicPlaying) {
+                                console.log('🎵 Retrying BGM after user interaction...');
+                                playBackgroundMusic();
+                            }
+                        }, 500);
+
+                        // Remove listeners after first interaction
+                        document.removeEventListener('click', onFirstInteraction);
+                        document.removeEventListener('keypress', onFirstInteraction);
+                        document.removeEventListener('touchstart', onFirstInteraction);
+                    }
+                }
+
+                document.addEventListener('click', onFirstInteraction);
+                document.addEventListener('keypress', onFirstInteraction);
+                document.addEventListener('touchstart', onFirstInteraction);
+            }
+
             // Delay background music initialization to ensure DOM fully loaded
             setTimeout(() => {
-                initBackgroundMusic();
+                attemptMusicInit();
             }, 1000);
 
             // Initial state - check if elements exist
