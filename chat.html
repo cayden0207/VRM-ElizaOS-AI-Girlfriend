@@ -2982,9 +2982,9 @@
             }
 
             // console.log('🎮 VRM loading debug info:');
-            console.log('- characterName:', characterName);
-            console.log('- vrmPath:', vrmPath);
-            console.log('- defaultVrmFile:', defaultVrmFile);
+            // console.log('- characterName:', characterName);
+            // console.log('- vrmPath:', vrmPath);
+            // console.log('- defaultVrmFile:', defaultVrmFile);
 
             if (!vrmPath) {
                 console.error('❌ VRM file path is empty');
@@ -3248,7 +3248,7 @@
         
         // Show AI dialogue bubble
         function showSpeechBubble(text) {
-            console.log('🗨️ showSpeechBubble called with text:', text);
+            // console.log('🗨️ showSpeechBubble called with text:', text);
             const bubble = document.getElementById('ai-speech-bubble');
             
             if (!bubble) {
@@ -3278,7 +3278,7 @@
                     // After text display completes, stay longer
                     const displayTime = Math.max(5000, text.length * 200);
                     
-                    console.log(`💬 Subtitle bubble display time: ${displayTime}ms (text length: ${text.length}characters)`);
+                    // console.log(`💬 Subtitle bubble display time: ${displayTime}ms (text length: ${text.length}characters)`);
                     
                     speechBubbleState.timeoutId = setTimeout(() => {
                         if (speechBubbleState.isActive) {
@@ -3351,7 +3351,7 @@
             const userId = walletAuth.getCurrentUserId();
             const character = walletAuth.getCurrentCharacter();
 
-            console.log(`💬 Sending message: ${message} (user: ${walletAuth.formatAddress(userId)}, character: ${character.name})`);
+            // console.log(`💬 Sending message: ${message} (user: ${walletAuth.formatAddress(userId)}, character: ${character.name})`);
 
             // Clear输入框
             input.value = '';
@@ -3367,7 +3367,7 @@
             try {
                 // Use ElizaOS integrated ChatSystem V2
                 if (window.chatSystemV2) {
-                    console.log('🤖 Using ElizaOS ChatSystem V2 to send message');
+                    // console.log('🤖 Using ElizaOS ChatSystem V2 to send message');
                     
                     // Ensure ChatSystem V2 has correct user and character settings
                     if (!window.chatSystemV2.currentUser) {
@@ -3378,12 +3378,12 @@
                             walletAddress: userId
                         };
                         window.chatSystemV2.waitingForWallet = false;
-                        console.log('👤 Setting ChatSystem V2 user:', window.chatSystemV2.currentUser.nickname);
+                        // console.log('👤 Setting ChatSystem V2 user:', window.chatSystemV2.currentUser.nickname);
                     }
                     
                     // Ensure ChatSystem V2 has correct character settings
                     if (!window.chatSystemV2.currentCharacter && selectedCharacter) {
-                        console.log('🎭 Setting ChatSystem V2 character:', selectedCharacter.name);
+                        // console.log('🎭 Setting ChatSystem V2 character:', selectedCharacter.name);
                         window.chatSystemV2.setCharacter(selectedCharacter);
                     }
                     
@@ -3395,7 +3395,7 @@
                             personality: character.personality,
                             ...character
                         };
-                        console.log('🎭 Setting ChatSystem V2 with current character data:', characterData.name);
+                        // console.log('🎭 Setting ChatSystem V2 with current character data:', characterData.name);
                         window.chatSystemV2.setCharacter(characterData);
                     }
                     
@@ -3403,7 +3403,7 @@
                     await window.chatSystemV2.sendMessage(message);
                     
                     // ChatSystem V2 会处理消息显示和历史记录
-                    console.log('✅ ElizaOS message sending completed');
+                    // console.log('✅ ElizaOS message sending completed');
                     
                 } else {
                     // Fall back to old system
@@ -3497,7 +3497,7 @@
         function triggerEmotion(emotion) {
             if (!currentVrm) return;
 
-            console.log(`🎭 Triggering emotion: ${emotion}`);
+            // console.log(`🎭 Triggering emotion: ${emotion}`);
 
             // Reset按钮状态
             document.querySelectorAll('.emotion-btn').forEach(btn => btn.classList.remove('active'));
@@ -3553,7 +3553,7 @@
 
             if (backgroundMusic) {
                 backgroundMusic.volume = musicVolume;
-                console.log('🎵 Background music element found, volume set to:', musicVolume);
+                // console.log('🎵 Background music element found, volume set to:', musicVolume);
 
                 // Initialize button state to match isMusicPlaying
                 updateMusicButton();
@@ -3572,7 +3572,7 @@
 
                 // Add loadstart event for debugging
                 backgroundMusic.addEventListener('loadstart', () => {
-                    console.log('🎵 Started loading background music from:', backgroundMusic.src || backgroundMusic.currentSrc);
+                    // console.log('🎵 Started loading background music from:', backgroundMusic.src || backgroundMusic.currentSrc);
                 });
 
                 // Try auto play
@@ -3587,7 +3587,7 @@
                 backgroundMusic.play().then(() => {
                     isMusicPlaying = true;
                     updateMusicButton();
-                    console.log('🎵 Background music started playing');
+                    // console.log('🎵 Background music started playing');
                     // Remove fixed background music message
                 }).catch(error => {
                     console.log('🎵 Auto-play blocked by browser, waiting for user interaction');
@@ -3600,7 +3600,7 @@
                             backgroundMusic.play().then(() => {
                                 isMusicPlaying = true;
                                 updateMusicButton();
-                                console.log('🎵 Background music started after user interaction');
+                                // console.log('🎵 Background music started after user interaction');
                             }).catch(e => {
                                 console.log('⚠️ Could not start background music:', e);
                             });
@@ -3691,7 +3691,7 @@
             const selector = document.getElementById('animation-selector');
             // 检查元素是否存在，如果不存在则跳过
             if (!selector) {
-                console.log('🎭 Animation selector element not found, skipping initialization');
+                // console.log('🎭 Animation selector element not found, skipping initialization');
                 return;
             }
             // Clear现有选项
@@ -3710,7 +3710,7 @@
             const selector = document.getElementById('character-selector');
             // 检查元素是否存在，如果不存在则跳过
             if (!selector) {
-                console.log('🎭 Character selector element not found, skipping initialization');
+                // console.log('🎭 Character selector element not found, skipping initialization');
                 return;
             }
             // Clear现有选项
@@ -4485,10 +4485,10 @@
                 function onFirstInteraction() {
                     if (!userInteracted) {
                         userInteracted = true;
-                        console.log('🎵 User interaction detected, attempting BGM start...');
+                        // console.log('🎵 User interaction detected, attempting BGM start...');
                         setTimeout(() => {
                             if (backgroundMusic && !isMusicPlaying) {
-                                console.log('🎵 Retrying BGM after user interaction...');
+                                // console.log('🎵 Retrying BGM after user interaction...');
                                 playBackgroundMusic();
                             }
                         }, 500);
@@ -4526,8 +4526,8 @@
                 const character = walletAuth.getCurrentCharacter();
                 
                 AppConfig.debug.log('📱 loadSelectedCharacter debug info:');
-                console.log('- character:', character);
-                console.log('- localStorage selectedCharacter:', localStorage.getItem('selectedCharacter'));
+                // console.log('- character:', character);
+                // console.log('- localStorage selectedCharacter:', localStorage.getItem('selectedCharacter'));
                 
                 if (character) {
                     // Update悬浮聊天框中的character名称
@@ -4541,8 +4541,8 @@
                     // Setup默认VRM文件
                     defaultVrmFile = character.file;
                     
-                    console.log(`✅ Character loaded: ${character.name} (wallet: ${walletAuth.formatAddress(character.walletAddress)})`);
-                    console.log(`📁 Setting defaultVrmFile: ${defaultVrmFile}`);
+                    // console.log(`✅ Character loaded: ${character.name} (wallet: ${walletAuth.formatAddress(character.walletAddress)})`);
+                    // console.log(`📁 Setting defaultVrmFile: ${defaultVrmFile}`);
                     
                     // Setupcharacter头像（基于character.id）
                     if (character.id) {
