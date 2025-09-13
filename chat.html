@@ -3552,6 +3552,7 @@
 
             if (backgroundMusic) {
                 backgroundMusic.volume = musicVolume;
+                console.log('🎵 Background music element found, volume set to:', musicVolume);
 
                 // Music loaded successfully event
                 backgroundMusic.addEventListener('canplaythrough', () => {
@@ -3561,11 +3562,19 @@
                 // Music loading error event
                 backgroundMusic.addEventListener('error', (e) => {
                     console.warn('⚠️ Background music loading failed:', e);
+                    console.warn('⚠️ Audio source:', backgroundMusic.src || backgroundMusic.currentSrc);
                     document.getElementById('music-controls').style.display = 'none';
+                });
+
+                // Add loadstart event for debugging
+                backgroundMusic.addEventListener('loadstart', () => {
+                    console.log('🎵 Started loading background music from:', backgroundMusic.src || backgroundMusic.currentSrc);
                 });
 
                 // Try auto play
                 playBackgroundMusic();
+            } else {
+                console.error('❌ Background music element not found');
             }
         }
 
