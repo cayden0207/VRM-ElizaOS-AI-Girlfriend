@@ -128,9 +128,36 @@ class ElizaOSChatSystem {
         this.createRelationshipIndicator();
         this.createContextDisplay();
     }
-    
-    // createMemoryIndicator function removed
-    
+
+    createMemoryIndicator() {
+        // Create memory indicator UI element
+        const chatHeader = document.querySelector('.chat-header') || document.body;
+
+        this.memoryIndicator = document.createElement('div');
+        this.memoryIndicator.id = 'memory-indicator';
+        this.memoryIndicator.className = 'memory-indicator';
+        this.memoryIndicator.innerHTML = `
+            <div class="memory-status">
+                <span class="brain-icon">🧠</span>
+                <span class="memory-text">Memory: <span id="memory-level">Active</span></span>
+            </div>
+        `;
+
+        this.memoryIndicator.style.cssText = `
+            display: inline-flex;
+            align-items: center;
+            margin-right: 10px;
+            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            font-size: 12px;
+            color: white;
+            backdrop-filter: blur(10px);
+        `;
+
+        chatHeader.appendChild(this.memoryIndicator);
+    }
+
     createRelationshipIndicator() {
         const chatHeader = document.querySelector('.chat-header') || document.body;
         

@@ -1047,15 +1047,36 @@ Language: ${actualLanguage === 'zh' ? 'Respond in Chinese' : actualLanguage === 
             
           } catch (aiError) {
             console.error('❌ OpenAI智能模式失败:', aiError.message);
-            
-            // 如果OpenAI也失败，使用基础后备回复
-            if (normalizedCharId === 'alice') {
-              responseText = `${userName}哥哥你好呀！我是Alice，很开心见到你！今天想聊什么呢～ 😊`;
-            } else if (normalizedCharId === 'ash') {
-              responseText = `${userName}，我是Ash。虽然系统有些问题，但我们还是可以聊天的。`;
-            } else {
-              responseText = `${userName}，我是你的AI伙伴，很高兴和你聊天！`;
-            }
+            console.error('❌ 详细错误信息:', aiError);
+
+            // 如果OpenAI也失败，使用多样化的后备回复
+            const fallbackResponses = {
+              'alice': [
+                `${userName}哥哥你好呀！我是Alice，很开心见到你！今天想聊什么呢～ 😊`,
+                `${userName}哥哥～Alice在这里！虽然系统有点小问题，但我们还是可以聊天的呢！`,
+                `${userName}哥哥，Alice来陪你聊天啦！有什么想说的吗？`
+              ],
+              'ash': [
+                `${userName}，我是Ash。虽然系统有些问题，但我们还是可以聊天的。`,
+                `${userName}，Ash在这里。让我们聊聊吧，有什么想谈的吗？`,
+                `${userName}，我是Ash，准备好和我对话了吗？`
+              ],
+              'miru': [
+                `${userName}，我是Miru～很高兴遇见你！`,
+                `${userName}，Miru在这里等你呢！想聊什么？`,
+                `${userName}，我是可爱的Miru，来和我说话吧～`
+              ]
+            };
+
+            const characterResponses = fallbackResponses[normalizedCharId] || [
+              `${userName}，我是你的AI伙伴，很高兴和你聊天！`,
+              `${userName}，虽然系统有点问题，但我们可以继续聊天！`,
+              `${userName}，我在这里陪你，有什么想说的吗？`
+            ];
+
+            // 随机选择一个回复
+            responseText = characterResponses[Math.floor(Math.random() * characterResponses.length)];
+            console.log('🔄 使用后备回复:', responseText);
           }
           
           const emotion = detectEmotion(responseText);
