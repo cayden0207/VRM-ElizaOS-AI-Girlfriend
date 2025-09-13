@@ -1905,7 +1905,7 @@
                 <div class="music-player-content">
                     <div class="music-controls-row">
                         <button class="music-control-btn">⏮</button>
-                        <button class="music-control-btn play-btn" id="music-toggle" onclick="toggleMusic()">⏸</button>
+                        <button class="music-control-btn play-btn" id="music-toggle" onclick="toggleMusic()">▶</button>
                         <button class="music-control-btn">⏭</button>
                     </div>
                     <div class="volume-control">
@@ -3554,6 +3554,9 @@
             if (backgroundMusic) {
                 backgroundMusic.volume = musicVolume;
                 console.log('🎵 Background music element found, volume set to:', musicVolume);
+
+                // Initialize button state to match isMusicPlaying
+                updateMusicButton();
 
                 // Music loaded successfully event
                 backgroundMusic.addEventListener('canplaythrough', () => {
