@@ -2893,6 +2893,7 @@
 
         // VRM character列表
         const vrmCharacters = {
+            'Alice': 'Main VRM/Alice.vrm',
             'Fliza VRM': 'Main VRM/Fliza VRM.vrm',
             'QuQu_U': 'Main VRM/QuQu_U.vrm',
             'Ash1.0': 'Main VRM/Ash1.0.vrm',
@@ -2908,7 +2909,7 @@
             'NecoMaid_Premium': 'Main VRM/NecoMaid_Premium.vrm',
             'RINDO_Full': 'Main VRM/RINDO_Full.vrm',
             'Rainy': 'Main VRM/Rainy_1.00.vrm',
-            'RearAlice': 'Main VRM/RearAlice_1.0.vrm',
+            'NEKO': 'Main VRM/NEKO.vrm',
             'Vivi_model': 'Main VRM/Vivi_model.vrm',
             'Wolf': 'Main VRM/Wolf_ver1.00(VRM).vrm',
             'Wolferia': 'Main VRM/Wolferia.vrm',
@@ -2930,8 +2931,29 @@
             if (characterName) {
                 vrmPath = vrmCharacters[characterName];
                 if (!vrmPath) {
-                console.error('❌ Character not found:', characterName);
-                    return;
+                    // Try to find character by name mapping for index.html compatibility
+                    const nameToVrmKey = {
+                        'Neco': 'NEKO',
+                        'Nekona': 'NEKONA',
+                        'Alice': 'Alice',
+                        'Ash': 'Ash1.0',
+                        'Fliza': 'Fliza VRM',
+                        'QuQu': 'QuQu_U',
+                        'Imeris': 'IMERIS',
+                        'Rindo': 'RINDO_Full',
+                        'Notia': 'YM_CH_03_Notia',
+                        'Yawl': 'Yawl_Dress',
+                        'Vivi': 'Vivi_model'
+                    };
+                    
+                    const vrmKey = nameToVrmKey[characterName];
+                    if (vrmKey && vrmCharacters[vrmKey]) {
+                        vrmPath = vrmCharacters[vrmKey];
+                        characterName = vrmKey; // Update to VRM key for consistency
+                    } else {
+                        console.error('❌ Character not found:', characterName);
+                        return;
+                    }
                 }
             } else {
                 // Use default or selected character file
@@ -2940,7 +2962,19 @@
                 const selectedCharacterData = localStorage.getItem('selectedCharacter');
                 if (selectedCharacterData) {
                     const character = JSON.parse(selectedCharacterData);
-                    characterName = character.name || 'Fliza';
+                    // Use the file path directly if available, otherwise use name mapping
+                    if (character.file) {
+                        vrmPath = character.file;
+                        characterName = character.name || 'Fliza';
+                        
+                        // Find the VRM key that matches this file path
+                        const vrmKey = Object.keys(vrmCharacters).find(key => vrmCharacters[key] === character.file);
+                        if (vrmKey) {
+                            characterName = vrmKey;
+                        }
+                    } else {
+                        characterName = character.name || 'Fliza';
+                    }
                 } else {
                     characterName = 'Fliza';
                 }
@@ -3681,7 +3715,7 @@
                 'NecoMaid_Premium': 'NecoMaid',
                 'RINDO_Full': 'Rindo',
                 'Rainy': 'Rainy',
-                'RearAlice': 'Alice',
+                'NEKO': 'Neco',
                 'Vivi_model': 'Vivi',
                 'Wolf': 'Wolf',
                 'Wolferia': 'Wolferia',
@@ -3758,7 +3792,7 @@
                 'NecoMaid_Premium': 'character-neco',
                 'RINDO_Full': 'character-rindo',
                 'Rainy': 'character-rainy',
-                'RearAlice': 'character-alice',
+                'NEKO': 'character-neco',
                 'Vivi_model': 'character-vivi',
                 'Wolf': 'character-wolf',
                 'Wolferia': 'character-wolferia',
