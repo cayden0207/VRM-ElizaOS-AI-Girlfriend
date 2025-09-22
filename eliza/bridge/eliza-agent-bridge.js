@@ -260,6 +260,140 @@ class ElizaAgentBridge {
       }
     });
 
+    // 用户profile保存端点 - 匹配前端调用
+    this.app.post('/api/profiles', async (req, res) => {
+      try {
+        const { walletAddress, name, avatarUrl, personality, interests, relationshipStyle } = req.body;
+
+        // 输入验证
+        if (!walletAddress) {
+          return res.status(400).json({
+            success: false,
+            error: 'Wallet address is required'
+          });
+        }
+
+        console.log(`👤 Profile save request: ${walletAddress.slice(0, 8)}...`);
+
+        // 检查用户是否存在
+        let user = await this.databaseAdapter.getAccountByUsername(walletAddress);
+
+        if (!user) {
+          // 如果用户不存在，先创建账户
+          const newUserData = {
+            username: walletAddress,
+            name: name || `用户${walletAddress.slice(0, 6)}`,
+            email: null,
+            avatar_url: avatarUrl || null,
+            details: {
+              walletAddress,
+              registeredAt: new Date().toISOString(),
+              loginCount: 1
+            }
+          };
+
+          user = await this.databaseAdapter.createAccount(newUserData);
+          console.log(`✅ New user created: ${user.username}`);
+        }
+
+        // 准备用户profile数据
+        const profileData = {
+          user_id: user.id,
+          wallet_address: walletAddress,
+          name: name || user.name,
+          avatar_url: avatarUrl || user.avatar_url,
+          personality: personality || null,
+          interests: interests || null,
+          relationship_style: relationshipStyle || null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+
+        // 检查是否已有profile记录
+        const { data: existingProfile } = await this.databaseAdapter.supabase
+          .from('ai_girlfriend_user_profiles')
+          .select('*')
+          .eq('wallet_address', walletAddress)
+          .single();
+
+        let profileResult;
+        if (existingProfile) {
+          // 更新现有profile
+          const { data, error } = await this.databaseAdapter.supabase
+            .from('ai_girlfriend_user_profiles')
+            .update({
+              name: profileData.name,
+              avatar_url: profileData.avatar_url,
+              personality: profileData.personality,
+              interests: profileData.interests,
+              relationship_style: profileData.relationship_style,
+              updated_at: profileData.updated_at
+            })
+            .eq('wallet_address', walletAddress)
+            .select()
+            .single();
+
+          if (error) {
+            console.error('❌ Profile update error:', error);
+            return res.status(500).json({
+              success: false,
+              error: 'Failed to update user profile'
+            });
+          }
+
+          profileResult = data;
+          console.log(`✅ Profile updated: ${walletAddress.slice(0, 8)}...`);
+        } else {
+          // 创建新profile
+          const { data, error } = await this.databaseAdapter.supabase
+            .from('ai_girlfriend_user_profiles')
+            .insert(profileData)
+            .select()
+            .single();
+
+          if (error) {
+            console.error('❌ Profile creation error:', error);
+            return res.status(500).json({
+              success: false,
+              error: 'Failed to create user profile'
+            });
+          }
+
+          profileResult = data;
+          console.log(`✅ Profile created: ${walletAddress.slice(0, 8)}...`);
+        }
+
+        // 返回前端期望的格式
+        res.json({
+          success: true,
+          data: {
+            user: {
+              id: user.username,
+              username: user.username,
+              name: profileResult.name,
+              email: user.email,
+              avatarUrl: profileResult.avatar_url,
+              profile: profileResult
+            }
+          }
+        });
+
+      } catch (error) {
+        console.error('❌ Profile save error:', {
+          error: error.message,
+          stack: error.stack,
+          walletAddress: req.body?.walletAddress?.slice(0, 8) + '...',
+          timestamp: new Date().toISOString()
+        });
+
+        res.status(500).json({
+          success: false,
+          error: 'Failed to save profile',
+          details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+      }
+    });
+
     // 聊天端点 - 使用真正的ElizaOS Agent (增强错误处理)
     this.app.post('/api/chat', async (req, res) => {
       try {
