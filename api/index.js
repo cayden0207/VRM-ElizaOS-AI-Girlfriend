@@ -1,10 +1,13 @@
 // VRM AI 女友系统 - 完整ElizaOS集成版 API
 // 兼容Vercel serverless的ES模块导入方式
 
-// 隐藏ElizaOS相关的无关紧要错误（不影响功能，有后备模式）
+// 调试控制：设置 DEBUG_ELIZA=1 可显示完整错误日志
+const DEBUG_ELIZA = process.env.DEBUG_ELIZA === '1' || process.env.DEBUG_ELIZA === 'true';
+
+// 之前静默的错误现在可通过环境变量控制输出
 process.on('unhandledRejection', (reason, promise) => {
-  if (reason && reason.message && reason.message.includes('databaseAdapter')) {
-    // 静默处理ElizaOS数据库相关错误，因为我们有后备模式
+  if (!DEBUG_ELIZA && reason && reason.message && reason.message.includes('databaseAdapter')) {
+    console.warn('[silenced] Unhandled Rejection (databaseAdapter):', reason?.message);
     return;
   }
   console.error('Unhandled Rejection:', reason);
@@ -859,11 +862,10 @@ export default async function handler(req, res) {
       try {
         console.log(`💬 处理聊天请求: ${userId} -> ${characterId}: "${message}"`);
 
-        // 🔥 直接使用OpenAI，跳过ElizaOS Agent
-        const FORCE_OPENAI = true; // 强制使用OpenAI模式
-
+        // 🔥 仅当设置环境变量时才强制使用OpenAI，默认不强制
+        const FORCE_OPENAI = process.env.FORCE_OPENAI === '1' || process.env.FORCE_OPENAI === 'true';
         if (FORCE_OPENAI) {
-          console.log('🚀 强制使用OpenAI智能模式，跳过ElizaOS');
+          console.warn('🚀 [FORCE_OPENAI=ON] 强制使用OpenAI智能模式，跳过ElizaOS');
           throw new Error('FORCE_OPENAI_MODE');
         }
 
@@ -1035,7 +1037,10 @@ export default async function handler(req, res) {
         }
 
         // 🔄 直接使用OpenAI智能模式
-        console.log('🤖 启用OpenAI智能模式...');
+        console.warn('🤖 启用OpenAI智能模式（ElizaOS路径失败或被强制）:', {
+          reason: error?.message,
+          forced: error?.message === 'FORCE_OPENAI_MODE'
+        });
         
         try {
           // 获取用户资料（保持个性化）
