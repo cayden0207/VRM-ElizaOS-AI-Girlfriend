@@ -2,7 +2,7 @@
 builder = "nixpacks"
 
 [deploy]
-startCommand = "cd eliza && node bridge/eliza-agent-bridge.js"
+startCommand = "node eliza/bridge/eliza-agent-bridge.js"
 restartPolicyType = "always"
 
 [env]
