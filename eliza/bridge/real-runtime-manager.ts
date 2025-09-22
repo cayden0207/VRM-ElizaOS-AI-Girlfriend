@@ -160,6 +160,11 @@ export class RealElizaRuntimeManager {
   }
 
   private transformMessageExamples(examples: any[]): any[] {
+    if (!Array.isArray(examples)) {
+      console.warn('messageExamples is not an array:', examples);
+      return [];
+    }
+
     return examples.map(example => {
       if (Array.isArray(example)) {
         return example.map(msg => ({
@@ -170,6 +175,17 @@ export class RealElizaRuntimeManager {
             source: msg.content?.source
           }
         }));
+      }
+      // If not an array, might be a direct message object
+      if (example && typeof example === 'object') {
+        return [{
+          user: example.user || 'user',
+          content: {
+            text: example.content?.text || example.content || '',
+            action: example.content?.action,
+            source: example.content?.source
+          }
+        }];
       }
       return example;
     });
