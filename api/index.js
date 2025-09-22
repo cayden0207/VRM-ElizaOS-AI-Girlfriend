@@ -18,12 +18,17 @@ import { createClient } from '@supabase/supabase-js';
 // Supabase 客户端
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_ANON_KEY;
+const BRIDGE_URL = process.env.BRIDGE_URL || '';
 
 console.log('🔍 Supabase配置检查:', {
   hasUrl: !!supabaseUrl,
   hasKey: !!supabaseKey,
   urlFirst6: supabaseUrl?.substring(0, 6),
   keyFirst6: supabaseKey?.substring(0, 6)
+});
+console.log('🌉 Bridge配置检查:', {
+  enabled: !!BRIDGE_URL,
+  target: BRIDGE_URL ? BRIDGE_URL.replace(/(https?:\/\/)([^\s]+)/, '$1***') : null
 });
 
 const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
@@ -568,6 +573,19 @@ export default async function handler(req, res) {
   try {
     // 健康检查
     if (url === '/health' || url === '/api/health') {
+      if (BRIDGE_URL) {
+        try {
+          const r = await fetch(`${BRIDGE_URL}/api/health`);
+          const j = await r.json().catch(() => ({}));
+          return res.json({
+            proxied: true,
+            bridge: BRIDGE_URL,
+            upstream: j
+          });
+        } catch (e) {
+          console.warn('⚠️ Bridge health check failed, falling back:', e.message);
+        }
+      }
       return res.json({
         status: 'ok',
         service: 'eliza-os-runtime',
@@ -679,6 +697,21 @@ export default async function handler(req, res) {
 
     // 🆕 用户认证/注册端点
     if (method === 'POST' && (url === '/auth' || url === '/api/auth')) {
+      if (BRIDGE_URL) {
+        try {
+          console.log('🌉 Proxy → Bridge /api/auth');
+          const upstream = await fetch(`${BRIDGE_URL}/api/auth`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(req.body)
+          });
+          const data = await upstream.json();
+          return res.json({ proxied: true, bridge: BRIDGE_URL, ...data });
+        } catch (e) {
+          console.error('❌ Bridge proxy failed (/api/auth):', e.message);
+          // fall through to local handling
+        }
+      }
       const { walletAddress } = req.body;
       
       if (!walletAddress) {
@@ -737,6 +770,17 @@ export default async function handler(req, res) {
 
     // 获取用户资料
     if (method === 'GET' && url.includes('/profiles/')) {
+      if (BRIDGE_URL) {
+        try {
+          console.log('🌉 Proxy → Bridge', url);
+          const upstream = await fetch(`${BRIDGE_URL}${url.startsWith('/api') ? '' : '/api'}${url.replace(/^\/api/, '')}`);
+          const data = await upstream.json();
+          return res.json({ proxied: true, bridge: BRIDGE_URL, ...data });
+        } catch (e) {
+          console.error('❌ Bridge proxy failed (profiles GET):', e.message);
+          // fall through to local handling
+        }
+      }
       console.log(`🛣️ Profile路由匹配，URL: ${url}`);
       
       let userId = null;
@@ -780,6 +824,21 @@ export default async function handler(req, res) {
 
     // Create/更新用户资料
     if (method === 'POST' && (url === '/profiles' || url === '/api/profiles')) {
+      if (BRIDGE_URL) {
+        try {
+          console.log('🌉 Proxy → Bridge /api/profiles');
+          const upstream = await fetch(`${BRIDGE_URL}/api/profiles`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(req.body)
+          });
+          const data = await upstream.json();
+          return res.json({ proxied: true, bridge: BRIDGE_URL, ...data });
+        } catch (e) {
+          console.error('❌ Bridge proxy failed (/api/profiles POST):', e.message);
+          // fall through to local handling
+        }
+      }
       const body = req.body;
       console.log(`💾 保存用户数据:`, body);
 
@@ -834,6 +893,22 @@ export default async function handler(req, res) {
 
     // ElizaOS Chat API
     if (method === 'POST' && (url === '/chat' || url === '/api/chat')) {
+      // Proxy to Bridge if configured
+      if (BRIDGE_URL) {
+        try {
+          console.log('🌉 Proxy → Bridge /api/chat');
+          const upstream = await fetch(`${BRIDGE_URL}/api/chat`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(req.body)
+          });
+          const data = await upstream.json();
+          return res.json({ proxied: true, bridge: BRIDGE_URL, ...data });
+        } catch (e) {
+          console.error('❌ Bridge proxy failed (/api/chat):', e.message);
+          // fall through to local handling
+        }
+      }
       console.log('🎯 API /api/chat请求到达！', {
         method,
         url,
@@ -1332,6 +1407,18 @@ Language: ${actualLanguage === 'zh' ? 'Respond in Chinese' : actualLanguage === 
 
     // 🆕 获取对话历史 - ElizaOS聊天系统需要
     if (method === 'GET' && url.includes('/api/history/')) {
+      // Proxy to Bridge history endpoint if configured
+      if (BRIDGE_URL) {
+        try {
+          console.log('🌉 Proxy → Bridge', url);
+          const upstream = await fetch(`${BRIDGE_URL}${url}`);
+          const data = await upstream.json();
+          return res.json({ proxied: true, bridge: BRIDGE_URL, ...data });
+        } catch (e) {
+          console.error('❌ Bridge proxy failed (history):', e.message);
+          // fall through to local handling
+        }
+      }
       try {
         // 解析URL: /api/history/{userId}/{characterId}
         const urlParts = url.split('/');

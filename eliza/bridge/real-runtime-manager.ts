@@ -110,7 +110,7 @@ export class RealElizaRuntimeManager {
   }
 
   private async loadCharacters(): Promise<void> {
-    const charactersDir = path.join(__dirname, '../characters');
+    const charactersDir = path.join(__dirname, '../agents');
     const files = fs.readdirSync(charactersDir).filter(f => f.endsWith('.json'));
 
     for (const file of files) {
@@ -150,7 +150,7 @@ export class RealElizaRuntimeManager {
           templates: {}
         };
 
-        this.characters.set(characterData.name, character);
+        this.characters.set(characterData.name.toLowerCase(), character);
         elizaLogger.info(`Loaded character: ${characterData.name}`);
       } catch (error) {
         elizaLogger.error(`Failed to load character ${file}:`, error);

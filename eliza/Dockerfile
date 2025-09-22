@@ -36,12 +36,13 @@ RUN chown -R eliza:nodejs /app
 # 切换到非 root 用户
 USER eliza
 
-# 暴露端口
-EXPOSE 3001
+# 暴露端口（桥接服务默认 3000）
+EXPOSE 3000
 
-# 健康检查
+# 健康检查（桥接服务 /api/health）
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3001/health || exit 1
+  CMD curl -f http://localhost:3000/api/health || exit 1
 
-# 启动命令
-CMD ["npm", "start"]
+# 启动命令（运行桥接服务）
+ENV PORT=3000
+CMD ["npm", "run", "start:bridge"]

@@ -2,6 +2,7 @@
   "name": "vrm-eliza-system",
   "version": "3.0.0",
   "type": "module",
+  "main": "index.js",
   "description": "VRM AI女友系统 - ElizaOS完整版",
   "dependencies": {
     "@ai16z/eliza": "^0.1.5",
@@ -14,5 +15,10 @@
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node eliza/bridge/eliza-agent-bridge.js",
+    "start:bridge": "node eliza/bridge/eliza-agent-bridge.js",
+    "dev": "node dev-server.js"
   }
 }
