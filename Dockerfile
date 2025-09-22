@@ -1,37 +1,23 @@
-# Bridge Service Dockerfile (root-level for Railway auto-deploy)
-FROM node:20-alpine
+FROM node:18-alpine
 
 WORKDIR /app
 
-# System deps used by some node modules and healthchecks
-RUN apk add --no-cache \
-    python3 \
-    make \
-    g++ \
-    curl \
-    git
+# Install system dependencies
+RUN apk add --no-cache curl
 
-# Non-root user
-RUN addgroup -g 1001 -S nodejs && adduser -S eliza -u 1001
-
-# Install deps first (better layer cache)
+# Copy package files and install dependencies
 COPY package*.json ./
-COPY tsconfig.json ./ 2>/dev/null || true
 RUN npm ci --only=production && npm cache clean --force
 
-# Copy source
-COPY --chown=eliza:nodejs . .
+# Copy source code
+COPY . .
 
-# Optional build step (repo is JS; keep non-fatal)
-RUN npm run build || echo "Build skipped"
+# Expose the port (Railway will set PORT environment variable)
+EXPOSE $PORT
 
-USER eliza
-
-EXPOSE 3000
-
+# Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3000/api/health || exit 1
+  CMD curl -f http://localhost:$PORT/api/health || exit 1
 
-ENV PORT=3000
+# Start the application
 CMD ["npm", "run", "start:bridge"]
-
