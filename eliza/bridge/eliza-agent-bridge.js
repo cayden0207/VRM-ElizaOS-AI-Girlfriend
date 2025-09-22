@@ -170,6 +170,96 @@ class ElizaAgentBridge {
       });
     });
     
+    // 用户认证端点 - 钱包地址登录/注册
+    this.app.post('/api/auth', async (req, res) => {
+      try {
+        const { walletAddress } = req.body;
+
+        // 输入验证
+        if (!walletAddress) {
+          return res.status(400).json({
+            success: false,
+            error: 'Wallet address is required'
+          });
+        }
+
+        console.log(`🔑 User authentication request: ${walletAddress.slice(0, 8)}...`);
+
+        // 检查用户是否存在
+        let user = await this.databaseAdapter.getAccountByUsername(walletAddress);
+        let isNew = false;
+
+        if (!user) {
+          // 创建新用户 (兼容钱包地址作为username)
+          console.log(`👤 Creating new user: ${walletAddress.slice(0, 8)}...`);
+
+          const newUserData = {
+            username: walletAddress,
+            name: `用户${walletAddress.slice(0, 6)}`,
+            email: null,
+            avatar_url: null,
+            details: {
+              walletAddress,
+              registeredAt: new Date().toISOString(),
+              loginCount: 1
+            }
+          };
+
+          user = await this.databaseAdapter.createAccount(newUserData);
+
+          if (!user) {
+            return res.status(500).json({
+              success: false,
+              error: 'Failed to create user account'
+            });
+          }
+
+          isNew = true;
+          console.log(`✅ New user created: ${user.username}`);
+        } else {
+          // 更新登录计数
+          console.log(`🔄 Existing user login: ${user.username}`);
+          // 注意：实际生产中应该更新last_login等字段
+        }
+
+        // 返回前端期望的格式
+        res.json({
+          success: true,
+          data: {
+            user: {
+              id: user.username,        // 前端期望的ID格式
+              username: user.username,
+              name: user.name,
+              email: user.email,
+              profile: {
+                id: user.id,
+                username: user.username,
+                name: user.name,
+                details: user.details
+              }
+            },
+            isNew
+          }
+        });
+
+        console.log(`✅ User authentication successful: ${user.username} (isNew: ${isNew})`);
+
+      } catch (error) {
+        console.error('❌ Authentication error:', {
+          error: error.message,
+          stack: error.stack,
+          walletAddress: req.body?.walletAddress?.slice(0, 8) + '...',
+          timestamp: new Date().toISOString()
+        });
+
+        res.status(500).json({
+          success: false,
+          error: 'Authentication failed',
+          details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
+      }
+    });
+
     // 聊天端点 - 使用真正的ElizaOS Agent (增强错误处理)
     this.app.post('/api/chat', async (req, res) => {
       try {

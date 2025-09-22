@@ -58,6 +58,33 @@ export class SupabaseDatabaseAdapter {
     }
 
     /**
+     * 通过用户名获取账户信息 (用于钱包地址登录)
+     */
+    async getAccountByUsername(username) {
+        try {
+            const { data, error } = await this.supabase
+                .from('accounts')
+                .select('*')
+                .eq('username', username)
+                .single();
+
+            if (error) {
+                if (error.code === 'PGRST116') {
+                    // No rows found, this is normal for new users
+                    return null;
+                }
+                console.error('Error getting account by username:', error);
+                return null;
+            }
+
+            return data;
+        } catch (error) {
+            console.error('Error in getAccountByUsername:', error);
+            return null;
+        }
+    }
+
+    /**
      * 获取记忆
      */
     async getMemories(params) {
