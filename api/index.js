@@ -595,6 +595,32 @@ export default async function handler(req, res) {
       });
     }
 
+    // 版本/状态诊断端点（便于验证是否已走桥接 + 配置）
+    if (method === 'GET' && (url === '/version' || url === '/api/version')) {
+      const info = {
+        service: 'eliza-os-runtime-proxy',
+        mode: BRIDGE_URL ? 'proxy_to_bridge' : 'local_runtime',
+        bridge: BRIDGE_URL || null,
+        forceOpenAI: process.env.FORCE_OPENAI === '1' || process.env.FORCE_OPENAI === 'true' || false,
+        debugEliza: process.env.DEBUG_ELIZA === '1' || process.env.DEBUG_ELIZA === 'true' || false,
+        supabase: {
+          configured: !!supabase,
+          urlPrefix: supabaseUrl ? supabaseUrl.substring(0, 12) : null
+        },
+        timestamp: new Date().toISOString()
+      };
+      if (BRIDGE_URL) {
+        try {
+          const r = await fetch(`${BRIDGE_URL}/api/system/status`);
+          const upstream = await r.json().catch(() => ({}));
+          return res.json({ proxied: true, bridge: BRIDGE_URL, info, upstream });
+        } catch (e) {
+          return res.json({ proxied: true, bridge: BRIDGE_URL, info, upstream: { error: e.message } });
+        }
+      }
+      return res.json({ proxied: false, info });
+    }
+
     // 🧪 语音 API 测试端点
     if (method === 'GET' && (url === '/voice-test' || url === '/api/voice-test')) {
       return res.json({
@@ -604,6 +630,36 @@ export default async function handler(req, res) {
         keyLength: process.env.ELEVENLABS_API_KEY ? process.env.ELEVENLABS_API_KEY.length : 0,
         timestamp: new Date().toISOString()
       });
+    }
+
+    // 代理桥接的系统状态和角色列表，便于验证
+    if (method === 'GET' && (url === '/api/system/status' || url === '/system/status')) {
+      if (BRIDGE_URL) {
+        try {
+          console.log('🌉 Proxy → Bridge /api/system/status');
+          const upstream = await fetch(`${BRIDGE_URL}/api/system/status`);
+          const data = await upstream.json();
+          return res.json({ proxied: true, bridge: BRIDGE_URL, ...data });
+        } catch (e) {
+          return res.status(502).json({ proxied: true, bridge: BRIDGE_URL, error: e.message });
+        }
+      }
+      return res.status(404).json({ error: 'No local system status' });
+    }
+
+    if (method === 'GET' && (url === '/api/characters' || url === '/characters')) {
+      if (BRIDGE_URL) {
+        try {
+          console.log('🌉 Proxy → Bridge /api/characters');
+          const upstream = await fetch(`${BRIDGE_URL}/api/characters`);
+          const data = await upstream.json();
+          return res.json({ proxied: true, bridge: BRIDGE_URL, ...data });
+        } catch (e) {
+          return res.status(502).json({ proxied: true, bridge: BRIDGE_URL, error: e.message });
+        }
+      }
+      // 无桥接则返回空
+      return res.json({ success: true, data: [] });
     }
 
     // 🎵 语音示范接口 - 简化版本
@@ -770,10 +826,12 @@ export default async function handler(req, res) {
 
     // 获取用户资料
     if (method === 'GET' && url.includes('/profiles/')) {
+      console.log(`🛣️ Profile路由匹配，URL: ${url}`);
       if (BRIDGE_URL) {
         try {
-          console.log('🌉 Proxy → Bridge', url);
-          const upstream = await fetch(`${BRIDGE_URL}${url.startsWith('/api') ? '' : '/api'}${url.replace(/^\/api/, '')}`);
+          console.log('🌉 Proxy → Bridge (profiles GET)');
+          const upstreamUrl = url.startsWith('/api') ? `${BRIDGE_URL}${url}` : `${BRIDGE_URL}/api${url}`;
+          const upstream = await fetch(upstreamUrl);
           const data = await upstream.json();
           return res.json({ proxied: true, bridge: BRIDGE_URL, ...data });
         } catch (e) {
@@ -781,7 +839,6 @@ export default async function handler(req, res) {
           // fall through to local handling
         }
       }
-      console.log(`🛣️ Profile路由匹配，URL: ${url}`);
       
       let userId = null;
       if (url.includes('/api/profiles/')) {
