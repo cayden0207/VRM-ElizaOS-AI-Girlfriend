@@ -1,0 +1,30 @@
+# Ignore large, non-server assets to keep Railway upload small
+
+# Dependencies/build
+node_modules/
+*/node_modules/
+dist/
+build/
+
+# Frontend/static assets not needed for API server
+BG/
+Main VRM/
+mixamo animation/
+three-vrm/
+profile-pic/
+public/
+assets/
+
+# IDE/temp
+.vercel/
+.vscode/
+.claude/
+.DS_Store
+tmp/
+temp/
+
+# Logs
+*.log
+
+# Generated
+i18n.characters.generated.js

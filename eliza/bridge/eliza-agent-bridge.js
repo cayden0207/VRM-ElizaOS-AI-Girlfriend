@@ -5,6 +5,8 @@ import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { createProviders, getProviderConfig } from '../providers/index.js';
+import { SupabaseDatabaseAdapter } from '../database/SupabaseDatabaseAdapter.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,16 +20,17 @@ class ElizaAgentBridge {
     this.app = express();
     this.agents = new Map(); // 存储AgentRuntime实例
     this.characters = new Map(); // 存储角色配置
-    
-    // Supabase客户端
-    if (process.env.SUPABASE_URL && process.env.SUPABASE_ANON_KEY) {
-      this.supabase = createClient(
+
+    // 初始化DatabaseAdapter
+    if (process.env.SUPABASE_URL && (process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY)) {
+      const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
+      this.databaseAdapter = new SupabaseDatabaseAdapter(
         process.env.SUPABASE_URL,
-        process.env.SUPABASE_ANON_KEY
+        supabaseKey
       );
-      console.log('✅ Supabase initialized for memory storage');
+      console.log('✅ SupabaseDatabaseAdapter initialized with', process.env.SUPABASE_SERVICE_KEY ? 'SERVICE_KEY' : 'ANON_KEY');
     }
-    
+
     this.setupMiddleware();
     this.setupRoutes();
   }
@@ -69,41 +72,11 @@ class ElizaAgentBridge {
         }
       };
       
-      // 创建AgentRuntime实例
+      // 创建AgentRuntime实例 - 使用完整的DatabaseAdapter
       const runtime = new AgentRuntime({
         character,
-        databaseAdapter: this.supabase ? {
-          // 使用Supabase作为记忆存储
-          async getMemories(roomId, count = 10) {
-            const { data } = await this.supabase
-              .from('memories')
-              .select('*')
-              .eq('room_id', roomId)
-              .order('created_at', { ascending: false })
-              .limit(count);
-            return data || [];
-          },
-          
-          async createMemory(memory) {
-            const { data } = await this.supabase
-              .from('memories')
-              .insert(memory)
-              .select()
-              .single();
-            return data;
-          },
-          
-          async searchMemories(query, roomId) {
-            const { data } = await this.supabase
-              .from('memories')
-              .select('*')
-              .eq('room_id', roomId)
-              .textSearch('content', query)
-              .limit(5);
-            return data || [];
-          }
-        } : undefined,
-        providers: [],
+        databaseAdapter: this.databaseAdapter,
+        providers: createProviders(),
         actions: [],
         evaluators: [],
         plugins: []
@@ -209,19 +182,23 @@ class ElizaAgentBridge {
         const roomId = `${userId}-${characterId}`;
         
         // 使用ElizaOS Agent处理消息
-        const response = await agent.processMessage({
+        const messageObj = {
           userId,
           roomId,
           content: { text: message },
           createdAt: Date.now()
-        });
+        };
+
+        // 使用正确的ElizaOS方法名
+        const response = await agent.composeState(messageObj);
+        const result = await agent.generateMessage(response);
         
         // 返回响应
         res.json({
           success: true,
           data: {
-            response: response.text || response.content?.text || '...',
-            emotion: response.action || 'neutral',
+            response: result.text || result.content?.text || '...',
+            emotion: result.action || 'neutral',
             memories: response.memories || [],
             context: response.context || {}
           }
@@ -286,11 +263,17 @@ class ElizaAgentBridge {
   
   async start() {
     await this.loadAgents();
-    
+
+    // Log Provider configuration
+    const providerConfig = getProviderConfig();
+    console.log(`🔌 Provider system: ${providerConfig.count} providers loaded`);
+    console.log(`📋 Provider types: ${providerConfig.types.join(', ')}`);
+    console.log(`⚡ Required providers: ${providerConfig.required.join(', ')}`);
+
     const port = process.env.PORT || 3000;
     this.app.listen(port, () => {
       console.log(`🚀 ElizaOS Agent Bridge running on port ${port}`);
-      console.log(`✅ Full ElizaOS integration with AgentRuntime`);
+      console.log(`✅ Full ElizaOS integration with AgentRuntime + Providers`);
       console.log(`🧠 Memory system: ${this.supabase ? 'Supabase' : 'In-memory'}`);
     });
   }
