@@ -6,6 +6,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { createProviders, getProviderConfig } from '../providers/index.js';
+import { createActions, getActionConfig } from '../actions/index.js';
 import { SupabaseDatabaseAdapter } from '../database/SupabaseDatabaseAdapter.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -77,7 +78,7 @@ class ElizaAgentBridge {
         character,
         databaseAdapter: this.databaseAdapter,
         providers: createProviders(),
-        actions: [],
+        actions: createActions(),
         evaluators: [],
         plugins: []
       });
@@ -576,6 +577,12 @@ class ElizaAgentBridge {
     console.log(`📋 Provider types: ${providerConfig.types.join(', ')}`);
     console.log(`⚡ Required providers: ${providerConfig.required.join(', ')}`);
 
+    // Log Action configuration
+    const actionConfig = getActionConfig();
+    console.log(`🎭 Action system: ${actionConfig.count} actions loaded`);
+    console.log(`🎯 Action types: ${actionConfig.types.join(', ')}`);
+    console.log(`⭐ Required actions: ${actionConfig.required.join(', ')}`);
+
     // Log database status
     console.log(`🧠 Database: ${this.databaseAdapter ? 'SupabaseDatabaseAdapter' : 'None'}`);
     if (this.databaseAdapter) {
@@ -606,6 +613,7 @@ class ElizaAgentBridge {
         timestamp: new Date().toISOString(),
         environment: process.env.NODE_ENV || 'development',
         providers: getProviderConfig(),
+        actions: getActionConfig(),
         database: {
           adapter: this.databaseAdapter ? 'SupabaseDatabaseAdapter' : null,
           configured: !!(process.env.SUPABASE_URL && (process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY))
