@@ -18,18 +18,28 @@ const validate = async (runtime, message, state) => {
   try {
     const content = message.content?.text || '';
 
-    // 检查是否包含值得记录的信息
+    // 检查是否包含值得记录的信息 (中英文双语)
     const memoryIndicators = [
-      // 个人信息类
+      // 个人信息类 (中文)
       '我是', '我叫', '我的名字', '我来自', '我住在',
-      // 偏好类
+      // 个人信息类 (英文)
+      'i am', 'my name is', 'i\'m called', 'i come from', 'i live in', 'i\'m from',
+      // 偏好类 (中文)
       '我喜欢', '我不喜欢', '我爱', '我讨厌',
-      // 经历类
+      // 偏好类 (英文)
+      'i like', 'i love', 'i hate', 'i don\'t like', 'i enjoy', 'i prefer',
+      // 经历类 (中文)
       '我们一起', '记得吗', '还记得', '第一次',
-      // 目标类
+      // 经历类 (英文)
+      'we did', 'remember when', 'do you remember', 'first time', 'together',
+      // 目标类 (中文)
       '我想', '我希望', '我的梦想', '我的目标',
-      // 习惯类
-      '我通常', '我经常', '我总是', '我从不'
+      // 目标类 (英文)
+      'i want', 'i hope', 'my dream', 'my goal', 'i wish', 'i plan to',
+      // 习惯类 (中文)
+      '我通常', '我经常', '我总是', '我从不',
+      // 习惯类 (英文)
+      'i usually', 'i often', 'i always', 'i never', 'i typically'
     ];
 
     const hasMemoryContent = memoryIndicators.some(indicator =>
@@ -90,12 +100,12 @@ const extractKeyInformation = (content) => {
     entities: []
   };
 
-  // 提取个人信息
+  // 提取个人信息 (中英文双语)
   const personalPatterns = {
-    name: /我叫(.+)|我的名字是(.+)|我是(.+)/g,
-    location: /我住在(.+)|我来自(.+)|我在(.+)/g,
-    age: /我今年(.+)岁|我(.+)岁/g,
-    job: /我的工作是(.+)|我是(.+)工作|我在(.+)上班/g
+    name: /我叫(.+)|我的名字是(.+)|我是(.+)|my name is (.+)|i am (.+)|i'm (.+)|call me (.+)/gi,
+    location: /我住在(.+)|我来自(.+)|我在(.+)|i live in (.+)|i come from (.+)|i'm from (.+)/gi,
+    age: /我今年(.+)岁|我(.+)岁|i am (.+) years old|i'm (.+) years old/gi,
+    job: /我的工作是(.+)|我是(.+)工作|我在(.+)上班|i work as (.+)|my job is (.+)|i'm a (.+)/gi
   };
 
   for (const [key, pattern] of Object.entries(personalPatterns)) {
@@ -105,10 +115,10 @@ const extractKeyInformation = (content) => {
     }
   }
 
-  // 提取偏好信息
+  // 提取偏好信息 (中英文双语)
   const preferencePatterns = {
-    likes: /我喜欢(.+)|我爱(.+)/g,
-    dislikes: /我不喜欢(.+)|我讨厌(.+)/g
+    likes: /我喜欢(.+)|我爱(.+)|i like (.+)|i love (.+)|i enjoy (.+)/gi,
+    dislikes: /我不喜欢(.+)|我讨厌(.+)|i don't like (.+)|i hate (.+)|i dislike (.+)/gi
   };
 
   for (const [key, pattern] of Object.entries(preferencePatterns)) {

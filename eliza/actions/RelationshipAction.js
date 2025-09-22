@@ -214,13 +214,21 @@ const analyzeInteraction = (content, currentRelationship) => {
  */
 const analyzeSentiment = (content) => {
     const positiveKeywords = [
+      // 中文正面词汇
       '爱', '喜欢', '开心', '高兴', '快乐', '幸福', '甜蜜', '温暖',
-      '谢谢', '感谢', '棒', '好', '赞', 'amazing', '完美', 'beautiful'
+      '谢谢', '感谢', '棒', '好', '赞', '完美', '美丽', '可爱',
+      // 英文正面词汇
+      'love', 'like', 'happy', 'joy', 'wonderful', 'amazing', 'beautiful',
+      'thank', 'thanks', 'great', 'awesome', 'perfect', 'sweet', 'cute'
     ];
 
     const negativeKeywords = [
+      // 中文负面词汇
       '讨厌', '不喜欢', '生气', '愤怒', '伤心', '难过', '失望', '烦恼',
-      '糟糕', '坏', 'terrible', 'awful', '无聊', '厌倦'
+      '糟糕', '坏', '无聊', '厌倦', '痛苦', '悲伤',
+      // 英文负面词汇
+      'hate', 'dislike', 'angry', 'sad', 'upset', 'disappointed', 'terrible',
+      'awful', 'boring', 'bad', 'horrible', 'annoying'
     ];
 
     const positiveCount = positiveKeywords.filter(word => content.includes(word)).length;
@@ -236,11 +244,36 @@ const analyzeSentiment = (content) => {
  */
 const analyzeInteractionType = (content) => {
     const typeKeywords = {
-      romantic: ['爱你', '想你', '亲爱的', '宝贝', '心动', '喜欢你'],
-      intimate: ['秘密', '私人', '只有你', '特别', '重要'],
-      emotional: ['感觉', '情绪', '心情', '开心', '伤心', '担心'],
-      casual: ['今天', '天气', '吃饭', '工作', '学习'],
-      deep: ['人生', '理想', '梦想', '未来', '哲学', '思考']
+      romantic: [
+        // 中文浪漫词汇
+        '爱你', '想你', '亲爱的', '宝贝', '心动', '喜欢你', '爱情', '恋人',
+        // 英文浪漫词汇
+        'love you', 'miss you', 'darling', 'baby', 'sweetheart', 'romantic', 'kiss'
+      ],
+      intimate: [
+        // 中文亲密词汇
+        '秘密', '私人', '只有你', '特别', '重要', '信任', '依靠',
+        // 英文亲密词汇
+        'secret', 'private', 'special', 'important', 'trust', 'intimate', 'personal'
+      ],
+      emotional: [
+        // 中文情感词汇
+        '感觉', '情绪', '心情', '开心', '伤心', '担心', '情感',
+        // 英文情感词汇
+        'feeling', 'emotion', 'mood', 'happy', 'sad', 'worried', 'emotional'
+      ],
+      casual: [
+        // 中文日常词汇
+        '今天', '天气', '吃饭', '工作', '学习', '睡觉', '休息',
+        // 英文日常词汇
+        'today', 'weather', 'eat', 'work', 'study', 'sleep', 'rest', 'daily'
+      ],
+      deep: [
+        // 中文深度词汇
+        '人生', '理想', '梦想', '未来', '哲学', '思考', '意义', '价值',
+        // 英文深度词汇
+        'life', 'dream', 'future', 'philosophy', 'think', 'meaning', 'purpose', 'deep'
+      ]
     };
 
     for (const [type, keywords] of Object.entries(typeKeywords)) {
@@ -281,8 +314,12 @@ const analyzeQualityFactors = (content, currentRelationship) => {
  */
 const detectPersonalSharing = (content) => {
     const personalKeywords = [
+      // 中文个人分享词汇
       '我是', '我叫', '我的', '我喜欢', '我不喜欢', '我觉得',
-      '我的工作', '我的家', '我的朋友', '我的经历'
+      '我的工作', '我的家', '我的朋友', '我的经历', '我的生活',
+      // 英文个人分享词汇
+      'i am', 'my name', 'i like', 'i love', 'i hate', 'i think',
+      'my job', 'my family', 'my friend', 'my life', 'my experience'
     ];
 
     return personalKeywords.some(keyword => content.includes(keyword)) ? 'high' : 'low';
@@ -293,8 +330,12 @@ const detectPersonalSharing = (content) => {
  */
 const detectEmotionalDepth = (content) => {
     const deepEmotionKeywords = [
+      // 中文深度情感词汇
       '感动', '心痛', '幸福', '恐惧', '焦虑', '希望', '绝望',
-      '爱', '恨', '依恋', '思念', '孤独', '温暖'
+      '爱', '恨', '依恋', '思念', '孤独', '温暖', '痛苦', '快乐',
+      // 英文深度情感词汇
+      'touched', 'heartbreak', 'happiness', 'fear', 'anxiety', 'hope', 'despair',
+      'love', 'hate', 'attachment', 'longing', 'lonely', 'warm', 'pain', 'joy'
     ];
 
     const count = deepEmotionKeywords.filter(keyword => content.includes(keyword)).length;
@@ -308,8 +349,12 @@ const detectEmotionalDepth = (content) => {
  */
 const detectSpecialContent = (content) => {
     const specialKeywords = [
+      // 中文特殊内容词汇
       '第一次', '特别', '重要', '难忘', '记住', '永远',
-      '承诺', '约定', '秘密', '只告诉你', '生日', '纪念日'
+      '承诺', '约定', '秘密', '只告诉你', '生日', '纪念日',
+      // 英文特殊内容词汇
+      'first time', 'special', 'important', 'memorable', 'remember', 'forever',
+      'promise', 'commitment', 'secret', 'only tell you', 'birthday', 'anniversary'
     ];
 
     return specialKeywords.some(keyword => content.includes(keyword));
@@ -398,8 +443,9 @@ const detectMilestones = (content, currentRelationship) => {
       });
     }
 
-    // 第一次表白
-    if (content.includes('爱你') || content.includes('喜欢你')) {
+    // 第一次表白 (中英文)
+    if (content.includes('爱你') || content.includes('喜欢你') ||
+        content.includes('love you') || content.includes('like you')) {
       milestones.push({
         type: 'first_confession',
         description: '情感表达',
@@ -407,8 +453,9 @@ const detectMilestones = (content, currentRelationship) => {
       });
     }
 
-    // 分享秘密
-    if (content.includes('秘密') || content.includes('只告诉你')) {
+    // 分享秘密 (中英文)
+    if (content.includes('秘密') || content.includes('只告诉你') ||
+        content.includes('secret') || content.includes('only tell you')) {
       milestones.push({
         type: 'secret_sharing',
         description: '分享秘密',
@@ -416,8 +463,9 @@ const detectMilestones = (content, currentRelationship) => {
       });
     }
 
-    // 重要承诺
-    if (content.includes('承诺') || content.includes('约定')) {
+    // 重要承诺 (中英文)
+    if (content.includes('承诺') || content.includes('约定') ||
+        content.includes('promise') || content.includes('commitment')) {
       milestones.push({
         type: 'promise',
         description: '重要承诺',

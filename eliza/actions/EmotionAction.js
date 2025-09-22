@@ -21,8 +21,9 @@ const validate = async (runtime, message, state) => {
     // 分析消息内容是否包含情感触发词
     const content = message.content?.text?.toLowerCase() || '';
 
-    // 情感触发关键词
+    // 情感触发关键词 (中英文双语)
     const emotionTriggers = [
+      // 中文情感词
       '开心', '高兴', '快乐', '兴奋', '激动',
       '伤心', '难过', '失望', '沮丧',
       '生气', '愤怒', '不满',
@@ -30,7 +31,16 @@ const validate = async (runtime, message, state) => {
       '爱你', '喜欢', '心动',
       '惊讶', '震惊', '意外',
       '困惑', '疑惑', '不明白',
-      '担心', '焦虑', '紧张'
+      '担心', '焦虑', '紧张',
+      // 英文情感词
+      'happy', 'joy', 'excited', 'thrilled', 'delighted',
+      'sad', 'upset', 'disappointed', 'depressed', 'down',
+      'angry', 'mad', 'furious', 'annoyed', 'irritated',
+      'shy', 'nervous', 'embarrassed', 'awkward',
+      'love you', 'like you', 'adore', 'crush', 'heart',
+      'surprised', 'shocked', 'amazed', 'wow',
+      'confused', 'puzzled', 'don\'t understand', '???',
+      'worried', 'anxious', 'concerned', 'afraid'
     ];
 
     const hasEmotionTrigger = emotionTriggers.some(trigger =>
@@ -75,15 +85,15 @@ const handler = async (runtime, message, state, options, callback) => {
  */
 const analyzeEmotion = (content) => {
   const emotionKeywords = {
-    happy: ['开心', '高兴', '快乐', '哈哈', '笑', '好棒'],
-    excited: ['兴奋', '激动', '太棒了', '好厉害', '爱了'],
-    sad: ['伤心', '难过', '失望', '沮丧', '哭'],
-    angry: ['生气', '愤怒', '不满', '讨厌'],
-    shy: ['害羞', '紧张', '尴尬', '不好意思'],
-    love: ['爱你', '喜欢你', '心动', '想你'],
-    surprised: ['惊讶', '震惊', '哇', '天哪'],
-    confused: ['困惑', '疑惑', '不明白', '？？？'],
-    worried: ['担心', '焦虑', '紧张', '害怕']
+    happy: ['开心', '高兴', '快乐', '哈哈', '笑', '好棒', 'happy', 'joy', 'haha', 'laugh', 'great', 'awesome'],
+    excited: ['兴奋', '激动', '太棒了', '好厉害', '爱了', 'excited', 'thrilled', 'amazing', 'fantastic', 'love it'],
+    sad: ['伤心', '难过', '失望', '沮丧', '哭', 'sad', 'upset', 'disappointed', 'depressed', 'cry'],
+    angry: ['生气', '愤怒', '不满', '讨厌', 'angry', 'mad', 'furious', 'hate', 'annoyed'],
+    shy: ['害羞', '紧张', '尴尬', '不好意思', 'shy', 'nervous', 'embarrassed', 'awkward'],
+    love: ['爱你', '喜欢你', '心动', '想你', 'love you', 'like you', 'adore', 'miss you', 'heart'],
+    surprised: ['惊讶', '震惊', '哇', '天哪', 'surprised', 'shocked', 'wow', 'omg', 'amazing'],
+    confused: ['困惑', '疑惑', '不明白', '？？？', 'confused', 'puzzled', 'don\'t understand', '???'],
+    worried: ['担心', '焦虑', '紧张', '害怕', 'worried', 'anxious', 'concerned', 'afraid', 'scared']
   };
 
   for (const [emotion, keywords] of Object.entries(emotionKeywords)) {
