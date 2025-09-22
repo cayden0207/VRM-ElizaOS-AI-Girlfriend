@@ -52,7 +52,7 @@ export class SupabaseDatabaseAdapter implements IDatabaseAdapter {
     try {
       const room: Room = {
         id: roomId,
-        createdAt: Date.now()
+        createdAt: new Date().toISOString()
       };
       
       const { error } = await this.supabase
@@ -118,7 +118,7 @@ export class SupabaseDatabaseAdapter implements IDatabaseAdapter {
           roomId,
           userId,
           userState: state,
-          joinedAt: Date.now()
+          joinedAt: new Date().toISOString()
         });
       
       if (error) {
@@ -398,7 +398,7 @@ export class SupabaseDatabaseAdapter implements IDatabaseAdapter {
         id: `${params.userA}-${params.userB}` as UUID,
         userId: params.userA,
         roomId: '' as UUID,
-        createdAt: Date.now()
+        createdAt: new Date().toISOString()
       };
       
       const { error } = await this.supabase

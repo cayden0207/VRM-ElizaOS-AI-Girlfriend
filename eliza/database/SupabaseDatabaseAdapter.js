@@ -215,6 +215,15 @@ export class SupabaseDatabaseAdapter {
      */
     async createMemory(memory, tableName = 'memories') {
         try {
+            // 修复时间戳格式：如果传入的是数字时间戳，转换为ISO字符串
+            let createdAt = memory.createdAt;
+            if (typeof createdAt === 'number') {
+                // 如果是毫秒时间戳，转换为Date然后格式化
+                createdAt = new Date(createdAt).toISOString();
+            } else if (!createdAt) {
+                createdAt = new Date().toISOString();
+            }
+
             const memoryData = {
                 id: memory.id || crypto.randomUUID(),
                 user_id: memory.userId,
@@ -222,7 +231,7 @@ export class SupabaseDatabaseAdapter {
                 room_id: memory.roomId,
                 content: typeof memory.content === 'string' ? memory.content : JSON.stringify(memory.content),
                 embedding: memory.embedding,
-                created_at: memory.createdAt || new Date().toISOString(),
+                created_at: createdAt,
                 type: memory.type || 'message'
             };
 

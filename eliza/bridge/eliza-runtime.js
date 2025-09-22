@@ -428,7 +428,7 @@ class ElizaOSRuntime {
           userId,
           roomId,
           content: { text: message },
-          createdAt: Date.now(),
+          createdAt: new Date().toISOString(),
           relationship: relationship?.relationship_level || 1
         };
         

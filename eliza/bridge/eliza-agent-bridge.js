@@ -435,7 +435,7 @@ class ElizaAgentBridge {
           userId,
           roomId,
           content: { text: message },
-          createdAt: Date.now()
+          createdAt: new Date().toISOString()
         };
 
         console.log(`🔄 Processing message for room: ${roomId}`);

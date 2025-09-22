@@ -237,7 +237,7 @@ export class RealElizaRuntimeManager {
         userId: userUUID,
         content,
         roomId: roomUUID,
-        createdAt: Date.now()
+        createdAt: new Date().toISOString()
       };
 
       // Create state for processing
