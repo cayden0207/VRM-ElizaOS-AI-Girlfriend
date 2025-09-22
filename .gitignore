@@ -68,3 +68,8 @@ build/
 
 # Generated files that can be recreated
 i18n.characters.generated.js
+
+# ElizaOS cache and model files
+eliza/cache/
+*.onnx
+*.bin

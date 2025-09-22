@@ -85,6 +85,71 @@ export class SupabaseDatabaseAdapter {
     }
 
     /**
+     * 获取参与者的房间列表 - ElizaOS需要
+     */
+    async getRoomsForParticipants(userIds) {
+        try {
+            console.log('Getting rooms for participants:', userIds);
+
+            const { data, error } = await this.supabase
+                .from('participants')
+                .select(`
+                    room_id,
+                    rooms!inner(*)
+                `)
+                .in('user_id', userIds);
+
+            if (error) {
+                console.error('Error getting rooms for participants:', error);
+                return [];
+            }
+
+            // 返回去重的房间列表
+            const uniqueRooms = data.reduce((acc, item) => {
+                if (!acc.find(room => room.id === item.room_id)) {
+                    acc.push({
+                        id: item.room_id,
+                        ...item.rooms
+                    });
+                }
+                return acc;
+            }, []);
+
+            return uniqueRooms;
+        } catch (error) {
+            console.error('Error in getRoomsForParticipants:', error);
+            return [];
+        }
+    }
+
+    /**
+     * 根据房间ID列表获取记忆 - ElizaOS需要
+     */
+    async getMemoriesByRoomIds(params) {
+        try {
+            const { roomIds, count = 10, unique = false, tableName = 'memories' } = params;
+            console.log('Getting memories by room IDs:', roomIds);
+
+            const { data, error } = await this.supabase
+                .from(tableName)
+                .select('*')
+                .in('room_id', roomIds)
+                .order('created_at', { ascending: false })
+                .limit(count);
+
+            if (error) {
+                console.error('Error getting memories by room IDs:', error);
+                return [];
+            }
+
+            return data || [];
+        } catch (error) {
+            console.error('Error in getMemoriesByRoomIds:', error);
+            return [];
+        }
+    }
+
+    /**
      * 获取记忆
      */
     async getMemories(params) {
