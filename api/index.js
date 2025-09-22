@@ -958,18 +958,8 @@ export default async function handler(req, res) {
 
         console.log('📝 ElizaOS提取的回复:', responseText);
 
-        // 检查ElizaOS回复质量，如果是重复或无效回复，强制使用OpenAI后备
-        const isLowQualityResponse =
-          !responseText ||
-          responseText === "..." ||
-          responseText.length < 10 ||
-          (responseText.includes('宝贝哥哥') && responseText.includes('Alice来陪你聊天啦')) ||
-          (responseText.includes('虽然系统有点小问题'));
-
-        if (isLowQualityResponse) {
-          console.log('⚠️ ElizaOS回复质量低，强制使用OpenAI后备模式');
-          throw new Error('ElizaOS response quality too low, fallback to OpenAI');
-        }
+        // ElizaOS响应直接使用，不进行质量检查和回退
+        console.log('📝 ElizaOS回复已接受:', responseText);
 
         // 检测情感
         const emotion = detectEmotion(responseText);
