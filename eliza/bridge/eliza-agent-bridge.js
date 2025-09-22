@@ -170,17 +170,41 @@ class ElizaAgentBridge {
       });
     });
     
-    // 聊天端点 - 使用真正的ElizaOS Agent
+    // 聊天端点 - 使用真正的ElizaOS Agent (增强错误处理)
     this.app.post('/api/chat', async (req, res) => {
       try {
         const { userId, characterId, message } = req.body;
-        
-        // 获取或创建Agent
-        const agent = await this.getOrCreateAgent(characterId);
-        
+
+        // 输入验证
+        if (!userId || !characterId || !message) {
+          return res.status(400).json({
+            success: false,
+            error: 'Missing required fields: userId, characterId, message'
+          });
+        }
+
+        console.log(`💬 Chat request: ${userId} → ${characterId}: "${message.substring(0, 50)}..."`);
+
+        // 获取或创建Agent (with retry)
+        let agent;
+        let retryCount = 0;
+        const maxRetries = 3;
+
+        while (retryCount < maxRetries) {
+          try {
+            agent = await this.getOrCreateAgent(characterId);
+            break;
+          } catch (agentError) {
+            retryCount++;
+            console.warn(`⚠️  Agent creation attempt ${retryCount}/${maxRetries} failed:`, agentError.message);
+            if (retryCount >= maxRetries) throw agentError;
+            await new Promise(resolve => setTimeout(resolve, 1000)); // 1s delay
+          }
+        }
+
         // 创建会话房间ID
         const roomId = `${userId}-${characterId}`;
-        
+
         // 使用ElizaOS Agent处理消息
         const messageObj = {
           userId,
@@ -189,26 +213,70 @@ class ElizaAgentBridge {
           createdAt: Date.now()
         };
 
-        // 使用正确的ElizaOS方法名
-        const response = await agent.composeState(messageObj);
-        const result = await agent.generateMessage(response);
-        
+        console.log(`🔄 Processing message for room: ${roomId}`);
+
+        // 使用正确的ElizaOS方法名 (with timeout)
+        const processingTimeout = 30000; // 30 seconds
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error('Processing timeout')), processingTimeout)
+        );
+
+        const processMessage = async () => {
+          const response = await agent.composeState(messageObj);
+          const result = await agent.generateMessage(response);
+          return { response, result };
+        };
+
+        const { response, result } = await Promise.race([
+          processMessage(),
+          timeoutPromise
+        ]);
+
+        console.log(`✅ Message processed successfully for ${characterId}`);
+
         // 返回响应
         res.json({
           success: true,
           data: {
-            response: result.text || result.content?.text || '...',
+            response: result.text || result.content?.text || '抱歉，我现在无法回应。',
             emotion: result.action || 'neutral',
             memories: response.memories || [],
-            context: response.context || {}
+            context: response.context || {},
+            timestamp: new Date().toISOString(),
+            characterId,
+            userId
           }
         });
-        
+
       } catch (error) {
-        console.error('Chat error:', error);
-        res.status(500).json({
+        console.error('❌ Chat error:', {
+          error: error.message,
+          stack: error.stack,
+          userId: req.body?.userId,
+          characterId: req.body?.characterId,
+          timestamp: new Date().toISOString()
+        });
+
+        // 不同类型的错误返回不同状态码
+        let statusCode = 500;
+        let errorMessage = '内部服务器错误';
+
+        if (error.message.includes('timeout')) {
+          statusCode = 408;
+          errorMessage = '请求超时，请稍后重试';
+        } else if (error.message.includes('not found')) {
+          statusCode = 404;
+          errorMessage = '找不到指定的角色';
+        } else if (error.message.includes('validation')) {
+          statusCode = 400;
+          errorMessage = '请求参数无效';
+        }
+
+        res.status(statusCode).json({
           success: false,
-          error: error.message
+          error: errorMessage,
+          details: process.env.NODE_ENV === 'development' ? error.message : undefined,
+          timestamp: new Date().toISOString()
         });
       }
     });
@@ -264,17 +332,90 @@ class ElizaAgentBridge {
   async start() {
     await this.loadAgents();
 
-    // Log Provider configuration
-    const providerConfig = getProviderConfig();
-    console.log(`🔌 Provider system: ${providerConfig.count} providers loaded`);
-    console.log(`📋 Provider types: ${providerConfig.types.join(', ')}`);
-    console.log(`⚡ Required providers: ${providerConfig.required.join(', ')}`);
+    // Enhanced monitoring and error tracking
+    this.logSystemStatus();
+    this.setupHealthMonitoring();
 
     const port = process.env.PORT || 3000;
     this.app.listen(port, () => {
       console.log(`🚀 ElizaOS Agent Bridge running on port ${port}`);
       console.log(`✅ Full ElizaOS integration with AgentRuntime + Providers`);
-      console.log(`🧠 Memory system: ${this.supabase ? 'Supabase' : 'In-memory'}`);
+      this.logEnvironmentStatus();
+    });
+  }
+
+  logSystemStatus() {
+    // Log Provider configuration
+    const providerConfig = getProviderConfig();
+    console.log('\n📊 SYSTEM STATUS REPORT:');
+    console.log(`🔌 Provider system: ${providerConfig.count} providers loaded`);
+    console.log(`📋 Provider types: ${providerConfig.types.join(', ')}`);
+    console.log(`⚡ Required providers: ${providerConfig.required.join(', ')}`);
+
+    // Log database status
+    console.log(`🧠 Database: ${this.databaseAdapter ? 'SupabaseDatabaseAdapter' : 'None'}`);
+    if (this.databaseAdapter) {
+      console.log(`📡 Supabase URL: ${process.env.SUPABASE_URL ? 'Configured' : 'Missing'}`);
+      console.log(`🔑 Supabase Key: ${process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY ? 'Configured' : 'Missing'}`);
+    }
+
+    // Log OpenAI status
+    console.log(`🤖 OpenAI API: ${process.env.OPENAI_API_KEY ? 'Configured' : 'Missing'}`);
+    console.log('\n');
+  }
+
+  logEnvironmentStatus() {
+    console.log('\n🌍 ENVIRONMENT STATUS:');
+    console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🏠 Loaded characters: ${this.characters.size}`);
+    console.log(`🚀 Active agents: ${this.agents.size}`);
+    console.log(`⏰ Started at: ${new Date().toISOString()}`);
+    console.log('\n');
+  }
+
+  setupHealthMonitoring() {
+    // Health monitoring endpoint with detailed status
+    this.app.get('/api/system/status', (req, res) => {
+      const status = {
+        service: 'eliza-agent-bridge',
+        version: '2.0.0',
+        timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || 'development',
+        providers: getProviderConfig(),
+        database: {
+          adapter: this.databaseAdapter ? 'SupabaseDatabaseAdapter' : null,
+          configured: !!(process.env.SUPABASE_URL && (process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY))
+        },
+        agents: {
+          loaded: this.characters.size,
+          active: this.agents.size,
+          preloaded: ['alice', 'ash', 'bobo']
+        },
+        apis: {
+          openai: !!process.env.OPENAI_API_KEY,
+          elevenlabs: !!process.env.ELEVENLABS_API_KEY
+        }
+      };
+
+      res.json({
+        success: true,
+        data: status
+      });
+    });
+
+    // Performance monitoring
+    this.app.use('/api/chat', (req, res, next) => {
+      req.startTime = Date.now();
+      const originalSend = res.send;
+      res.send = function(data) {
+        const responseTime = Date.now() - req.startTime;
+        console.log(`📊 Chat API Response: ${responseTime}ms | Character: ${req.body?.characterId || 'unknown'} | User: ${req.body?.userId || 'unknown'}`);
+        if (responseTime > 2000) {
+          console.warn(`⚠️  SLOW RESPONSE: ${responseTime}ms exceeds 2000ms threshold`);
+        }
+        originalSend.call(this, data);
+      };
+      next();
     });
   }
 }
