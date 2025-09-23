@@ -196,14 +196,14 @@ export class SupabaseDatabaseAdapter {
                 .from('memories')
                 .select('*')
                 .eq('id', memoryId)
-                .single();
+                .maybeSingle();
 
             if (error) {
-                console.error('Error getting memory by id:', error);
+                console.warn('Warning getting memory by id (may be not found):', error.message || error);
                 return null;
             }
 
-            return data;
+            return data || null;
         } catch (error) {
             console.error('Error in getMemoryById:', error);
             return null;
@@ -225,7 +225,7 @@ export class SupabaseDatabaseAdapter {
             }
 
             const memoryData = {
-                id: memory.id || crypto.randomUUID(),
+                id: memory.id || randomUUID(),
                 user_id: memory.userId,
                 agent_id: memory.agentId,
                 room_id: memory.roomId,
@@ -249,6 +249,68 @@ export class SupabaseDatabaseAdapter {
             return data;
         } catch (error) {
             console.error('Error in createMemory:', error);
+            return false;
+        }
+    }
+
+    /**
+     * 创建/更新文档（用于知识导入）
+     */
+    async createDocument(doc) {
+        try {
+            const payload = {
+                id: doc.id || randomUUID(),
+                user_id: doc.userId || doc.user_id || null,
+                content: doc.content,
+                metadata: typeof doc.metadata === 'string' ? doc.metadata : (doc.metadata || {}),
+                created_at: doc.created_at || new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            };
+
+            const { data, error } = await this.supabase
+                .from('documents')
+                .upsert(payload, { onConflict: 'id' })
+                .select()
+                .maybeSingle();
+
+            if (error) {
+                console.error('Error creating/upserting document:', error);
+                return false;
+            }
+            return data || payload;
+        } catch (error) {
+            console.error('Error in createDocument:', error);
+            return false;
+        }
+    }
+
+    /**
+     * 创建/更新片段（用于知识导入）
+     */
+    async createFragment(fragment) {
+        try {
+            const payload = {
+                id: fragment.id || randomUUID(),
+                document_id: fragment.document_id || fragment.documentId || null,
+                content: fragment.content,
+                metadata: typeof fragment.metadata === 'string' ? fragment.metadata : (fragment.metadata || {}),
+                created_at: fragment.created_at || new Date().toISOString(),
+                updated_at: new Date().toISOString()
+            };
+
+            const { data, error } = await this.supabase
+                .from('fragments')
+                .upsert(payload, { onConflict: 'id' })
+                .select()
+                .maybeSingle();
+
+            if (error) {
+                console.error('Error creating/upserting fragment:', error);
+                return false;
+            }
+            return data || payload;
+        } catch (error) {
+            console.error('Error in createFragment:', error);
             return false;
         }
     }
