@@ -58,19 +58,12 @@ class ElizaAgentBridge {
 
   async resolveAccountId({ accountId, walletAddress, legacyUserId }) {
     const supabase = this.databaseAdapter?.supabase;
-    const disableProfileDb = process.env.DISABLE_PROFILE_DB === '1' || process.env.DISABLE_PROFILE_DB === 'true';
-
-    // Fast-path: DB writes disabled — derive canonical ID without touching DB
-    if (disableProfileDb || !supabase) {
-      if (this.isUuid(accountId)) {
-        return { accountId, isNew: false, username: null, legacyUserId: legacyUserId || null };
-      }
-      const wallet = (walletAddress || this.parseWalletFromLegacy(legacyUserId) || this.parseWalletFromLegacy(accountId) || accountId || '').toString().toLowerCase();
-      if (wallet && wallet.startsWith('0x')) {
-        const id = `wallet_${wallet}`;
-        return { accountId: id, isNew: false, username: wallet, legacyUserId: id };
-      }
-      return { accountId: accountId || legacyUserId || null, isNew: false, username: null, legacyUserId: legacyUserId || null };
+    if (!supabase) {
+      // 最低限度回退：允许传 UUID 直接用；否则兼容 wallet_ 前缀（仅在极端情况下）
+      if (this.isUuid(accountId)) return { accountId, isNew: false, username: null, legacyUserId: legacyUserId || null };
+      const wallet = (walletAddress || this.parseWalletFromLegacy(legacyUserId) || '').toString().toLowerCase();
+      if (wallet && wallet.startsWith('0x')) return { accountId: `wallet_${wallet}`, isNew: false, username: wallet, legacyUserId: `wallet_${wallet}` };
+      return { accountId: accountId || null, isNew: false, username: null, legacyUserId: legacyUserId || null };
     }
 
     // 1) canonical UUID provided
@@ -322,23 +315,58 @@ class ElizaAgentBridge {
         if (!walletAddress && !accountId) {
           return res.status(400).json({ success: false, error: 'walletAddress or accountId is required' });
         }
-        const disableProfileDb = process.env.DISABLE_PROFILE_DB === '1' || process.env.DISABLE_PROFILE_DB === 'true';
-        const { accountId: accId, isNew, username, legacyUserId } = await this.resolveAccountId({ walletAddress, accountId });
-        if (!accId) return res.status(500).json({ success: false, error: 'Failed to resolve account' });
+        const supabase = this.databaseAdapter?.supabase;
+        const wallet = (walletAddress || '').toString().toLowerCase();
 
-        let profile = null;
-        if (!disableProfileDb && this.databaseAdapter?.supabase) {
-          try {
-            const { data: prof } = await this.databaseAdapter.supabase
-              .from('user_profiles')
-              .select('*')
-              .eq('account_id', accId)
-              .maybeSingle();
-            profile = prof || null;
-          } catch (_) {}
+        // 如果传了 accountId 且为 UUID，直接返回
+        if (this.isUuid(accountId)) {
+          return res.json({ success: true, data: { accountId, legacyUserId: null, username: null, isNew: false } });
         }
 
-        res.json({ success: true, data: { accountId: accId, legacyUserId: legacyUserId || (username ? `wallet_${username}` : null), username: username || null, isNew: !!isNew, profile } });
+        if (!wallet || !wallet.startsWith('0x')) {
+          return res.status(400).json({ success: false, error: 'walletAddress is required and must start with 0x' });
+        }
+
+        // 1) 查 identity
+        let accId = null; let isNew = false;
+        const { data: ident } = await supabase
+          .from('account_identities')
+          .select('account_id')
+          .eq('provider','wallet')
+          .eq('identifier', wallet)
+          .maybeSingle();
+        if (ident?.account_id) {
+          accId = ident.account_id;
+        } else {
+          // 2) 插入 accounts
+          const { data: acc, error: e1 } = await supabase
+            .from('accounts')
+            .insert({ username: wallet, details: { createdFrom: 'wallet' } })
+            .select()
+            .maybeSingle();
+          if (e1 && e1.code !== '23505') {
+            console.error('create account error:', e1);
+            return res.status(500).json({ success: false, error: 'Failed to create account' });
+          }
+          if (acc?.id) {
+            accId = acc.id; isNew = true;
+          } else {
+            const { data: acc2, error: e2 } = await supabase
+              .from('accounts')
+              .select('id')
+              .eq('username', wallet)
+              .maybeSingle();
+            if (e2 || !acc2?.id) return res.status(500).json({ success: false, error: 'Account lookup failed' });
+            accId = acc2.id;
+          }
+          // 3) 插入 identity
+          const { error: e3 } = await supabase
+            .from('account_identities')
+            .insert({ account_id: accId, provider: 'wallet', identifier: wallet });
+          if (e3 && e3.code !== '23505') console.warn('create identity warn:', e3.message);
+        }
+
+        return res.json({ success: true, data: { accountId: accId, legacyUserId: `wallet_${wallet}`, username: wallet, isNew } });
       } catch (error) {
         console.error('❌ Authentication error:', {
           error: error.message,
@@ -560,48 +588,51 @@ class ElizaAgentBridge {
       }
     });
 
-    // 获取用户资料（支持 accountId 或 legacy wallet_ 前缀）
-    this.app.get('/api/profiles/:userId', async (req, res) => {
+    // 读取用户资料（规范）
+    this.app.get('/api/profiles/:accountId', async (req, res) => {
       try {
-        const idParam = req.params.userId;
-        if (!idParam) return res.status(400).json({ error: 'User ID is required' });
-
+        const accountId = req.params.accountId;
+        if (!accountId) return res.status(400).json({ success: false, error: 'accountId is required' });
         const supabase = this.databaseAdapter?.supabase;
         if (!supabase) return res.json({ success: true, profile: null });
-
-        const accountId = await this.resolveAccountIdFromParam(idParam);
-        // 优先 user_profiles（canonical）
-        const { data: prof, error: profErr } = await supabase
+        const { data, error } = await supabase
           .from('user_profiles')
           .select('*')
           .eq('account_id', accountId)
           .maybeSingle();
-        if (!profErr && prof) {
-          return res.json({ success: true, profile: prof });
-        }
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        return res.json({ success: true, profile: data || null });
+      } catch (e) {
+        return res.status(500).json({ success: false, error: e.message });
+      }
+    });
 
-        // 兼容旧 users 表（通过 wallet identity 找回 legacy id）
-        try {
-          const { data: idt } = await supabase
-            .from('account_identities')
-            .select('identifier')
-            .eq('provider', 'wallet')
-            .eq('account_id', accountId)
-            .maybeSingle();
-          if (idt?.identifier) {
-            const dbId = `wallet_${idt.identifier}`;
-            const { data: legacy } = await supabase
-              .from('users')
-              .select('*')
-              .eq('id', dbId)
-              .maybeSingle();
-            return res.json({ success: true, profile: legacy || null });
-          }
-        } catch (_) {}
-
-        return res.json({ success: true, profile: null });
-      } catch (error) {
-        return res.status(500).json({ success: false, error: error.message });
+    // 写入/更新用户资料（规范）
+    this.app.post('/api/profiles', async (req, res) => {
+      try {
+        const { accountId, name, avatarUrl, personality, interests, relationshipStyle } = req.body || {};
+        if (!accountId) return res.status(400).json({ success: false, error: 'accountId is required' });
+        const supabase = this.databaseAdapter?.supabase;
+        if (!supabase) return res.status(500).json({ success: false, error: 'database unavailable' });
+        const payload = {
+          account_id: accountId,
+          name: name || null,
+          avatar_url: avatarUrl || null,
+          personality: personality || null,
+          interests: interests || null,
+          relationship_style: relationshipStyle || null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        };
+        const { data, error } = await supabase
+          .from('user_profiles')
+          .upsert(payload, { onConflict: 'account_id' })
+          .select()
+          .maybeSingle();
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        return res.json({ success: true, profile: data || payload });
+      } catch (e) {
+        return res.status(500).json({ success: false, error: e.message });
       }
     });
   }
