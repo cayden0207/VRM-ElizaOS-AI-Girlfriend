@@ -11,9 +11,9 @@ const AppConfig = {
             baseURL: 'http://localhost:3001',
             timeout: 10000
         },
-        // Production environment - point to Bridge (single, stable Node service)
+        // Production environment - point to custom API domain (CNAME to Bridge)
         production: {
-            baseURL: 'https://vrm-elizaos-ai-girlfriend-production.up.railway.app',
+            baseURL: 'https://api.xwaifus.com',
             timeout: 15000
         }
     },
