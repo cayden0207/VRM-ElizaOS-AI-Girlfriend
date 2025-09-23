@@ -913,15 +913,35 @@ export default async function handler(req, res) {
       if (BRIDGE_URL) {
         try {
           console.log('🌉 Proxy → Bridge /api/chat');
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 15000);
           const upstream = await fetch(`${BRIDGE_URL}/api/chat`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(req.body)
+            body: JSON.stringify(req.body),
+            signal: controller.signal
           });
-          const data = await upstream.json();
+          clearTimeout(timeout);
+          if (!upstream.ok) {
+            console.warn('⚠️ Upstream /api/chat not OK:', upstream.status, upstream.statusText);
+            throw new Error(`Upstream status ${upstream.status}`);
+          }
+          let data;
+          try {
+            data = await upstream.json();
+          } catch (parseErr) {
+            console.error('⚠️ Upstream /api/chat JSON parse failed:', parseErr.message);
+            throw parseErr;
+          }
+          // If upstream explicitly reports failure or missing payload, fall back locally
+          if (data && (data.success === false || (data.status === 'error') || (!data.data && data.error))) {
+            console.warn('⚠️ Upstream /api/chat indicated failure, falling back locally:', data);
+            throw new Error('Upstream indicated failure');
+          }
+          // Otherwise return upstream result
           return res.json({ proxied: true, bridge: BRIDGE_URL, ...data });
         } catch (e) {
-          console.error('❌ Bridge proxy failed (/api/chat):', e.message);
+          console.error('❌ Bridge proxy failed (/api/chat), using local handling:', e.message);
           // fall through to local handling
         }
       }
