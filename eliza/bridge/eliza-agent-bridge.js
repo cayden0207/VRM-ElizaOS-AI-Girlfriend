@@ -421,9 +421,13 @@ class ElizaAgentBridge {
 
     // 聊天端点 - 使用真正的ElizaOS Agent (增强错误处理)
     this.app.post('/api/chat', async (req, res) => {
+      // 先在 try 外安全提取并规范化，避免 catch 作用域问题
+      const body = req.body || {};
+      const userId = body.userId;
+      const characterId = body.characterId;
+      const message = body.message;
+      const normalizedCharacterId = this.normalizeId(characterId);
       try {
-        const { userId, characterId, message } = req.body;
-        const normalizedCharacterId = this.normalizeId(characterId);
 
         // 输入验证
         if (!userId || !characterId || !message) {
@@ -528,8 +532,8 @@ class ElizaAgentBridge {
         console.error('❌ Chat error:', {
           error: error.message,
           stack: error.stack,
-          userId: req.body?.userId,
-          characterId: normalizedCharacterId || req.body?.characterId,
+          userId: body?.userId,
+          characterId: normalizedCharacterId || body?.characterId,
           timestamp: new Date().toISOString()
         });
 

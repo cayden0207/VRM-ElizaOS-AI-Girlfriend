@@ -11,6 +11,17 @@ export class SupabaseDatabaseAdapter {
         console.log('✅ SupabaseDatabaseAdapter initialized');
     }
 
+    mapTableName(tableName) {
+        const map = {
+            messages: 'memories',
+            message_documents: 'documents',
+            message_fragments: 'fragments'
+        };
+        if (!tableName || typeof tableName !== 'string') return 'memories';
+        const t = tableName.toLowerCase();
+        return map[t] || t;
+    }
+
     /**
      * 获取账户信息
      */
@@ -128,10 +139,11 @@ export class SupabaseDatabaseAdapter {
     async getMemoriesByRoomIds(params) {
         try {
             const { roomIds, count = 10, unique = false, tableName = 'memories' } = params;
+            const tbl = this.mapTableName(tableName);
             console.log('Getting memories by room IDs:', roomIds);
 
             const { data, error } = await this.supabase
-                .from(tableName)
+                .from(tbl)
                 .select('*')
                 .in('room_id', roomIds)
                 .order('created_at', { ascending: false })
@@ -155,9 +167,10 @@ export class SupabaseDatabaseAdapter {
     async getMemories(params) {
         try {
             const { roomId, count = 10, unique = false, tableName = 'memories' } = params;
+            const tbl = this.mapTableName(tableName);
 
             let query = this.supabase
-                .from(tableName)
+                .from(tbl)
                 .select('*')
                 .order('created_at', { ascending: false });
 
@@ -328,9 +341,10 @@ export class SupabaseDatabaseAdapter {
                 match_count = 10,
                 unique = false
             } = params;
+            const tbl = this.mapTableName(tableName);
 
             let query = this.supabase
-                .from(tableName)
+                .from(tbl)
                 .select('*')
                 .order('created_at', { ascending: false });
 
