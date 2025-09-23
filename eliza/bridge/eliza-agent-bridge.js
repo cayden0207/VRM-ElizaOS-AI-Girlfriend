@@ -58,7 +58,20 @@ class ElizaAgentBridge {
 
   async resolveAccountId({ accountId, walletAddress, legacyUserId }) {
     const supabase = this.databaseAdapter?.supabase;
-    if (!supabase) return { accountId: accountId || null, isNew: false, username: null, legacyUserId: legacyUserId || null };
+    const disableProfileDb = process.env.DISABLE_PROFILE_DB === '1' || process.env.DISABLE_PROFILE_DB === 'true';
+
+    // Fast-path: DB writes disabled — derive canonical ID without touching DB
+    if (disableProfileDb || !supabase) {
+      if (this.isUuid(accountId)) {
+        return { accountId, isNew: false, username: null, legacyUserId: legacyUserId || null };
+      }
+      const wallet = (walletAddress || this.parseWalletFromLegacy(legacyUserId) || this.parseWalletFromLegacy(accountId) || accountId || '').toString().toLowerCase();
+      if (wallet && wallet.startsWith('0x')) {
+        const id = `wallet_${wallet}`;
+        return { accountId: id, isNew: false, username: wallet, legacyUserId: id };
+      }
+      return { accountId: accountId || legacyUserId || null, isNew: false, username: null, legacyUserId: legacyUserId || null };
+    }
 
     // 1) canonical UUID provided
     if (this.isUuid(accountId)) {
@@ -137,7 +150,16 @@ class ElizaAgentBridge {
   }
 
   async resolveAccountIdFromParam(idParam) {
+    const disableProfileDb = process.env.DISABLE_PROFILE_DB === '1' || process.env.DISABLE_PROFILE_DB === 'true';
     if (this.isUuid(idParam)) return idParam;
+    if (disableProfileDb) {
+      // In disabled mode, keep legacy id as canonical
+      const legacy = typeof idParam === 'string' && idParam.startsWith('wallet_') ? idParam : null;
+      const wallet = this.parseWalletFromLegacy(idParam) || (typeof idParam === 'string' && idParam.startsWith('0x') ? idParam.toLowerCase() : null);
+      if (legacy) return legacy;
+      if (wallet) return `wallet_${wallet}`;
+      return idParam;
+    }
     const wallet = this.parseWalletFromLegacy(idParam) || (typeof idParam === 'string' && idParam.startsWith('0x') ? idParam : null);
     const { accountId } = await this.resolveAccountId({ walletAddress: wallet, legacyUserId: idParam });
     return accountId || idParam; // fallback to original for compatibility
@@ -293,40 +315,30 @@ class ElizaAgentBridge {
       });
     });
     
-    // 用户认证端点（统一 accounts + account_identities，兼容 legacy）
+    // 用户认证端点（统一 accounts + account_identities，兼容 legacy；当禁用时不写库）
     this.app.post('/api/auth', async (req, res) => {
       try {
         const { walletAddress, accountId } = req.body || {};
         if (!walletAddress && !accountId) {
           return res.status(400).json({ success: false, error: 'walletAddress or accountId is required' });
         }
-
+        const disableProfileDb = process.env.DISABLE_PROFILE_DB === '1' || process.env.DISABLE_PROFILE_DB === 'true';
         const { accountId: accId, isNew, username, legacyUserId } = await this.resolveAccountId({ walletAddress, accountId });
-        if (!accId) {
-          return res.status(500).json({ success: false, error: 'Failed to resolve account' });
+        if (!accId) return res.status(500).json({ success: false, error: 'Failed to resolve account' });
+
+        let profile = null;
+        if (!disableProfileDb && this.databaseAdapter?.supabase) {
+          try {
+            const { data: prof } = await this.databaseAdapter.supabase
+              .from('user_profiles')
+              .select('*')
+              .eq('account_id', accId)
+              .maybeSingle();
+            profile = prof || null;
+          } catch (_) {}
         }
 
-        // 可选：返回部分 profile（如存在）
-        let profile = null;
-        try {
-          const { data: prof } = await this.databaseAdapter.supabase
-            .from('user_profiles')
-            .select('*')
-            .eq('account_id', accId)
-            .maybeSingle();
-          profile = prof || null;
-        } catch (_) {}
-
-        res.json({
-          success: true,
-          data: {
-            accountId: accId,
-            legacyUserId: legacyUserId || (username ? `wallet_${username}` : null),
-            username: username || null,
-            isNew: !!isNew,
-            profile
-          }
-        });
+        res.json({ success: true, data: { accountId: accId, legacyUserId: legacyUserId || (username ? `wallet_${username}` : null), username: username || null, isNew: !!isNew, profile } });
       } catch (error) {
         console.error('❌ Authentication error:', {
           error: error.message,
@@ -338,138 +350,9 @@ class ElizaAgentBridge {
       }
     });
 
-    // 用户profile保存端点 - 匹配前端调用
+    // 用户profile保存端点 - 暂时禁用写库（待新 schema 完成后重写）
     this.app.post('/api/profiles', async (req, res) => {
-      try {
-        const { walletAddress, name, avatarUrl, personality, interests, relationshipStyle } = req.body;
-
-        // 输入验证
-        if (!walletAddress) {
-          return res.status(400).json({
-            success: false,
-            error: 'Wallet address is required'
-          });
-        }
-
-        console.log(`👤 Profile save request: ${walletAddress.slice(0, 8)}...`);
-
-        // 检查用户是否存在
-        let user = await this.databaseAdapter.getAccountByUsername(walletAddress);
-
-        if (!user) {
-          // 如果用户不存在，先创建账户
-          const newUserData = {
-            username: walletAddress,
-            name: name || `用户${walletAddress.slice(0, 6)}`,
-            email: null,
-            avatar_url: avatarUrl || null,
-            details: {
-              walletAddress,
-              registeredAt: new Date().toISOString(),
-              loginCount: 1
-            }
-          };
-
-          user = await this.databaseAdapter.createAccount(newUserData);
-          console.log(`✅ New user created: ${user.username}`);
-        }
-
-        // 准备用户profile数据
-        const profileData = {
-          user_id: user.id,
-          wallet_address: walletAddress,
-          name: name || user.name,
-          avatar_url: avatarUrl || user.avatar_url,
-          personality: personality || null,
-          interests: interests || null,
-          relationship_style: relationshipStyle || null,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        };
-
-        // 检查是否已有profile记录
-        const { data: existingProfile } = await this.databaseAdapter.supabase
-          .from('ai_girlfriend_user_profiles')
-          .select('*')
-          .eq('wallet_address', walletAddress)
-          .single();
-
-        let profileResult;
-        if (existingProfile) {
-          // 更新现有profile
-          const { data, error } = await this.databaseAdapter.supabase
-            .from('ai_girlfriend_user_profiles')
-            .update({
-              name: profileData.name,
-              avatar_url: profileData.avatar_url,
-              personality: profileData.personality,
-              interests: profileData.interests,
-              relationship_style: profileData.relationship_style,
-              updated_at: profileData.updated_at
-            })
-            .eq('wallet_address', walletAddress)
-            .select()
-            .single();
-
-          if (error) {
-            console.error('❌ Profile update error:', error);
-            return res.status(500).json({
-              success: false,
-              error: 'Failed to update user profile'
-            });
-          }
-
-          profileResult = data;
-          console.log(`✅ Profile updated: ${walletAddress.slice(0, 8)}...`);
-        } else {
-          // 创建新profile
-          const { data, error } = await this.databaseAdapter.supabase
-            .from('ai_girlfriend_user_profiles')
-            .insert(profileData)
-            .select()
-            .single();
-
-          if (error) {
-            console.error('❌ Profile creation error:', error);
-            return res.status(500).json({
-              success: false,
-              error: 'Failed to create user profile'
-            });
-          }
-
-          profileResult = data;
-          console.log(`✅ Profile created: ${walletAddress.slice(0, 8)}...`);
-        }
-
-        // 返回前端期望的格式
-        res.json({
-          success: true,
-          data: {
-            user: {
-              id: user.username,
-              username: user.username,
-              name: profileResult.name,
-              email: user.email,
-              avatarUrl: profileResult.avatar_url,
-              profile: profileResult
-            }
-          }
-        });
-
-      } catch (error) {
-        console.error('❌ Profile save error:', {
-          error: error.message,
-          stack: error.stack,
-          walletAddress: req.body?.walletAddress?.slice(0, 8) + '...',
-          timestamp: new Date().toISOString()
-        });
-
-        res.status(500).json({
-          success: false,
-          error: 'Failed to save profile',
-          details: process.env.NODE_ENV === 'development' ? error.message : undefined
-        });
-      }
+      return res.status(501).json({ success: false, error: 'Profiles API temporarily disabled for schema migration' });
     });
 
     // 聊天端点 - 使用真正的ElizaOS Agent (增强错误处理)
