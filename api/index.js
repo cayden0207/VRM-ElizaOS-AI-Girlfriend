@@ -1430,6 +1430,12 @@ Language: ${actualLanguage === 'zh' ? 'Respond in Chinese' : actualLanguage === 
           }
           
           console.log('✅ ElizaOS后备模式成功');
+          // 规范化角色名称用于前端展示
+          let metaCharacterName = characterId;
+          try {
+            const c = await loadCharacter(characterId);
+            if (c?.name) metaCharacterName = c.name;
+          } catch(_) {}
           return res.json({
             success: true,
             data: {
@@ -1438,7 +1444,7 @@ Language: ${actualLanguage === 'zh' ? 'Respond in Chinese' : actualLanguage === 
               relationship_level: 1,
               audio: audioData, // 🎤 包含语音数据
               metadata: {
-                characterName: characterId === 'alice' ? 'Alice' : 'Ash',
+                characterName: metaCharacterName,
                 timestamp: Date.now(),
                 fallback_mode: true
               }
