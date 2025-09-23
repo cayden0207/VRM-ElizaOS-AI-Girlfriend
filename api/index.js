@@ -912,9 +912,10 @@ export default async function handler(req, res) {
       // Proxy to Bridge if configured
       if (BRIDGE_URL) {
         try {
-          console.log('🌉 Proxy → Bridge /api/chat');
+          const proxyTimeoutMs = parseInt(process.env.BRIDGE_PROXY_TIMEOUT_MS || '18000', 10);
+          console.log('🌉 Proxy → Bridge /api/chat', { proxyTimeoutMs });
           const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), 15000);
+          const timeout = setTimeout(() => controller.abort(), proxyTimeoutMs);
           const upstream = await fetch(`${BRIDGE_URL}/api/chat`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
