@@ -36,6 +36,15 @@ class ElizaAgentBridge {
     this.setupRoutes();
   }
   
+  getConfig() {
+    return {
+      timeoutMs: parseInt(process.env.BRIDGE_TIMEOUT_MS || '12000', 10),
+      retries: parseInt(process.env.BRIDGE_RETRIES || '1', 10),
+      model: process.env.ELIZA_MODEL || 'gpt-4o-mini',
+      maxTokens: parseInt(process.env.ELIZA_MAX_TOKENS || '160', 10)
+    };
+  }
+
   setupMiddleware() {
     this.app.use(cors({
       origin: true,
@@ -70,10 +79,12 @@ class ElizaAgentBridge {
         adjectives: characterData.adjectives || [],
         style: characterData.style || {},
         modelProvider: ModelProviderName.OPENAI,
-        modelEndpointOverride: characterData.settings?.model || 'gpt-4o',
+        modelEndpointOverride: (process.env.ELIZA_MODEL || characterData.settings?.model || 'gpt-4o-mini'),
         settings: {
           secrets: {},
-          voice: characterData.settings?.voice || {}
+          voice: characterData.settings?.voice || {},
+          model: process.env.ELIZA_MODEL || characterData.settings?.model || 'gpt-4o-mini',
+          maxTokens: parseInt(process.env.ELIZA_MAX_TOKENS || '160', 10)
         }
       };
       
@@ -453,21 +464,33 @@ class ElizaAgentBridge {
         console.log(`🔄 Processing message for room: ${roomId}`);
 
         // 使用正确的ElizaOS方法名 (with timeout)
-        const processingTimeout = 30000; // 30 seconds
-        const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error('Processing timeout')), processingTimeout)
-        );
-
-        const processMessage = async () => {
-          const response = await agent.composeState(messageObj);
-          const result = await agent.generateMessage(response);
-          return { response, result };
+        const { timeoutMs, retries } = this.getConfig();
+        const attempt = async () => {
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Processing timeout')), timeoutMs)
+          );
+          const processMessage = async () => {
+            const response = await agent.composeState(messageObj);
+            const result = await agent.generateMessage(response);
+            return { response, result };
+          };
+          return Promise.race([processMessage(), timeoutPromise]);
         };
 
-        const { response, result } = await Promise.race([
-          processMessage(),
-          timeoutPromise
-        ]);
+        let response, result, err;
+        for (let i = 0; i < Math.max(1, retries + 1); i++) {
+          try {
+            ({ response, result } = await attempt());
+            err = null;
+            if (i > 0) console.log(`✅ Chat attempt #${i+1} succeeded after retry`);
+            break;
+          } catch (e) {
+            err = e;
+            console.warn(`⚠️ Chat attempt #${i+1} failed:`, e.message);
+            if (i === Math.max(1, retries + 1) - 1) throw e;
+            await new Promise(r => setTimeout(r, 500));
+          }
+        }
 
         console.log(`✅ Message processed successfully for ${characterId}`);
 
@@ -578,6 +601,8 @@ class ElizaAgentBridge {
       console.log(`🚀 ElizaOS Agent Bridge running on port ${port}`);
       console.log(`✅ Full ElizaOS integration with AgentRuntime + Providers`);
       this.logEnvironmentStatus();
+      const cfg = this.getConfig();
+      console.log(`⚙️ Bridge config → timeoutMs=${cfg.timeoutMs}, retries=${cfg.retries}, model=${cfg.model}, maxTokens=${cfg.maxTokens}`);
     });
   }
 
