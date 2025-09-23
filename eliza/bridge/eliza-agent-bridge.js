@@ -35,7 +35,7 @@ class ElizaAgentBridge {
     this.setupMiddleware();
     this.setupRoutes();
   }
-  
+
   getConfig() {
     return {
       timeoutMs: parseInt(process.env.BRIDGE_TIMEOUT_MS || '12000', 10),
@@ -43,6 +43,104 @@ class ElizaAgentBridge {
       model: process.env.ELIZA_MODEL || 'gpt-4o-mini',
       maxTokens: parseInt(process.env.ELIZA_MAX_TOKENS || '160', 10)
     };
+  }
+
+  // ===== Account ID resolution helpers =====
+  isUuid(str) {
+    return typeof str === 'string' && /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(str);
+  }
+
+  parseWalletFromLegacy(legacy) {
+    if (!legacy || typeof legacy !== 'string') return null;
+    if (legacy.startsWith('wallet_')) return legacy.slice(7);
+    return null;
+  }
+
+  async resolveAccountId({ accountId, walletAddress, legacyUserId }) {
+    const supabase = this.databaseAdapter?.supabase;
+    if (!supabase) return { accountId: accountId || null, isNew: false, username: null, legacyUserId: legacyUserId || null };
+
+    // 1) canonical UUID provided
+    if (this.isUuid(accountId)) {
+      return { accountId, isNew: false, username: null, legacyUserId: legacyUserId || null };
+    }
+
+    // 2) derive wallet
+    let wallet = walletAddress || this.parseWalletFromLegacy(legacyUserId);
+    if (!wallet && typeof accountId === 'string' && accountId.startsWith('wallet_')) {
+      wallet = this.parseWalletFromLegacy(accountId);
+    }
+    if (!wallet && typeof accountId === 'string' && accountId.startsWith('0x')) {
+      wallet = accountId;
+    }
+
+    if (!wallet) {
+      // nothing to resolve
+      return { accountId: null, isNew: false, username: null, legacyUserId: null };
+    }
+
+    const identifier = wallet.toLowerCase();
+
+    // 3) lookup identity
+    try {
+      const { data: ident } = await supabase
+        .from('account_identities')
+        .select('account_id')
+        .eq('provider', 'wallet')
+        .eq('identifier', identifier)
+        .maybeSingle();
+      if (ident?.account_id) {
+        return { accountId: ident.account_id, isNew: false, username: identifier, legacyUserId: `wallet_${identifier}` };
+      }
+    } catch (_) {}
+
+    // 4) create account + identity
+    let createdAccountId = null;
+    try {
+      const { data: acc, error: accErr } = await supabase
+        .from('accounts')
+        .insert({ username: identifier, details: { createdFrom: 'wallet' } })
+        .select()
+        .single();
+      if (accErr && accErr.code !== '23505') {
+        console.error('create account error:', accErr);
+      }
+      createdAccountId = acc?.id;
+    } catch (e) {
+      // ignore, might already exist
+    }
+
+    // ensure account exists
+    if (!createdAccountId) {
+      const { data: acc2 } = await supabase
+        .from('accounts')
+        .select('id')
+        .eq('username', identifier)
+        .maybeSingle();
+      createdAccountId = acc2?.id || null;
+    }
+
+    if (!createdAccountId) {
+      return { accountId: null, isNew: false, username: identifier, legacyUserId: `wallet_${identifier}` };
+    }
+
+    try {
+      await supabase
+        .from('account_identities')
+        .insert({ account_id: createdAccountId, provider: 'wallet', identifier })
+        .select()
+        .maybeSingle();
+    } catch (e) {
+      // on conflict ignore
+    }
+    return { accountId: createdAccountId, isNew: true, username: identifier, legacyUserId: `wallet_${identifier}` };
+  }
+
+  async resolveAccountIdFromParam(idParam) {
+    if (this.isUuid(idParam)) return idParam;
+    const wallet = this.parseWalletFromLegacy(idParam) || (typeof idParam === 'string' && idParam.startsWith('0x') ? idParam : null);
+    const { accountId } = await this.resolveAccountId({ walletAddress: wallet, legacyUserId: idParam });
+    return accountId || idParam; // fallback to original for compatibility
   }
 
   setupMiddleware() {
@@ -195,80 +293,40 @@ class ElizaAgentBridge {
       });
     });
     
-    // 用户认证端点 - 钱包地址登录/注册
+    // 用户认证端点（统一 accounts + account_identities，兼容 legacy）
     this.app.post('/api/auth', async (req, res) => {
       try {
-        const { walletAddress } = req.body;
-
-        // 输入验证
-        if (!walletAddress) {
-          return res.status(400).json({
-            success: false,
-            error: 'Wallet address is required'
-          });
+        const { walletAddress, accountId } = req.body || {};
+        if (!walletAddress && !accountId) {
+          return res.status(400).json({ success: false, error: 'walletAddress or accountId is required' });
         }
 
-        console.log(`🔑 User authentication request: ${walletAddress.slice(0, 8)}...`);
-
-        // 检查用户是否存在
-        let user = await this.databaseAdapter.getAccountByUsername(walletAddress);
-        let isNew = false;
-
-        if (!user) {
-          // 创建新用户 (兼容钱包地址作为username)
-          console.log(`👤 Creating new user: ${walletAddress.slice(0, 8)}...`);
-
-          const newUserData = {
-            username: walletAddress,
-            name: `用户${walletAddress.slice(0, 6)}`,
-            email: null,
-            avatar_url: null,
-            details: {
-              walletAddress,
-              registeredAt: new Date().toISOString(),
-              loginCount: 1
-            }
-          };
-
-          user = await this.databaseAdapter.createAccount(newUserData);
-
-          if (!user) {
-            return res.status(500).json({
-              success: false,
-              error: 'Failed to create user account'
-            });
-          }
-
-          isNew = true;
-          console.log(`✅ New user created: ${user.username}`);
-        } else {
-          // 更新登录计数
-          console.log(`🔄 Existing user login: ${user.username}`);
-          // 注意：实际生产中应该更新last_login等字段
+        const { accountId: accId, isNew, username, legacyUserId } = await this.resolveAccountId({ walletAddress, accountId });
+        if (!accId) {
+          return res.status(500).json({ success: false, error: 'Failed to resolve account' });
         }
 
-        // 返回前端期望的格式
+        // 可选：返回部分 profile（如存在）
+        let profile = null;
+        try {
+          const { data: prof } = await this.databaseAdapter.supabase
+            .from('user_profiles')
+            .select('*')
+            .eq('account_id', accId)
+            .maybeSingle();
+          profile = prof || null;
+        } catch (_) {}
+
         res.json({
           success: true,
           data: {
-            user: {
-              id: user.username,        // 前端期望的ID格式
-              username: user.username,
-              name: user.name,
-              email: user.email,
-              profile: {
-                id: user.id,
-                username: user.username,
-                name: user.name,
-                details: user.details
-              }
-            },
-            isNew
+            accountId: accId,
+            legacyUserId: legacyUserId || (username ? `wallet_${username}` : null),
+            username: username || null,
+            isNew: !!isNew,
+            profile
           }
         });
-
-        console.log(`✅ User authentication successful: ${user.username} (isNew: ${isNew})`);
-
       } catch (error) {
         console.error('❌ Authentication error:', {
           error: error.message,
@@ -276,12 +334,7 @@ class ElizaAgentBridge {
           walletAddress: req.body?.walletAddress?.slice(0, 8) + '...',
           timestamp: new Date().toISOString()
         });
-
-        res.status(500).json({
-          success: false,
-          error: 'Authentication failed',
-          details: process.env.NODE_ENV === 'development' ? error.message : undefined
-        });
+        res.status(500).json({ success: false, error: 'Authentication failed' });
       }
     });
 
@@ -430,10 +483,10 @@ class ElizaAgentBridge {
       try {
 
         // 输入验证
-        if (!userId || !characterId || !message) {
+        if ((!userId && !body.accountId) || !characterId || !message) {
           return res.status(400).json({
             success: false,
-            error: 'Missing required fields: userId, characterId, message'
+            error: 'Missing required fields: accountId/userId, characterId, message'
           });
         }
 
@@ -457,11 +510,11 @@ class ElizaAgentBridge {
         }
 
         // 创建会话房间ID
-        const roomId = `${userId}-${normalizedCharacterId}`;
+        const roomId = `${accountId}-${normalizedCharacterId}`;
 
         // 使用ElizaOS Agent处理消息
         const messageObj = {
-          userId,
+          userId: accountId,
           roomId,
           content: { text: message },
           createdAt: new Date().toISOString()
@@ -503,7 +556,7 @@ class ElizaAgentBridge {
         // 持久化对话到 conversations（便于后续回忆）
         try {
           if (this.databaseAdapter?.supabase) {
-            const roomId = `${userId}-${normalizedCharacterId}`;
+            const roomId = `${accountId}-${normalizedCharacterId}`;
             const emotion = result.action || 'neutral';
             await this.databaseAdapter.supabase.from('conversations').insert([
               { room_id: roomId, user_id: userId, character_id: normalizedCharacterId, role: 'user', content: message, metadata: { timestamp: Date.now(), via: 'bridge' } },
@@ -624,29 +677,46 @@ class ElizaAgentBridge {
       }
     });
 
-    // 获取用户资料（与 serverless 保持兼容）
+    // 获取用户资料（支持 accountId 或 legacy wallet_ 前缀）
     this.app.get('/api/profiles/:userId', async (req, res) => {
       try {
-        const userId = req.params.userId;
-        if (!userId) return res.status(400).json({ error: 'User ID is required' });
+        const idParam = req.params.userId;
+        if (!idParam) return res.status(400).json({ error: 'User ID is required' });
 
-        const dbId = userId.startsWith('wallet_') ? userId : `wallet_${userId}`;
-        if (!this.databaseAdapter?.supabase) {
-          return res.json({ success: true, profile: null });
-        }
+        const supabase = this.databaseAdapter?.supabase;
+        if (!supabase) return res.json({ success: true, profile: null });
 
-        const { data, error } = await this.databaseAdapter.supabase
-          .from('users')
+        const accountId = await this.resolveAccountIdFromParam(idParam);
+        // 优先 user_profiles（canonical）
+        const { data: prof, error: profErr } = await supabase
+          .from('user_profiles')
           .select('*')
-          .eq('id', dbId)
+          .eq('account_id', accountId)
           .maybeSingle();
-
-        if (error) {
-          console.error('❌ 数据库查询错误:', error);
-          return res.status(500).json({ error: error.message });
+        if (!profErr && prof) {
+          return res.json({ success: true, profile: prof });
         }
 
-        return res.json({ success: true, profile: data });
+        // 兼容旧 users 表（通过 wallet identity 找回 legacy id）
+        try {
+          const { data: idt } = await supabase
+            .from('account_identities')
+            .select('identifier')
+            .eq('provider', 'wallet')
+            .eq('account_id', accountId)
+            .maybeSingle();
+          if (idt?.identifier) {
+            const dbId = `wallet_${idt.identifier}`;
+            const { data: legacy } = await supabase
+              .from('users')
+              .select('*')
+              .eq('id', dbId)
+              .maybeSingle();
+            return res.json({ success: true, profile: legacy || null });
+          }
+        } catch (_) {}
+
+        return res.json({ success: true, profile: null });
       } catch (error) {
         return res.status(500).json({ success: false, error: error.message });
       }
