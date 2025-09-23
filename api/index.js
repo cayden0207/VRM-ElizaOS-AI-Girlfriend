@@ -938,7 +938,21 @@ export default async function handler(req, res) {
             console.warn('⚠️ Upstream /api/chat indicated failure, falling back locally:', data);
             throw new Error('Upstream indicated failure');
           }
-          // Otherwise return upstream result
+          // Otherwise persist conversation locally for continuity, then return upstream result
+          try {
+            if (supabase && req.body?.userId && req.body?.characterId && data?.success && data?.data?.response) {
+              const userId = req.body.userId;
+              const characterId = req.body.characterId;
+              const roomId = `${userId}-${characterId}`;
+              const emotion = data.data.emotion || 'neutral';
+              await supabase.from('conversations').insert([
+                { room_id: roomId, user_id: userId, character_id: characterId, role: 'user', content: req.body.message, metadata: { timestamp: Date.now(), via: 'bridge' } },
+                { room_id: roomId, user_id: userId, character_id: characterId, role: 'assistant', content: data.data.response, metadata: { timestamp: Date.now(), emotion, via: 'bridge' } }
+              ]);
+            }
+          } catch (persistErr) {
+            console.warn('⚠️ Failed to persist conversation after bridge response:', persistErr.message);
+          }
           return res.json({ proxied: true, bridge: BRIDGE_URL, ...data });
         } catch (e) {
           console.error('❌ Bridge proxy failed (/api/chat), using local handling:', e.message);
