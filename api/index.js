@@ -561,8 +561,9 @@ export default async function handler(req, res) {
 
   const { method } = req;
   const url = req.url || '';
+  const path = (url.split('?')[0] || '').replace(/\/+$/, ''); // strip query + trailing slash
   
-  console.log(`📋 ${method} ${url}`);
+  console.log(`📋 ${method} ${url} (path=${path})`);
   console.log(`📊 Request body:`, req.body);
   
   // 🔍 调试语音示范请求
@@ -907,7 +908,7 @@ export default async function handler(req, res) {
     }
 
     // ElizaOS Chat API
-    if (method === 'POST' && (url === '/chat' || url === '/api/chat')) {
+    if (method === 'POST' && (path === '/chat' || path === '/api/chat')) {
       // Proxy to Bridge if configured
       if (BRIDGE_URL) {
         try {
