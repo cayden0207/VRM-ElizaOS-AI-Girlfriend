@@ -44,7 +44,11 @@ class ElizaAgentBridge {
     this.app.use(express.json({ limit: '10mb' }));
     this.app.set('trust proxy', 1);
   }
-  
+
+  normalizeId(id) {
+    return (id || '').toString().trim().toLowerCase();
+  }
+
   /**
    * 创建真正的ElizaOS Agent
    */
@@ -106,7 +110,7 @@ class ElizaAgentBridge {
         try {
           const filePath = path.join(agentsDir, file);
           const characterData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-          const characterId = characterData.name.toLowerCase();
+          const characterId = this.normalizeId(characterData.name);
           
           // 存储角色配置
           this.characters.set(characterId, characterData);
@@ -132,20 +136,27 @@ class ElizaAgentBridge {
    * 获取或创建Agent
    */
   async getOrCreateAgent(characterId) {
+    const id = this.normalizeId(characterId);
     // 检查是否已有Agent
-    if (this.agents.has(characterId)) {
-      return this.agents.get(characterId);
+    if (this.agents.has(id)) {
+      return this.agents.get(id);
     }
     
     // 获取角色配置
-    const characterData = this.characters.get(characterId);
+    let characterData = this.characters.get(id);
     if (!characterData) {
-      throw new Error(`Character ${characterId} not found`);
+      // 尝试大小写不敏感匹配
+      const fallbackKey = Array.from(this.characters.keys()).find(k => k.toLowerCase() === id);
+      if (fallbackKey) characterData = this.characters.get(fallbackKey);
+    }
+    if (!characterData) {
+      const available = Array.from(this.characters.keys()).slice(0, 10).join(', ');
+      throw new Error(`Character ${characterId} not found. Available: ${available}${this.characters.size>10?'...':''}`);
     }
     
     // 创建新Agent
     const agent = await this.createAgent(characterData);
-    this.agents.set(characterId, agent);
+    this.agents.set(id, agent);
     
     // 限制内存中的Agent数量
     if (this.agents.size > 5) {
@@ -399,6 +410,7 @@ class ElizaAgentBridge {
     this.app.post('/api/chat', async (req, res) => {
       try {
         const { userId, characterId, message } = req.body;
+        const normalizedCharacterId = this.normalizeId(characterId);
 
         // 输入验证
         if (!userId || !characterId || !message) {
@@ -408,7 +420,7 @@ class ElizaAgentBridge {
           });
         }
 
-        console.log(`💬 Chat request: ${userId} → ${characterId}: "${message.substring(0, 50)}..."`);
+        console.log(`💬 Chat request: ${userId} → ${normalizedCharacterId}: "${message.substring(0, 50)}..."`);
 
         // 获取或创建Agent (with retry)
         let agent;
@@ -417,7 +429,7 @@ class ElizaAgentBridge {
 
         while (retryCount < maxRetries) {
           try {
-            agent = await this.getOrCreateAgent(characterId);
+            agent = await this.getOrCreateAgent(normalizedCharacterId);
             break;
           } catch (agentError) {
             retryCount++;
@@ -428,7 +440,7 @@ class ElizaAgentBridge {
         }
 
         // 创建会话房间ID
-        const roomId = `${userId}-${characterId}`;
+        const roomId = `${userId}-${normalizedCharacterId}`;
 
         // 使用ElizaOS Agent处理消息
         const messageObj = {
@@ -468,7 +480,7 @@ class ElizaAgentBridge {
             memories: response.memories || [],
             context: response.context || {},
             timestamp: new Date().toISOString(),
-            characterId,
+            characterId: normalizedCharacterId,
             userId
           }
         });
@@ -478,7 +490,7 @@ class ElizaAgentBridge {
           error: error.message,
           stack: error.stack,
           userId: req.body?.userId,
-          characterId: req.body?.characterId,
+          characterId: normalizedCharacterId || req.body?.characterId,
           timestamp: new Date().toISOString()
         });
 
@@ -509,7 +521,7 @@ class ElizaAgentBridge {
     // 获取角色列表
     this.app.get('/api/characters', (req, res) => {
       const characters = Array.from(this.characters.values()).map(c => ({
-        id: c.name.toLowerCase(),
+        id: this.normalizeId(c.name),
         name: c.name,
         bio: c.bio,
         topics: c.topics
