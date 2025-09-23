@@ -1420,20 +1420,8 @@ Language: ${actualLanguage === 'zh' ? 'Respond in Chinese' : actualLanguage === 
       }
     }
 
-    // 🆕 获取对话历史 - ElizaOS聊天系统需要
+    // 🆕 获取对话历史 - 为保持兼容性，固定使用本地实现（返回 conversations/relationship 结构）
     if (method === 'GET' && url.includes('/api/history/')) {
-      // Proxy to Bridge history endpoint if configured
-      if (BRIDGE_URL) {
-        try {
-          console.log('🌉 Proxy → Bridge', url);
-          const upstream = await fetch(`${BRIDGE_URL}${url}`);
-          const data = await upstream.json();
-          return res.json({ proxied: true, bridge: BRIDGE_URL, ...data });
-        } catch (e) {
-          console.error('❌ Bridge proxy failed (history):', e.message);
-          // fall through to local handling
-        }
-      }
       try {
         // 解析URL: /api/history/{userId}/{characterId}
         const urlParts = url.split('/');
