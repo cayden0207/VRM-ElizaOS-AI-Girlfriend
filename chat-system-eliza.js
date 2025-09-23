@@ -25,12 +25,16 @@ class ElizaOSChatSystem {
     }
     
     getAPIBaseURL() {
-        // Local development environment
+        // Prefer centralized AppConfig
+        try {
+            const url = window.AppConfig?.getApiUrl?.();
+            if (url && typeof url === 'string' && url.length > 0) return url;
+        } catch (_) {}
+
+        // Fallbacks
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
             return 'http://localhost:3000';
         }
-        
-        // Production: use same origin
         return window.location.origin;
     }
     

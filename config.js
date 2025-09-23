@@ -11,9 +11,9 @@ const AppConfig = {
             baseURL: 'http://localhost:3001',
             timeout: 10000
         },
-        // Production environment - use relative path (same Vercel app)
+        // Production environment - point to Bridge (single, stable Node service)
         production: {
-            baseURL: '',  // Use relative path, API is on the same domain
+            baseURL: 'https://vrm-elizaos-ai-girlfriend-production.up.railway.app',
             timeout: 15000
         }
     },
@@ -24,8 +24,7 @@ const AppConfig = {
     // Get API base URL
     getApiUrl() {
         const baseURL = this.API[this.environment].baseURL;
-        // Production environment returns empty string to use relative path
-        return baseURL;
+        return baseURL || '';
     },
     
     // Note: Supabase access has been migrated to backend, frontend no longer needs direct access
