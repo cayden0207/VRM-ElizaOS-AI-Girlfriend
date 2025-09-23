@@ -751,23 +751,8 @@ export default async function handler(req, res) {
       }
     }
 
-    // 🆕 用户认证/注册端点
+    // 🆕 用户认证/注册端点（固定使用本地实现写 users 表，避免桥接 accounts 依赖）
     if (method === 'POST' && (url === '/auth' || url === '/api/auth')) {
-      if (BRIDGE_URL) {
-        try {
-          console.log('🌉 Proxy → Bridge /api/auth');
-          const upstream = await fetch(`${BRIDGE_URL}/api/auth`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(req.body)
-          });
-          const data = await upstream.json();
-          return res.json({ proxied: true, bridge: BRIDGE_URL, ...data });
-        } catch (e) {
-          console.error('❌ Bridge proxy failed (/api/auth):', e.message);
-          // fall through to local handling
-        }
-      }
       const { walletAddress } = req.body;
       
       if (!walletAddress) {
@@ -824,21 +809,9 @@ export default async function handler(req, res) {
       });
     }
 
-    // 获取用户资料
+    // 获取用户资料（固定本地实现）
     if (method === 'GET' && url.includes('/profiles/')) {
       console.log(`🛣️ Profile路由匹配，URL: ${url}`);
-      if (BRIDGE_URL) {
-        try {
-          console.log('🌉 Proxy → Bridge (profiles GET)');
-          const upstreamUrl = url.startsWith('/api') ? `${BRIDGE_URL}${url}` : `${BRIDGE_URL}/api${url}`;
-          const upstream = await fetch(upstreamUrl);
-          const data = await upstream.json();
-          return res.json({ proxied: true, bridge: BRIDGE_URL, ...data });
-        } catch (e) {
-          console.error('❌ Bridge proxy failed (profiles GET):', e.message);
-          // fall through to local handling
-        }
-      }
       
       let userId = null;
       if (url.includes('/api/profiles/')) {
@@ -879,23 +852,8 @@ export default async function handler(req, res) {
       return res.json({ success: true, profile: data });
     }
 
-    // Create/更新用户资料
+    // Create/更新用户资料（固定本地实现）
     if (method === 'POST' && (url === '/profiles' || url === '/api/profiles')) {
-      if (BRIDGE_URL) {
-        try {
-          console.log('🌉 Proxy → Bridge /api/profiles');
-          const upstream = await fetch(`${BRIDGE_URL}/api/profiles`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(req.body)
-          });
-          const data = await upstream.json();
-          return res.json({ proxied: true, bridge: BRIDGE_URL, ...data });
-        } catch (e) {
-          console.error('❌ Bridge proxy failed (/api/profiles POST):', e.message);
-          // fall through to local handling
-        }
-      }
       const body = req.body;
       console.log(`💾 保存用户数据:`, body);
 
