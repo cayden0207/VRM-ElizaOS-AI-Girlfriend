@@ -73,7 +73,9 @@ class ElizaAgentBridge {
           : [characterData.bio],
         lore: characterData.lore || [],
         knowledge: characterData.lore || [],
-        messageExamples: characterData.messageExamples || [],
+        messageExamples: (characterData.messageExamples || []).filter(example =>
+          Array.isArray(example) && example.length > 0
+        ),
         postExamples: characterData.postExamples || [],
         topics: characterData.topics || [],
         adjectives: characterData.adjectives || [],
@@ -494,6 +496,20 @@ class ElizaAgentBridge {
 
         console.log(`✅ Message processed successfully for ${characterId}`);
 
+        // 持久化对话到 conversations（便于后续回忆）
+        try {
+          if (this.databaseAdapter?.supabase) {
+            const roomId = `${userId}-${normalizedCharacterId}`;
+            const emotion = result.action || 'neutral';
+            await this.databaseAdapter.supabase.from('conversations').insert([
+              { room_id: roomId, user_id: userId, character_id: normalizedCharacterId, role: 'user', content: message, metadata: { timestamp: Date.now(), via: 'bridge' } },
+              { room_id: roomId, user_id: userId, character_id: normalizedCharacterId, role: 'assistant', content: (result.text || result.content?.text || ''), metadata: { timestamp: Date.now(), emotion, via: 'bridge' } }
+            ]);
+          }
+        } catch (persistErr) {
+          console.warn('⚠️ Failed to persist conversations:', persistErr.message);
+        }
+
         // 返回响应
         res.json({
           success: true,
@@ -556,35 +572,79 @@ class ElizaAgentBridge {
       });
     });
     
-    // 获取对话历史
+    // 获取对话历史（返回 { conversations, relationship } 结构以兼容前端）
     this.app.get('/api/history/:userId/:characterId', async (req, res) => {
       try {
         const { userId, characterId } = req.params;
         const roomId = `${userId}-${characterId}`;
-        
-        if (this.supabase) {
-          const { data } = await this.supabase
-            .from('memories')
+        const limit = parseInt(req.query?.limit) || 20;
+
+        if (this.databaseAdapter?.supabase) {
+          // conversations
+          const { data: conversations } = await this.databaseAdapter.supabase
+            .from('conversations')
             .select('*')
             .eq('room_id', roomId)
             .order('created_at', { ascending: false })
-            .limit(20);
-          
-          res.json({
+            .limit(limit);
+
+          // relationship（如表不存在则返回 null）
+          let relationship = null;
+          try {
+            const { data: rel } = await this.databaseAdapter.supabase
+              .from('user_character_relations')
+              .select('*')
+              .eq('user_id', userId)
+              .eq('character_id', characterId)
+              .maybeSingle();
+            relationship = rel || null;
+          } catch (_) {
+            relationship = null;
+          }
+
+          return res.json({
             success: true,
-            data: data || []
-          });
-        } else {
-          res.json({
-            success: true,
-            data: []
+            data: {
+              conversations: conversations || [],
+              relationship
+            }
           });
         }
+
+        return res.json({ success: true, data: { conversations: [], relationship: null } });
       } catch (error) {
         res.status(500).json({
           success: false,
           error: error.message
         });
+      }
+    });
+
+    // 获取用户资料（与 serverless 保持兼容）
+    this.app.get('/api/profiles/:userId', async (req, res) => {
+      try {
+        const userId = req.params.userId;
+        if (!userId) return res.status(400).json({ error: 'User ID is required' });
+
+        const dbId = userId.startsWith('wallet_') ? userId : `wallet_${userId}`;
+        if (!this.databaseAdapter?.supabase) {
+          return res.json({ success: true, profile: null });
+        }
+
+        const { data, error } = await this.databaseAdapter.supabase
+          .from('users')
+          .select('*')
+          .eq('id', dbId)
+          .maybeSingle();
+
+        if (error) {
+          console.error('❌ 数据库查询错误:', error);
+          return res.status(500).json({ error: error.message });
+        }
+
+        return res.json({ success: true, profile: data });
+      } catch (error) {
+        return res.status(500).json({ success: false, error: error.message });
       }
     });
   }
