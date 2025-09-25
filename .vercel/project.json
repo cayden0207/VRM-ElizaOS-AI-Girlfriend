@@ -1,1 +1,15 @@
-{"projectId":"prj_LiQhWIntbiqNv0q8cXHKGDaPbXwx","orgId":"team_3YUn70oIpCAItKvnBHasVvfo","projectName":"vrm-frontend-new"}
+{
+  "projectId": "prj_LiQhWIntbiqNv0q8cXHKGDaPbXwx",
+  "orgId": "team_3YUn70oIpCAItKvnBHasVvfo",
+  "settings": {
+    "createdAt": 1756651435625,
+    "framework": null,
+    "devCommand": null,
+    "installCommand": null,
+    "buildCommand": null,
+    "outputDirectory": null,
+    "rootDirectory": null,
+    "directoryListing": false,
+    "nodeVersion": "22.x"
+  }
+}

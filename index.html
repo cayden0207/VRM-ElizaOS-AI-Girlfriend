@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: blob: https://mintlify.s3.us-west-1.amazonaws.com https://assets.coingecko.com https://cdn.jsdelivr.net https://raw.githubusercontent.com https://images.ctfassets.net https://avatars.githubusercontent.com https://backpack.app https://www.madlads.com https://pbs.twimg.com https://static.okx.com https://img.bitgetimg.com https://tp-statics.tokenpocket.pro https://trustwallet.com; media-src 'self' blob: data:; connect-src 'self' blob: http://localhost:3000 https://rpc.xlayer.tech https://api.elevenlabs.io https://vrm-eliza-ai-girlfriend.vercel.app;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: blob: https://mintlify.s3.us-west-1.amazonaws.com https://assets.coingecko.com https://cdn.jsdelivr.net https://raw.githubusercontent.com https://images.ctfassets.net https://avatars.githubusercontent.com https://backpack.app https://www.madlads.com https://pbs.twimg.com https://static.okx.com https://img.bitgetimg.com https://tp-statics.tokenpocket.pro https://trustwallet.com; media-src 'self' blob: data:; connect-src 'self' blob: http://localhost:3000 https://rpc.xlayer.tech https://api.elevenlabs.io https://vrm-eliza-ai-girlfriend.vercel.app https://*.railway.app https://vrm-elizaos-ai-girlfriend-production.up.railway.app https://api.xwaifus.com;">
     <title data-i18n-title="char.select.title">WAIFU - Choose Your Girlfriend</title>
     <link rel="icon" type="image/png" href="assets/wallet/favicon-circle.png">
     <link rel="stylesheet" href="wallet-ui.css">
@@ -5348,399 +5348,138 @@ Disconnect
         };
         
     </script>
-    <!-- userinfo填写面板 -->
+<!-- User Profile Panel (Redesigned) -->
     <div class="user-profile-overlay" id="user-profile-overlay" style="display: none;">
         <div class="profile-panel">
             <div class="profile-panel-header">
-                <h2 class="profile-panel-title" data-i18n="registration.title">New User Registration</h2>
+                <h2 class="profile-panel-title" data-i18n="registration.title">User Profile</h2>
             </div>
-            
-            <form class="profile-form">
-                <!-- user名 -->
+            <form class="profile-form" id="profile-form">
+                <!-- Name (Canonical Schema) -->
                 <div class="profile-field">
-                    <label class="field-label" data-i18n="registration.username">Username</label>
-                    <input type="text" class="profile-input" id="username" data-i18n-placeholder="registration.username.placeholder" placeholder="Maximum 12 characters" maxlength="12" required>
-                    <div class="field-note" data-i18n="registration.username.note">Other users can see this (maximum 12 characters)</div>
+                    <label class="field-label" data-i18n="profile.name">Name</label>
+                    <input type="text" class="profile-input" id="profile-name" placeholder="Your display name" required>
+                    <div class="field-note" data-i18n="profile.name.note">Your AI girlfriend will call you by this name.</div>
                 </div>
-                
-                <!-- 昵称（姓名） -->
+
+                <!-- Avatar URL (Canonical Schema) -->
                 <div class="profile-field">
-                    <label class="field-label" data-i18n="registration.display.name">Your Name</label>
-                    <input type="text" class="profile-input" id="displayName" data-i18n-placeholder="registration.display.name.placeholder" placeholder="Name" required>
-                    <div class="field-note" data-i18n="registration.display.name.note">Choose a sweet name your AI girlfriend will lovingly call you by~ ♡</div>
+                    <label class="field-label" data-i18n="profile.avatar">Avatar URL</label>
+                    <input type="text" class="profile-input" id="profile-avatar-url" placeholder="http://...">
+                    <div class="field-note" data-i18n="profile.avatar.note">Optional: A link to your profile picture.</div>
                 </div>
-                
-                <!-- 生日 -->
-                <div class="profile-field has-multiple-inputs">
-                    <label class="field-label" data-i18n="registration.birthday">Your Birthday</label>
-                    <div class="birthday-inputs">
-                        <select class="profile-select" id="birthYear" required>
-                            <option value="" data-i18n="registration.birthday.year">Year</option>
-                            <option value="2010">2010</option>
-                            <option value="2009">2009</option>
-                            <option value="2008">2008</option>
-                            <option value="2007">2007</option>
-                            <option value="2006">2006</option>
-                            <option value="2005">2005</option>
-                            <option value="2004">2004</option>
-                            <option value="2003">2003</option>
-                            <option value="2002">2002</option>
-                            <option value="2001">2001</option>
-                            <option value="2000">2000</option>
-                            <option value="1999">1999</option>
-                            <option value="1998">1998</option>
-                            <option value="1997">1997</option>
-                            <option value="1996">1996</option>
-                            <option value="1995">1995</option>
-                            <option value="1994">1994</option>
-                            <option value="1993">1993</option>
-                            <option value="1992">1992</option>
-                            <option value="1991">1991</option>
-                            <option value="1990">1990</option>
-                            <option value="1989">1989</option>
-                            <option value="1988">1988</option>
-                            <option value="1987">1987</option>
-                            <option value="1986">1986</option>
-                            <option value="1985">1985</option>
-                            <option value="1984">1984</option>
-                            <option value="1983">1983</option>
-                            <option value="1982">1982</option>
-                            <option value="1981">1981</option>
-                            <option value="1980">1980</option>
-                            <option value="1979">1979</option>
-                            <option value="1978">1978</option>
-                            <option value="1977">1977</option>
-                            <option value="1976">1976</option>
-                            <option value="1975">1975</option>
-                            <option value="1974">1974</option>
-                            <option value="1973">1973</option>
-                            <option value="1972">1972</option>
-                            <option value="1971">1971</option>
-                            <option value="1970">1970</option>
-                            <option value="1969">1969</option>
-                            <option value="1968">1968</option>
-                            <option value="1967">1967</option>
-                            <option value="1966">1966</option>
-                            <option value="1965">1965</option>
-                            <option value="1964">1964</option>
-                            <option value="1963">1963</option>
-                            <option value="1962">1962</option>
-                            <option value="1961">1961</option>
-                            <option value="1960">1960</option>
-                            <option value="1959">1959</option>
-                            <option value="1958">1958</option>
-                            <option value="1957">1957</option>
-                            <option value="1956">1956</option>
-                            <option value="1955">1955</option>
-                            <option value="1954">1954</option>
-                            <option value="1953">1953</option>
-                            <option value="1952">1952</option>
-                            <option value="1951">1951</option>
-                            <option value="1950">1950</option>
-                        </select>
-                        <select class="profile-select" id="birthMonth" required>
-                            <option value="" data-i18n="registration.birthday.month">Month</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                        </select>
-                        <select class="profile-select" id="birthDay" required>
-                            <option value="" data-i18n="registration.birthday.day">Day</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                            <option value="13">13</option>
-                            <option value="14">14</option>
-                            <option value="15">15</option>
-                            <option value="16">16</option>
-                            <option value="17">17</option>
-                            <option value="18">18</option>
-                            <option value="19">19</option>
-                            <option value="20">20</option>
-                            <option value="21">21</option>
-                            <option value="22">22</option>
-                            <option value="23">23</option>
-                            <option value="24">24</option>
-                            <option value="25">25</option>
-                            <option value="26">26</option>
-                            <option value="27">27</option>
-                            <option value="28">28</option>
-                            <option value="29">29</option>
-                            <option value="30">30</option>
-                            <option value="31">31</option>
-                        </select>
-                    </div>
-                    <div class="field-note" data-i18n="registration.birthday.note">Your AI girlfriend will remember your special day! ♡</div>
-                </div>
-                
-                <!-- 国家/城市 -->
+
+                <!-- Personality (Canonical Schema) -->
                 <div class="profile-field">
-                    <label class="field-label" data-i18n="registration.location">Location</label>
-                    <input type="text" class="profile-input" id="location" data-i18n-placeholder="registration.location.placeholder" placeholder="e.g.: Beijing, Shanghai, New York" required>
-                    <div class="field-note" data-i18n="registration.location.note">Your AI girlfriend will remember your location and suggest wonderful local restaurants and activities! ♡</div>
+                    <label class="field-label" data-i18n="profile.personality">Personality</label>
+                    <textarea class="profile-input" id="profile-personality" placeholder="Describe your personality..."></textarea>
+                    <div class="field-note" data-i18n="profile.personality.note">Optional: How would you describe yourself?</div>
                 </div>
-                
-                <!-- 语言偏好 -->
+
+                <!-- Interests (Canonical Schema) -->
                 <div class="profile-field">
-                    <label class="field-label" data-i18n="registration.language">Language Setting</label>
-                    <select class="profile-select" id="language" required>
-                        <option value="" data-i18n="registration.language.select">Select Language</option>
-                        <option value="CN">中文</option>
-                        <option value="English">English</option>
-                        <option value="日本語">日本語</option>
-                        <option value="한국어">한국어</option>
-                        <option value="Español">Español</option>
-                        <option value="Français">Français</option>
-                    </select>
+                    <label class="field-label" data-i18n="profile.interests">Interests</label>
+                    <textarea class="profile-input" id="profile-interests" placeholder="e.g., Gaming, Reading, Hiking..."></textarea>
+                    <div class="field-note" data-i18n="profile.interests.note">Optional: What are your hobbies?</div>
                 </div>
-                
-                <!-- 记忆system -->
+
+                <!-- Relationship Style (Canonical Schema) -->
+                <div class="profile-field">
+                    <label class="field-label" data-i18n="profile.relationship_style">Relationship Style</label>
+                    <textarea class="profile-input" id="profile-relationship-style" placeholder="e.g., Caring, Humorous, Adventurous..."></textarea>
+                    <div class="field-note" data-i18n="profile.relationship_style.note">Optional: What are you like in a relationship?</div>
+                </div>
+
+                <!-- Custom Fields (for details JSONB) -->
                 <div class="memory-section">
-                    <div class="memory-title" data-i18n="registration.preferences">Let your girlfriend get to know you better! ♡</div>
-                    
-                    <div class="memory-field">
-                        <label class="memory-label" data-i18n="registration.favorite.food">Favorite Food</label>
-                        <input type="text" class="memory-input" id="favoriteFood" data-i18n-placeholder="registration.favorite.food.placeholder" placeholder="e.g.: Hot pot, pasta, sushi">
+                    <div class="memory-title" data-i18n="profile.custom.title">Additional Details</div>
+                    <!-- Birthday (Custom) -->
+                    <div class="profile-field">
+                        <label class="field-label" data-i18n="profile.birthday">Birthday</label>
+                        <input type="date" class="profile-input" id="profile-birthday">
+                        <div class="field-note" data-i18n="profile.birthday.note">Optional: Your AI girlfriend will remember it!</div>
                     </div>
-                    
-                    <div class="memory-field">
-                        <label class="memory-label" data-i18n="registration.favorite.color">Favorite Color</label>
-                        <input type="text" class="memory-input" id="favoriteColor" data-i18n-placeholder="registration.favorite.color.placeholder" placeholder="e.g.: Blue, pink, green">
+                    <!-- Location (Custom) -->
+                    <div class="profile-field">
+                        <label class="field-label" data-i18n="profile.location">Location</label>
+                        <input type="text" class="profile-input" id="profile-location" placeholder="e.g., New York">
                     </div>
-                    
-                    <div class="memory-field">
-                        <label class="memory-label" data-i18n="registration.hobbies">Hobbies</label>
-                        <input type="text" class="memory-input" id="hobbies" data-i18n-placeholder="registration.hobbies.placeholder" placeholder="e.g.: Reading, listening to music, gaming">
-                    </div>
-                    
                 </div>
-                
-                <button type="button" class="profile-submit-btn" onclick="handleProfileSubmit(event)" data-i18n="registration.submit">OK</button>
+
+                <button type="button" class="profile-submit-btn" onclick="handleProfileSubmit(event)" data-i18n="registration.submit">Save Profile</button>
             </form>
         </div>
     </div>
 
-<script>
-// directly implement complete form submission logic here
-window.handleProfileSubmit = async function(event) {
-    try {
-        (window.AppConfig?.debug?.log || console.log)('Form submit start');
+    <script>
+    window.handleProfileSubmit = async function(event) {
         if (event) {
             event.preventDefault();
-            event.stopPropagation();
         }
-        
-        const formData = {
-            username: document.getElementById('username').value.trim(),
-            displayName: document.getElementById('displayName').value.trim(),
-            birthYear: document.getElementById('birthYear').value,
-            birthMonth: document.getElementById('birthMonth').value,
-            birthDay: document.getElementById('birthDay').value,
-            location: document.getElementById('location').value.trim(),
-            language: document.getElementById('language').value,
-            // Memory system data
-            memory: {
-                favoriteFood: document.getElementById('favoriteFood').value.trim(),
-                favoriteColor: document.getElementById('favoriteColor').value.trim(),
-                hobbies: document.getElementById('hobbies').value.trim()
-            }
-        };
-        
-        (window.AppConfig?.debug?.log || console.log)('Form data collected');
-        
-        // Validate required fields
-        const requiredFields = {
-            username: formData.username,
-            displayName: formData.displayName,
-            birthYear: formData.birthYear,
-            birthMonth: formData.birthMonth,
-            birthDay: formData.birthDay,
-            location: formData.location,
-            language: formData.language
-        };
-        
-        const missingFields = Object.entries(requiredFields).filter(([key, value]) => !value).map(([key]) => key);
-        if (missingFields.length > 0) {
-            console.error('❌ Missing required fields:', missingFields);
-            alert(`请填写所有requiredinfo！缺few: ${missingFields.join(', ')}`);
+
+        const walletAddress = localStorage.getItem('wallet_address');
+        if (!walletAddress) {
+            alert('Error: Wallet address not found. Please reconnect your wallet.');
             return;
         }
-        
-        // saveduserprofile
-        const walletAddress = localStorage.getItem('wallet_address');
-        if (walletAddress) {
-            const userId = `wallet_${walletAddress}`;
-            
-            // Convert data format to match API expectations
-            const month = formData.birthMonth.toString().length === 1 ? '0' + formData.birthMonth : formData.birthMonth;
-            const day = formData.birthDay.toString().length === 1 ? '0' + formData.birthDay : formData.birthDay;
-            
-            const apiFormData = {
-                nickname: formData.displayName,
-                username: formData.username,
-                age: new Date().getFullYear() - parseInt(formData.birthYear),
-                birthday: `${formData.birthYear}-${month}-${day}`,
-                location: formData.location,
-                language: formData.language,
-                interests: formData.memory.hobbies,
-                bio: `喜欢的食物: ${formData.memory.favoriteFood}, 喜欢的color: ${formData.memory.favoriteColor}`
-            };
-            
-            (window.AppConfig?.debug?.log || console.log)('Prepare to save user profile');
-            
-            // Send to backend API
-            try {
-                const apiUrl = window.AppConfig ? window.AppConfig.getApiUrl() : 'http://localhost:3000';
-                (window.AppConfig?.debug?.log || console.log)('POST API:', `${apiUrl}/api/profiles`);
-                (window.AppConfig?.debug?.log || console.log)('Payload prepared');
-                
-                const response = await fetch(`${apiUrl}/api/profiles`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        walletAddress: walletAddress,
-                        ...apiFormData
-                    })
-                });
-                
-                (window.AppConfig?.debug?.log || console.log)('API response status:', response.status);
-                
-                if (response.ok) {
-                    const result = await response.json();
-                    (window.AppConfig?.debug?.log || console.log)('User profile saved');
-                    
-                    // hide panel
-                    const overlay = document.getElementById('user-profile-overlay');
-                    if (overlay) {
-                        overlay.style.display = 'none';
-                    }
-                    
-                    // displaysuccessfulprompt
-                    const successMsg = document.createElement('div');
-                    successMsg.style.cssText = `
-                        position: fixed;
-                        top: 50%;
-                        left: 50%;
-                        transform: translate(-50%, -50%);
-                        background: rgba(0, 0, 0, 0.9);
-                        color: white;
-                        padding: 20px 40px;
-                        border-radius: 10px;
-                        font-size: 16px;
-                        z-index: 10001;
-                    `;
-                    successMsg.textContent = i18n.t('registration.success');
-                    document.body.appendChild(successMsg);
-                    
-                    setTimeout(() => {
-                        successMsg.remove();
-                    }, 3000);
-                    
-                } else {
-                    let errorMessage = `APISave failed: ${response.status}`;
-                    try {
-                        const errorData = await response.json();
-                        errorMessage = errorData.details || errorData.error || errorData.message || errorMessage;
-                        if (errorData.troubleshooting) {
-                            console.error('❌ 故障排除建议:', errorData.troubleshooting);
-                        }
-                    } catch (parseError) {
-                        console.error('❌ 无法解析错误响应:', parseError);
-                    }
-                    throw new Error(errorMessage);
-                }
-            } catch (error) {
-                console.error('❌ Save user profile failed:', error);
-                alert('saveduserprofilefailed，请retry: ' + error.message);
-            }
-        } else {
-            console.error('❌ Wallet address missing; cannot save profile');
-            alert('none法getwalletaddress，请重newconnectedwallet');
+
+        // --- Canonical Fields for 'user_profiles' table ---
+        const profileData = {
+            name: document.getElementById('profile-name').value,
+            avatar_url: document.getElementById('profile-avatar-url').value,
+            personality: document.getElementById('profile-personality').value,
+            interests: document.getElementById('profile-interests').value,
+            relationship_style: document.getElementById('profile-relationship-style').value
+        };
+
+        // --- Custom Fields for 'accounts.details' JSONB column ---
+        const customData = {
+            birthday: document.getElementById('profile-birthday').value,
+            location: document.getElementById('profile-location').value
+        };
+
+        // Basic validation
+        if (!profileData.name) {
+            alert('Please enter your name.');
+            return;
         }
-    } catch (error) {
-        console.error('❌ Error during form submit:', error);
-        alert('submittedfailed：' + error.message);
-    }
-};
 
-// Initialize character-selector scroll to center
-function initializeCharacterSelectorScroll() {
-    const characterSelector = document.querySelector('.character-selector');
-    if (characterSelector) {
-        // Wait for thumbnails to load
-        setTimeout(() => {
-            const scrollableWidth = characterSelector.scrollWidth - characterSelector.clientWidth;
-            const centerPosition = scrollableWidth / 2;
-            characterSelector.scrollLeft = centerPosition;
-        }, 500); // Delay to ensure content is loaded
-    }
-}
+        try {
+            const apiUrl = window.AppConfig ? window.AppConfig.getApiUrl() : 'http://localhost:3000';
+            const response = await fetch(`${apiUrl}/api/profiles`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    walletAddress: walletAddress,
+                    profileData: profileData,
+                    customData: customData
+                })
+            });
 
-// Add event listener for when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    initializeCharacterSelectorScroll();
-});
+            const result = await response.json();
 
-// Also initialize when characters are loaded (after VRM loading)
-window.addEventListener('load', () => {
-    setTimeout(initializeCharacterSelectorScroll, 1000);
-});
+            if (response.ok && result.success) {
+                alert('Profile saved successfully!');
+                // Hide the panel
+                const overlay = document.getElementById('user-profile-overlay');
+                if (overlay) {
+                    overlay.style.display = 'none';
+                }
+            } else {
+                throw new Error(result.error || 'Failed to save profile.');
+            }
 
-// Mobile Notice Modal Functions
-function showMobileNotice() {
-    const overlay = document.getElementById('mobile-notice-overlay');
-    if (overlay && window.innerWidth <= 768) {
-        overlay.classList.add('show');
-    }
-}
+        } catch (error) {
+            console.error('❌ Failed to save profile:', error);
+            alert(`Error: ${error.message}`);
+        }
+    };
+    </script>
+    </div>
 
-function closeMobileNotice() {
-    const overlay = document.getElementById('mobile-notice-overlay');
-    if (overlay) {
-        overlay.classList.remove('show');
-        // Remember user closed the notice (optional - store in sessionStorage)
-        sessionStorage.setItem('mobileNoticeShown', 'true');
-    }
-}
-
-// Show mobile notice on page load for mobile devices
-document.addEventListener('DOMContentLoaded', () => {
-    // Check if notice was already shown in this session
-    const noticeShown = sessionStorage.getItem('mobileNoticeShown');
-    if (!noticeShown && window.innerWidth <= 768) {
-        // Delay showing notice slightly for better UX
-        setTimeout(showMobileNotice, 1000);
-    }
-});
-
-// Handle window resize to show/hide notice appropriately
-window.addEventListener('resize', () => {
-    const overlay = document.getElementById('mobile-notice-overlay');
-    if (overlay && window.innerWidth > 768) {
-        overlay.classList.remove('show');
-    }
-});
-</script>
+<!-- The old handleProfileSubmit script block has been removed for redesign. -->
 
 </body>
 </html>

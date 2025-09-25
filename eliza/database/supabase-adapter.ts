@@ -271,16 +271,43 @@ export class SupabaseDatabaseAdapter implements IDatabaseAdapter {
         .eq('roomId', roomId);
 
       const { count, error } = await query;
-      
+
       if (error) {
         elizaLogger.error('Error counting memories:', error);
         return 0;
       }
-      
+
       return count || 0;
     } catch (error) {
       elizaLogger.error('Error in countMemories:', error);
       return 0;
+    }
+  }
+
+  async getMemoriesByRoomIds(params: {
+    roomIds: UUID[];
+    tableName?: string;
+  }): Promise<Memory[]> {
+    try {
+      if (!params.roomIds || params.roomIds.length === 0) {
+        return [];
+      }
+
+      const { data, error } = await this.supabase
+        .from('memories')
+        .select('*')
+        .in('roomId', params.roomIds)
+        .order('createdAt', { ascending: false });
+
+      if (error) {
+        elizaLogger.error('Error getting memories by room IDs:', error);
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      elizaLogger.error('Error in getMemoriesByRoomIds:', error);
+      return [];
     }
   }
 

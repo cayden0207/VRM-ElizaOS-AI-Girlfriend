@@ -3334,120 +3334,13 @@
         }
 
 
+        // The entire sendMessage function has been replaced by the new elizaChatSystem.handleSendMessage() method.
+        // This is called directly from sendChatMessage() and handleChatKeyPress().
         async function sendMessage() {
-            // Validateuser是否已认证
-            if (!walletAuth.isAuthenticated) {
-                console.error('❌ user not authenticated, cannot send message');
-                walletAuth.showUnauthorizedOverlay();
-                return;
-            }
-
-            const input = document.getElementById('chat-input-field');
-            const message = input.value.trim();
-
-            if (!message) return;
-
-            // Get current user and character info
-            const userId = walletAuth.getCurrentUserId();
-            const character = walletAuth.getCurrentCharacter();
-
-            // console.log(`💬 Sending message: ${message} (user: ${walletAuth.formatAddress(userId)}, character: ${character.name})`);
-
-            // Clear输入框
-            input.value = '';
-
-            // Analyze emotion and trigger animation
-            if (aiModeEnabled) {
-                const emotion = analyzeMessage(message);
-                if (emotion !== 'neutral') {
-                    triggerEmotion(emotion);
-                }
-            }
-
-            try {
-                // Use ElizaOS integrated ChatSystem V2
-                if (window.chatSystemV2) {
-                    // console.log('🤖 Using ElizaOS ChatSystem V2 to send message');
-                    
-                    // Ensure ChatSystem V2 has correct user and character settings
-                    if (!window.chatSystemV2.currentUser) {
-                        // Simulate user object, let ChatSystem V2 think user is logged in
-                        window.chatSystemV2.currentUser = {
-                            id: userId,
-                            nickname: `user${userId.slice(-4)}`,
-                            walletAddress: userId
-                        };
-                        window.chatSystemV2.waitingForWallet = false;
-                        // console.log('👤 Setting ChatSystem V2 user:', window.chatSystemV2.currentUser.nickname);
-                    }
-                    
-                    // Ensure ChatSystem V2 has correct character settings
-                    if (!window.chatSystemV2.currentCharacter && selectedCharacter) {
-                        // console.log('🎭 Setting ChatSystem V2 character:', selectedCharacter.name);
-                        window.chatSystemV2.setCharacter(selectedCharacter);
-                    }
-                    
-                    // Double check: if still no character, use current character data
-                    if (!window.chatSystemV2.currentCharacter) {
-                        const characterData = {
-                            name: character.name,
-                            id: character.id || character.name.toLowerCase(),
-                            personality: character.personality,
-                            ...character
-                        };
-                        // console.log('🎭 Setting ChatSystem V2 with current character data:', characterData.name);
-                        window.chatSystemV2.setCharacter(characterData);
-                    }
-                    
-                    // Use ChatSystem V2 to send message (includes OpenAI integration)
-                    await window.chatSystemV2.sendMessage(message);
-                    
-                    // ChatSystem V2 会处理消息显示和历史记录
-                    // console.log('✅ ElizaOS message sending completed');
-                    
-                } else {
-                    // Fall back to old system
-                    console.log('⚠️ Falling back to old preset reply system');
-                    let response;
-                    
-                    // If memory system is initialized, use enhanced AI reply
-                    if (window.memorySystem && window.memorySystem.initialized) {
-                        // 1. 检索记忆上下文
-                        const memoryContext = await window.memorySystem.retrieveMemoryContext(userId, character.id, message);
-                        
-                        // 2. 构建增强的AI上下文
-                        const npcPersona = getNPCPersona(character.id);
-                        const contextPrompt = window.memorySystem.buildContextForAI(memoryContext, npcPersona);
-                        
-                        // 3. generated带记忆的AI回复
-                        response = await generateAIResponseWithMemory(message, contextPrompt);
-                    } else {
-                        // Finally fall back to simple AI reply
-                        response = generateAIResponse(message);
-                    }
-
-                    // AI reply handled by ElizaOS system
-
-                    // Analyze AI reply and possibly trigger additional animation
-                    const aiEmotion = analyzeMessage(response);
-                    if (aiEmotion !== 'neutral' && aiModeEnabled) {
-                        setTimeout(() => triggerEmotion(aiEmotion), 500);
-                    }
-
-                    // Save conversation to memory system
-                    if (window.memorySystem && window.memorySystem.initialized) {
-                        await window.memorySystem.processConversationMemories(userId, character.id, message, response);
-                    } else {
-                        // Fall back to save to localStorage
-                        saveChatHistory(userId, character.id, message, response);
-                    }
-                }
-
-            } catch (error) {
-                console.error('❌ Failed to send message:', error);
-                
-                // Final fallback handling
-                // Fallback disabled - using ElizaOS system only
+            if (window.elizaChatSystem) {
+                window.elizaChatSystem.handleSendMessage();
+            } else {
+                console.error('❌ ElizaOS Chat System not initialized.');
             }
         }
 
@@ -4247,67 +4140,19 @@
         let selectedCharacter = null;
         
         function initializeAIChat() {
-            if (window.chatSystemV2 && selectedCharacter) {
-                window.chatSystemV2.setCharacter(selectedCharacter);
-                // console.log('💕 AI chat system V2 connected to character:', selectedCharacter.name);
+            if (window.elizaChatSystem && selectedCharacter) {
+                window.elizaChatSystem.setCurrentCharacter(selectedCharacter);
+                // console.log('💕 AI chat system connected to character:', selectedCharacter.name);
                 
-                // Add welcome message (if new conversation)
-                setTimeout(async () => {
-                    const stats = await window.chatSystemV2.getUserStats();
-                    if (!stats || stats.totalInteractions === 0) {
-                        const welcomeMessage = getWelcomeMessage(selectedCharacter);
-                        window.chatSystemV2.updateChatUI({
-                            id: Date.now(),
-                            sender: 'ai',
-                            content: welcomeMessage,
-                            timestamp: new Date().toISOString(),
-                            emotion: 'happy'
-                        });
-                    }
-                }, 1000);
+                // Welcome message is now handled by the backend logic based on conversation history.
+                // The old logic to show a welcome message on the frontend if totalInteractions === 0 is removed.
             }
         }
         
-        function getWelcomeMessage(character) {
-            const timeContext = new Date().getHours();
-            let greeting = 'Hello';
-            if (timeContext < 12) greeting = 'Good morning';
-            else if (timeContext < 18) greeting = 'Good afternoon';
-            else greeting = 'Good evening';
-            
-            const welcomeMessages = {
-                'Alice': `${greeting}! I'm Alice~ Nice to meet you! What would you like to chat about today?`,
-                'Fliza': `${greeting}~ I'm Fliza, I've been waiting for you.`,
-                'Ash': `Hmm...${greeting}, I'm Ash. Is there anything you'd like to say?`,
-                'Elinyaa': `${greeting}! I'm Elinyaa~ Let's have a happy day!`,
-                'default': `${greeting}! I'm ${character.name}, nice to meet you~`
-            };
-            return welcomeMessages[character.name] || welcomeMessages.default;
-        }
+        // getWelcomeMessage function removed after migration. Welcome messages are now handled by the backend.
         
-        // Rewrite send message function to use AI system V2
-        const originalSendChatMessage = sendChatMessage;
-        sendChatMessage = function() {
-            const input = document.getElementById('chat-input-field');
-            const message = input.value.trim();
-            if (!message) return;
-            
-            // Add send button animation
-            const sendBtn = document.querySelector('.send-btn');
-            sendBtn.classList.add('sending');
-            setTimeout(() => {
-                sendBtn.classList.remove('sending');
-            }, 600);
-            
-            // Use AI chat system V2 to send message
-            if (window.chatSystemV2 && selectedCharacter) {
-                window.chatSystemV2.sendMessage(message);
-                input.value = '';
-            } else {
-                // Fall back to original chat functionality
-                originalSendChatMessage();
-            }
-        }
+        // The re-definition of sendChatMessage has been removed after migrating to the new ElizaOS chat system.
+        // The original sendChatMessage now correctly calls the new system via the updated sendMessage function.
         
         // VRM表情触发函数（供AI系统调用）
         window.triggerVRMExpression = function(expression) {
@@ -4846,8 +4691,8 @@
                 
                 // Wait for chat system initialization
                 setTimeout(() => {
-                    if (window.chatSystemV2) {
-                        // console.log('💬 Chat system ready');"
+                    if (window.elizaChatSystem) {
+                        // console.log('💬 Chat system ready');
                     }
                 }, 1000);
             }

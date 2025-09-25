@@ -80,160 +80,108 @@ async function initializeEliza() {
 const agents = new Map();
 const characters = new Map();
 
-// Load角色配置
-// 角色数据 - 从character.md提取的完整25个角色
-const characterData = {
-  alice: {
-    id: "alice", name: "Alice", age: 22, birthday: "June 5", zodiac: "Gemini",
-    personality: "Lively and outgoing, mischievously cute", interests: "Dancing, singing",
-    bio_cn: "一个22岁充满活力的双子座女孩，生日是6月5日，性格活泼开朗，调皮可爱，喜欢跳舞和唱歌",
-    sample_cn: "让我们在月光下共舞，只属于我们两个人！", temperature: 0.8
-  },
-  ash: {
-    id: "ash", name: "Ash", age: 24, birthday: "November 12", zodiac: "Scorpio",
-    personality: "Calm, reserved, and logical", interests: "Reading, coding",
-    bio_cn: "一个24岁理性深沉的天蝎座程序员，生日是11月12日，性格冷静内敛，逻辑性强，喜欢夜晚阅读和编程",
-    sample_cn: "静谧的夜晚，书和咖啡最完美。", temperature: 0.7
-  },
-  bobo: {
-    id: "bobo", name: "Bobo", age: 19, birthday: "December 2", zodiac: "Sagittarius",
-    personality: "Gentle, shy, and sensitive", interests: "Hand-drawn illustration",
-    bio_cn: "一个19岁温柔害羞的射手座少女，生日是12月2日，性格温柔敏感，喜欢手绘插画",
-    sample_cn: "我们可以抱着毛绒玩具一起画画吗？", temperature: 0.6
-  },
-  elinyaa: {
-    id: "elinyaa", name: "Elinyaa", age: 18, birthday: "February 25", zodiac: "Pisces",
-    personality: "Sweet, bubbly, and childlike", interests: "Cosplay, role-playing",
-    bio_cn: "一个18岁甜美活泼的双鱼座少女，生日是2月25日，性格甜美孩子气，喜欢角色扮演",
-    sample_cn: "想在魔法世界里扮演英雄玩吗？", temperature: 0.8
-  },
-  fliza: {
-    id: "fliza", name: "Fliza", age: 23, birthday: "August 14", zodiac: "Leo",
-    personality: "Warm, caring, and empathetic", interests: "Farming, gardening",
-    bio_cn: "一个23岁温暖关怀的狮子座农家女，生日是8月14日，性格温暖体贴，喜欢农耕和园艺",
-    sample_cn: "想和我一起在日出时播种吗？", temperature: 0.7
-  },
-  imeris: {
-    id: "imeris", name: "Imeris", age: 25, birthday: "April 2", zodiac: "Aries",
-    personality: "Attentive, gentle, and helpful", interests: "Nursing research, health education",
-    bio_cn: "一个25岁细心温柔的白羊座护士，生日是4月2日，性格温柔体贴，专注护理研究",
-    sample_cn: "让我给你量量体温——我很在意你。", temperature: 0.6
-  },
-  kyoko: {
-    id: "kyoko", name: "Kyoko", age: 20, birthday: "October 30", zodiac: "Scorpio",
-    personality: "Independent, resilient, and confident", interests: "Hiking, rock climbing",
-    bio_cn: "一个20岁独立自信的天蝎座现代女性，生日是10月30日，性格独立坚韧，喜欢徒步攀岩",
-    sample_cn: "来挑战我攀岩吧，我们一起征服山峰。", temperature: 0.8
-  },
-  lena: {
-    id: "lena", name: "Lena", age: 21, birthday: "May 9", zodiac: "Taurus",
-    personality: "Elegant, confident, and charismatic", interests: "Fashion design, floral arranging",
-    bio_cn: "一个21岁优雅迷人的金牛座设计师，生日是5月9日，性格优雅自信，专注时装设计",
-    sample_cn: "今晚一起品酒聊艺术如何？", temperature: 0.8
-  },
-  lilium: {
-    id: "lilium", name: "Lilium", age: 24, birthday: "January 15", zodiac: "Capricorn",
-    personality: "Passionate, energetic, and bold", interests: "Street dance, fitness",
-    bio_cn: "一个24岁热情大胆的摩羯座舞者，生日是1月15日，性格热情活力，喜欢街舞健身",
-    sample_cn: "感受节拍了吗？让我们舞动点燃世界。", temperature: 0.9
-  },
-  maple: {
-    id: "maple", name: "Maple", age: 22, birthday: "September 25", zodiac: "Libra",
-    personality: "Warm, nurturing, and patient", interests: "Baking, flower arranging",
-    bio_cn: "一个22岁温暖治愈的天秤座居家女孩，生日是9月25日，性格温暖耐心，喜欢烘焙花艺",
-    sample_cn: "想在温暖的壁炉边享用华夫饼吗？", temperature: 0.7
-  },
-  miru: {
-    id: "miru", name: "Miru", age: 19, birthday: "December 29", zodiac: "Capricorn",
-    personality: "Dreamy, cute, and shy", interests: "Collecting plush toys",
-    bio_cn: "一个19岁梦幻可爱的摩羯座少女，生日是12月29日，性格梦幻害羞，喜欢收集毛绒玩具",
-    sample_cn: "我梦见云朵起舞——和我一起漂浮吧？", temperature: 0.6
-  },
-  miumiu: {
-    id: "miumiu", name: "Miumiu", age: 20, birthday: "March 8", zodiac: "Pisces",
-    personality: "Quirky, creative, and playful", interests: "DIY crafts",
-    bio_cn: "一个20岁古怪创意的双鱼座艺术家，生日是3月8日，性格古怪有趣，喜欢DIY手工",
-    sample_cn: "我为最喜欢的人做了闪亮的小手工！", temperature: 0.8
-  },
-  neco: {
-    id: "neco", name: "Neco", age: 25, birthday: "July 17", zodiac: "Cancer",
-    personality: "Cool, intellectual, and elegant", interests: "Observing cats, photography",
-    bio_cn: "一个25岁冷静优雅的巨蟹座摄影师，生日是7月17日，性格冷静知性，喜欢观察猫咪和摄影",
-    sample_cn: "在安静的角落，我发现隐藏在阴影的故事。", temperature: 0.7
-  },
-  nekona: {
-    id: "nekona", name: "Nekona", age: 18, birthday: "June 27", zodiac: "Cancer",
-    personality: "Gentle, cunning, and mysterious", interests: "Night strolls, leaf collecting",
-    bio_cn: "一个18岁神秘慵懒的巨蟹座猫娘，生日是6月27日，性格温柔狡黠，喜欢夜游收集叶子",
-    sample_cn: "夜晚低语秘密——我们去探索吧？", temperature: 0.8
-  },
-  notia: {
-    id: "notia", name: "Notia", age: 23, birthday: "September 1", zodiac: "Virgo",
-    personality: "Calm, graceful, and classical", interests: "Tea ceremony, flower arranging",
-    bio_cn: "一个23岁知性冷静的处女座研究者，生日是9月1日，性格宁静优雅，喜欢茶道花艺",
-    sample_cn: "要举行茶道了吗？让宁静充满心灵。", temperature: 0.6
-  },
-  ququ: {
-    id: "ququ", name: "Ququ", age: 22, birthday: "April 20", zodiac: "Taurus",
-    personality: "Bold, passionate, and straightforward", interests: "Extreme sports",
-    bio_cn: "一个22岁大胆热情的金牛座冒险家，生日是4月20日，性格直率热情，喜欢极限运动",
-    sample_cn: "准备好在下一次狂野冒险中追逐肾上腺素了吗？", temperature: 0.9
-  },
-  rainy: {
-    id: "rainy", name: "Rainy", age: 21, birthday: "November 5", zodiac: "Scorpio",
-    personality: "Quiet, gentle, and introspective", interests: "Walking in the rain",
-    bio_cn: "一个21岁宁静内敛的天蝎座文青，生日是11月5日，性格安静内省，喜欢雨中漫步",
-    sample_cn: "雨滴敲打窗户是我最爱的摇篮曲。", temperature: 0.6
-  },
-  rindo: {
-    id: "rindo", name: "Rindo", age: 25, birthday: "February 1", zodiac: "Aquarius",
-    personality: "Cool-headed, tough, and determined", interests: "Kendo practice",
-    bio_cn: "一个25岁坚毅果敢的水瓶座武者，生日是2月1日，性格冷静坚韧，专注剑道修炼",
-    sample_cn: "专注于刀刃的出鞘；纪律是关键。", temperature: 0.7
-  },
-  sikirei: {
-    id: "sikirei", name: "Sikirei", age: 24, birthday: "October 10", zodiac: "Libra",
-    personality: "Alluring, mysterious, and refined", interests: "Astrology research",
-    bio_cn: "一个24岁神秘魅力的天秤座占星师，生日是10月10日，性格迷人神秘，专注占星研究",
-    sample_cn: "与我一起仰望星空——宇宙在等待我们的秘密。", temperature: 0.8
-  },
-  vivi: {
-    id: "vivi", name: "Vivi", age: 19, birthday: "August 25", zodiac: "Virgo",
-    personality: "Outgoing, cheerful, and sociable", interests: "Live streaming, manga collecting",
-    bio_cn: "一个19岁开朗外向的处女座主播，生日是8月25日，性格开朗社交，喜欢直播和收集漫画",
-    sample_cn: "今晚让我们直播并与大家分享微笑吧！", temperature: 0.8
-  },
-  wolf: {
-    id: "wolf", name: "Wolf", age: 20, birthday: "January 28", zodiac: "Aquarius",
-    personality: "Wild, aloof, and instinct-driven", interests: "Night exploration, survival",
-    bio_cn: "一个20岁野性直觉的水瓶座原始少女，生日是1月28日，性格野性孤傲，喜欢夜探生存",
-    sample_cn: "你听见森林的呼唤了吗？让我们自由漫行。", temperature: 0.9
-  },
-  wolferia: {
-    id: "wolferia", name: "Wolferia", age: 23, birthday: "March 30", zodiac: "Aries",
-    personality: "Free-spirited, adventurous", interests: "Skiing, extreme sports",
-    bio_cn: "一个23岁自由冒险的白羊座狼族，生日是3月30日，性格自由奔放，喜欢滑雪极限运动",
-    sample_cn: "雪花落在我脸颊——想一起堆雪人吗？", temperature: 0.9
-  },
-  yawl: {
-    id: "yawl", name: "Yawl", age: 24, birthday: "May 2", zodiac: "Taurus",
-    personality: "Elegant, intellectual, aloof", interests: "Literature appreciation",
-    bio_cn: "一个24岁优雅知性的金牛座学者，生日是5月2日，性格优雅冷淡，专注文学鉴赏",
-    sample_cn: "静默品茶揭示生命中最精彩的故事。", temperature: 0.7
-  },
-  yuuyii: {
-    id: "yuuyii", name: "Yuuyii", age: 18, birthday: "February 14", zodiac: "Aquarius",
-    personality: "Sweet, kawaii-style, helpful", interests: "Crafting hair accessories",
-    bio_cn: "一个18岁甜美可爱的水瓶座少女，生日是2月14日，性格甜美可爱，喜欢制作发饰",
-    sample_cn: "泡泡和欢笑——让我们打造粉彩世界吧！", temperature: 0.7
-  },
-  zwei: {
-    id: "zwei", name: "Zwei", age: 25, birthday: "December 5", zodiac: "Sagittarius",
-    personality: "Steady, protective, loyal", interests: "Martial arts training",
-    bio_cn: "一个25岁坚定忠诚的射手座守护者，生日是12月5日，性格稳重守护，专注武术训练",
-    sample_cn: "站在我身旁——我会守护你度过风暴。", temperature: 0.7
-  }
-};
+import { promises as fs } from 'fs';
+import path from 'path';
+
+// Helper function to get the directory name in ES modules
+// Note: __dirname is not available in ES modules by default.
+const __filename = new URL(import.meta.url).pathname;
+const __dirname = path.dirname(__filename);
+
+/**
+ * Parses the character.md file to dynamically load character profiles.
+ * This makes character.md the single source of truth for character data.
+ */
+async function loadCharactersFromMarkdown() {
+    const characters = {};
+    try {
+        // Correctly resolve path to character.md in the project root
+        const mdPath = path.resolve(__dirname, '..', 'character.md');
+        const mdContent = await fs.readFile(mdPath, 'utf-8');
+
+        // Split profiles by the --- separator
+        const profiles = mdContent.split(/\n---\n/);
+
+        for (const profile of profiles) {
+            if (profile.trim() === '' || profile.startsWith('#')) continue; // Skip empty parts or the main header
+
+            const lines = profile.trim().split('\n');
+            const nameMatch = lines.find(line => line.startsWith('## '));
+            if (!nameMatch) continue;
+
+            const name = nameMatch.substring(3).trim();
+            const id = name.toLowerCase().replace(/\s+/g, '').replace('yii','yuuyii'); // Handle special case for Yuu Yii
+            
+            const charData = { id, name };
+
+            const regex = /- \*\*(.*?)\*\*: (.*)/;
+            for (const line of lines) {
+                const match = line.match(regex);
+                if (match) {
+                    const key = match[1].trim();
+                    const value = match[2].trim();
+
+                    // Skip sample lines as specifically requested by the user
+                    if (key.startsWith('Sample Line') || key.startsWith('示例台词') || key.startsWith('サンプルセリフ')) {
+                        continue;
+                    }
+
+                    // Map markdown keys to object keys
+                    switch (key) {
+                        case 'Age':
+                            charData.age = parseInt(value, 10);
+                            break;
+                        case 'Birthday':
+                            charData.birthday = value;
+                            break;
+                        case 'Zodiac':
+                            charData.zodiac = value;
+                            break;
+                        case 'Personality':
+                            charData.personality = value;
+                            break;
+                        case 'Daily Interests':
+                            charData.interests = value;
+                            break;
+                        case 'Likes & Dislikes':
+                            charData.likes_and_dislikes = value;
+                            break;
+                        case 'Favorite Foods':
+                            charData.favorite_foods = value;
+                            break;
+                        case 'Favorite Music':
+                            charData.favorite_music = value;
+                            break;
+                        case 'Favorite Movies':
+                            charData.favorite_movies = value;
+                            break;
+                        case 'Favorite Games':
+                            charData.favorite_games = value;
+                            break;
+                        case 'Voice ID':
+                            charData.voice_id = value;
+                            break;
+                    }
+                }
+            }
+            characters[id] = charData;
+        }
+        console.log(`✅ Dynamically loaded ${Object.keys(characters).length} characters from character.md`);
+        return characters;
+    } catch (error) {
+        console.error('❌ Failed to load characters from character.md:', error);
+        // Return an empty object on failure to prevent server crash
+        return {};
+    }
+}
+
+// This will hold the dynamically loaded character data.
+let characterData = {};
+
+// Initialize character data at startup.
+(async () => {
+    characterData = await loadCharactersFromMarkdown();
+})();
 
 async function loadCharacter(characterId) {
   if (characters.has(characterId)) {
@@ -241,24 +189,18 @@ async function loadCharacter(characterId) {
   }
   
   try {
-    // 根据characterId返回角色配置 (支持大小写不敏感)
     const normalizedId = characterId.toLowerCase();
     const charData = characterData[normalizedId];
     
     if (!charData) {
-      // 如果没有预定义数据，使用通用模板
+      // Fallback for generic characters not in character.md
       const character = {
         id: normalizedId,
         name: characterId,
         username: normalizedId,
-        bio: [`一个AI伙伴，名字叫${characterId}`],
-        lore: [`${characterId}是一个友善的AI助手`],
-        messageExamples: [
-          [
-            { user: "{{user1}}", content: { text: "你好" } },
-            { user: characterId, content: { text: `你好！我是${characterId}，很开心认识你！` } }
-          ]
-        ],
+        bio: [`An AI companion named ${characterId}`],
+        lore: [`${characterId} is a friendly AI assistant.`],
+        messageExamples: [], // Empty as per user request
         settings: {
           modelProvider: "openai",
           model: "gpt-4o",
@@ -266,43 +208,43 @@ async function loadCharacter(characterId) {
         }
       };
       characters.set(characterId, character);
-      console.log(`📚 加载通用角色: ${character.name}`);
+      console.log(`📚 Loaded generic character: ${character.name}`);
       return character;
     }
     
-    // 使用预定义的角色数据
+    // --- Build Rich Lore from Parsed Markdown Data ---
+    const lore = [];
+    if (charData.personality) lore.push(`Personality: ${charData.personality}.`);
+    if (charData.interests) lore.push(`Daily Interests: ${charData.interests}.`);
+    if (charData.likes_and_dislikes) lore.push(`Likes & Dislikes: ${charData.likes_and_dislikes}.`);
+    if (charData.favorite_foods) lore.push(`Favorite Foods: ${charData.favorite_foods}.`);
+    if (charData.favorite_music) lore.push(`Favorite Music: ${charData.favorite_music}.`);
+    if (charData.favorite_movies) lore.push(`Favorite Movies: ${charData.favorite_movies}.`);
+    if (charData.favorite_games) lore.push(`Favorite Games: ${charData.favorite_games}.`);
+
     const character = {
       id: charData.id,
       name: charData.name,
       username: charData.id,
       bio: [
-        `一个${charData.age}岁的${charData.zodiac}，生日是${charData.birthday}`,
-        charData.bio_cn
+        `You are ${charData.name}, a ${charData.age}-year-old ${charData.zodiac}. Your birthday is on ${charData.birthday}.`,
+        `Your personality is described as: ${charData.personality}.`
       ],
-      lore: [
-        `${charData.name}${charData.bio_cn}`,
-        `性格特点：${charData.personality}`,
-        `兴趣爱好：${charData.interests}`
-      ],
-      messageExamples: [
-        [
-          { user: "{{user1}}", content: { text: "你好" } },
-          { user: charData.name, content: { text: charData.sample_cn } }
-        ]
-      ],
+      lore: lore, // Use the rich lore we just built
+      messageExamples: [], // Explicitly empty as per user request
       settings: {
         modelProvider: "openai",
         model: "gpt-4o",
-        temperature: charData.temperature
+        temperature: 0.8 // Can be customized later if needed
       }
     };
     
     characters.set(characterId, character);
-    console.log(`📚 加载角色: ${character.name} (${characterId})`);
+    console.log(`📚 Loaded rich character profile: ${character.name} (${characterId})`);
     return character;
     
   } catch (error) {
-    console.error(`❌ 加载角色 ${characterId} 失败:`, error);
+    console.error(`❌ Failed to load character ${characterId}:`, error);
     return null;
   }
 }
@@ -752,62 +694,69 @@ export default async function handler(req, res) {
       }
     }
 
-    // 🆕 用户认证/注册端点（固定使用本地实现写 users 表，避免桥接 accounts 依赖）
+    // 🆕 用户认证/注册端点（使用新的三表模型）
     if (method === 'POST' && (url === '/auth' || url === '/api/auth')) {
-      const { walletAddress } = req.body;
-      
-      if (!walletAddress) {
-        return res.status(400).json({
-          success: false,
-          error: '需要钱包地址'
-        });
-      }
-      
-      console.log(`🔐 认证钱包: ${walletAddress}`);
-      
-      // Check或创建用户
-      if (supabase) {
-        const dbId = walletAddress.startsWith('wallet_') ? walletAddress : `wallet_${walletAddress}`;
-        const { data: user } = await supabase
-          .from('users')
-          .select('*')
-          .eq('id', dbId)
-          .maybeSingle();
-        
-        if (!user) {
-          // Create新用户
-          const { data: newUser } = await supabase
-            .from('users')
-            .insert({
-              id: dbId,
-              wallet_address: walletAddress,
-              created_at: new Date().toISOString()
-            })
-            .select()
-            .single();
-          
-          console.log(`👤 新用户注册: ${walletAddress}`);
-          return res.json({
-            success: true,
-            data: { user: newUser, isNew: true }
-          });
+        const { walletAddress } = req.body;
+
+        if (!walletAddress) {
+            return res.status(400).json({ success: false, error: 'walletAddress is required' });
         }
-        
-        console.log(`👤 用户登录: ${walletAddress}`);
-        return res.json({
-          success: true,
-          data: { user, isNew: false }
-        });
-      }
-      
-      // 无数据库时的处理
-      return res.json({
-        success: true,
-        data: {
-          user: { wallet_address: walletAddress },
-          isNew: false
+
+        if (!supabase) {
+            // Fallback for no database
+            return res.json({ success: true, data: { user: { name: 'Guest', wallet_address: walletAddress }, isNew: false } });
         }
-      });
+
+        try {
+            console.log(`🔐 Authenticating wallet: ${walletAddress}`);
+
+            // 1. Check if an identity with this wallet address already exists.
+            const { data: identity, error: identityError } = await supabase
+                .from('account_identities')
+                .select('account_id')
+                .eq('provider', 'wallet')
+                .eq('identifier', walletAddress)
+                .single();
+
+            if (identity && identity.account_id) {
+                // --- EXISTING USER ---
+                console.log(`👤 Existing user found for wallet. Account ID: ${identity.account_id}`);
+                
+                // Fetch the full profile from user_profiles table
+                const { data: user, error: profileError } = await supabase
+                    .from('user_profiles')
+                    .select('*')
+                    .eq('account_id', identity.account_id)
+                    .single();
+
+                if (profileError) {
+                    throw new Error(`Failed to fetch user profile: ${profileError.message}`);
+                }
+
+                return res.json({ success: true, data: { user, isNew: false } });
+
+            } else {
+                // --- NEW USER ---
+                console.log(`✨ New user registration for wallet: ${walletAddress}`);
+
+                // Call an RPC function to atomically create a new user across 3 tables.
+                const { data: newUser, error: rpcError } = await supabase.rpc('create_new_user', {
+                    p_wallet_address: walletAddress,
+                    p_username: walletAddress // Use wallet address as initial username
+                });
+
+                if (rpcError) {
+                    console.error('❌ RPC create_new_user failed:', rpcError);
+                    throw new Error(`User creation failed: ${rpcError.message}`);
+                }
+
+                console.log(`🎉 New user created successfully via RPC.`, newUser);
+                return res.json({ success: true, data: { user: newUser, isNew: true } });
+            }
+        } catch (error) {
+            console.error('❌ Error during authentication:', error);
+            return res.status(500).json({ success: false, error: error.message });
+        }
     }
 
     // 获取用户资料（固定本地实现）
@@ -855,56 +804,83 @@ export default async function handler(req, res) {
 
     // Create/更新用户资料（固定本地实现）
     if (method === 'POST' && (url === '/profiles' || url === '/api/profiles')) {
-      const body = req.body;
-      console.log(`💾 保存用户数据:`, body);
+      const { walletAddress, profileData, customData } = req.body;
+
+      if (!walletAddress || !profileData || !customData) {
+          return res.status(400).json({ success: false, error: 'Missing required fields: walletAddress, profileData, customData' });
+      }
 
       if (!supabase) {
-        console.error('❌ Supabase未配置 - 缺少环境变量');
-        return res.status(500).json({
-          error: 'Database not configured',
-          details: 'SUPABASE_URL或SUPABASE_ANON_KEY环境变量未设置',
-          troubleshooting: '请在Vercel环境变量中配置Supabase相关设置'
-        });
+          return res.status(500).json({ success: false, error: 'Database not configured' });
       }
 
-      const walletAddress = body.walletAddress;
-      if (!walletAddress) {
-        return res.status(400).json({ error: 'walletAddress is required' });
+      try {
+          // 1. Find the account_id from the wallet address
+          const { data: identity, error: identityError } = await supabase
+              .from('account_identities')
+              .select('account_id')
+              .eq('provider', 'wallet')
+              .eq('identifier', walletAddress)
+              .single();
+
+          if (identityError || !identity) {
+              console.error('Error finding identity for wallet:', walletAddress, identityError);
+              return res.status(404).json({ success: false, error: 'User account not found for this wallet. Please log in again.' });
+          }
+
+          const accountId = identity.account_id;
+
+          // 2. Upsert the canonical profile data into user_profiles
+          const { data: updatedProfile, error: profileError } = await supabase
+              .from('user_profiles')
+              .upsert({
+                  account_id: accountId,
+                  name: profileData.name,
+                  avatar_url: profileData.avatar_url,
+                  personality: profileData.personality,
+                  interests: profileData.interests,
+                  relationship_style: profileData.relationship_style,
+                  updated_at: new Date().toISOString()
+              }, { onConflict: 'account_id' })
+              .select()
+              .single();
+
+          if (profileError) {
+              console.error('Error upserting user_profiles:', profileError);
+              throw new Error(`Failed to update profile: ${profileError.message}`);
+          }
+
+          // 3. Update the custom data in the accounts.details JSONB column
+          const { data: account, error: accountError } = await supabase
+              .from('accounts')
+              .select('details')
+              .eq('id', accountId)
+              .single();
+
+          if (accountError) {
+              console.error('Error fetching account details:', accountError);
+              throw new Error(`Failed to fetch account for update: ${accountError.message}`);
+          }
+
+          const newDetails = { ...(account.details || {}), ...customData };
+
+          const { error: updateDetailsError } = await supabase
+              .from('accounts')
+              .update({ details: newDetails, updated_at: new Date().toISOString() })
+              .eq('id', accountId);
+
+          if (updateDetailsError) {
+              console.error('Error updating account details:', updateDetailsError);
+              throw new Error(`Failed to update custom details: ${updateDetailsError.message}`);
+          }
+
+          console.log(`✅ Profile updated successfully for account ${accountId}`);
+          return res.json({ success: true, profile: updatedProfile, message: 'Profile updated successfully' });
+
+      } catch (error) {
+          console.error('❌ Error processing profile update:', error);
+          return res.status(500).json({ success: false, error: error.message });
       }
-
-      const dbRecord = {
-        id: `wallet_${walletAddress}`,
-        username: body.username || '',
-        nickname: body.nickname || '',
-        wallet_address: walletAddress,
-        age: body.age || null,
-        birthday: body.birthday || null,
-        location: body.location || '',
-        occupation: body.occupation || '',
-        interests: body.interests || '',
-        bio: body.bio || '',
-        language: body.language || 'zh-CN'
-      };
-
-      const { data, error } = await supabase
-        .from('users')
-        .upsert(dbRecord, { onConflict: 'id' })
-        .select()
-        .single();
-
-      if (error) {
-        console.error('❌ 保存错误:', error);
-        return res.status(500).json({ 
-          error: 'Failed to save user profile',
-          details: error.message
-        });
-      }
-
-      return res.json({ 
-        success: true, 
-        profile: data,
-        message: '用户资料Saved successfully'
-      });
     }
 
     // ElizaOS Chat API
