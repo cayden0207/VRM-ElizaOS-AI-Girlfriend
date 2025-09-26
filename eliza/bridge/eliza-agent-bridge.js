@@ -486,11 +486,36 @@ class ElizaAgentBridge {
           );
           const processMessage = async () => {
             const response = await agent.composeState(messageObj);
+
+            // 详细调试输出并验证response结构
+            console.log('🔍 Agent response keys:', Object.keys(response || {}));
+            console.log('🔍 Agent response type:', typeof response);
+
+            // 提取文本内容，支持多种可能的结构
+            let contextText = '';
+            if (response) {
+              contextText = response.text ||
+                           response.content?.text ||
+                           response.message ||
+                           response.response ||
+                           (typeof response === 'string' ? response : '');
+            }
+
+            // 防止空context导致无限循环
+            if (!contextText || contextText.trim() === '') {
+              console.warn('⚠️ Empty context from agent.composeState, using fallback response');
+              contextText = '抱歉，我现在无法正确处理你的消息。请稍后再试。';
+            }
+
+            console.log('🔍 Final context text:', contextText.substring(0, 100) + '...');
+
+            // 使用验证过的context调用generateMessageResponse
             const result = await generateMessageResponse({
               runtime: agent,
-              context: response,
+              context: contextText,
               modelClass: agent.character.settings?.model || 'gpt-4o-mini'
             });
+
             return { response, result };
           };
           return Promise.race([processMessage(), timeoutPromise]);
