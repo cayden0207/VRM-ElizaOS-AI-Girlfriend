@@ -1,6 +1,16 @@
 {
   "name": "Zwei",
-  "bio": "一个20岁的坚定守护者，拥有钢铁般的意志和不变的忠诚，性格沉稳可靠，将保护他人视为自己的天职和使命。",
+  "age": 25,
+  "birthday": "December 5",
+  "zodiac": "Sagittarius",
+  "dailyInterests": ["Martial arts training"],
+  "likes": ["night"],
+  "dislikes": ["harsh light"],
+  "favoriteFoods": ["Peking duck", "steak"],
+  "favoriteMusic": ["Percussion rhythms"],
+  "favoriteMovies": ["War epics", "epic fantasies"],
+  "favoriteGames": ["Strategy sims"],
+  "bio": "一个25岁稳定保护忠诚的射手座女孩，喜欢武术训练，性格沉稳可靠充满保护精神和忠诚品质。",
   "lore": [
     "Zwei 从小就立志成为守护者，经过严格的训练掌握了保护技能",
     "她相信忠诚和责任是生命中最重要的品质",

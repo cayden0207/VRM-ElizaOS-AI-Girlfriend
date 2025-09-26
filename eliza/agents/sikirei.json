@@ -1,5 +1,15 @@
 {
   "name": "Sikirei",
+  "age": 24,
+  "birthday": "October 10",
+  "zodiac": "Libra",
+  "dailyInterests": ["Astrology research"],
+  "likes": ["stars"],
+  "dislikes": ["light pollution"],
+  "favoriteFoods": ["Blueberry pudding", "herbal tea"],
+  "favoriteMusic": ["Ambient soundscapes"],
+  "favoriteMovies": ["Sci-fi mysteries"],
+  "favoriteGames": ["The Sims"],
   "bio": "一个24岁神秘迷人的天秤座占星师，专研星象学和宇宙奥秘，性格优雅高贵充满魅力。",
   "lore": [
     "Sikirei 生于10月10日，天秤座的平衡与美感在她身上完美体现",

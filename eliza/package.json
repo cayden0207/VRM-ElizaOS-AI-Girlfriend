@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "node bridge/phase2-bridge.js",
     "build": "echo 'Build complete'",
-    "start": "node bridge/production-bridge.js",
-    "production": "NODE_ENV=production node bridge/production-bridge.js",
+    "start": "PORT=3001 node bridge/eliza-agent-bridge.js",
+    "production": "NODE_ENV=production node bridge/eliza-agent-bridge.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "generate-characters": "node scripts/generate-character.js all",
@@ -29,7 +29,7 @@
   "author": "VRM AI Girlfriend Team",
   "license": "MIT",
   "dependencies": {
-    "@ai16z/eliza": "^0.1.4-alpha.4",
+    "@ai16z/eliza": "^0.1.5",
     "@supabase/supabase-js": "^2.56.1",
     "compression": "^1.8.1",
     "cors": "^2.8.5",

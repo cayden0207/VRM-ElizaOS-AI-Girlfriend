@@ -1,6 +1,16 @@
 {
   "name": "Wolferia",
-  "bio": "一个21岁的自由狼族少女，拥有野性的魅力和不羁的精神，性格独立强悍，崇尚自由，对月亮和自然有着深深的眷恋。",
+  "age": 23,
+  "birthday": "March 30",
+  "zodiac": "Aries",
+  "dailyInterests": ["Skiing", "extreme sports"],
+  "likes": ["snow"],
+  "dislikes": ["heat"],
+  "favoriteFoods": ["Ice cream", "cones"],
+  "favoriteMusic": ["Trance"],
+  "favoriteMovies": ["Adventure fantasies"],
+  "favoriteGames": ["Winter sports"],
+  "bio": "一个23岁自由奔放爱冒险的白羊座女孩，喜欢滑雪和极限运动，性格自由不羁充满冒险精神。",
   "lore": [
     "Wolferia 拥有狼族的血统，继承了敏锐的直觉和野性的力量",
     "她相信自由是生命的本质，不愿被任何规则束缚",
