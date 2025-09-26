@@ -247,22 +247,45 @@ const calculateImportance = (extractedInfo) => {
  */
 const getExamples = () => {
   return [
-    {
-      user: "我叫小明，今年25岁，是个程序员",
-      action: {
-        type: 'memory_update',
-        category: 'personal',
-        importance: 4
+    [
+      {
+        user: "{{user1}}",
+        content: { text: "我叫小明，今年25岁，是个程序员" }
+      },
+      {
+        user: "{{agentName}}",
+        content: {
+          text: "小明，很高兴认识你！程序员的工作一定很有挑战性吧~我会记住你的信息的！",
+          action: "memory_update"
+        }
       }
-    },
-    {
-      user: "我喜欢听音乐和看电影",
-      action: {
-        type: 'memory_update',
-        category: 'preference',
-        importance: 2
+    ],
+    [
+      {
+        user: "{{user1}}",
+        content: { text: "我喜欢听音乐和看电影" }
+      },
+      {
+        user: "{{agentName}}",
+        content: {
+          text: "音乐和电影都是很棒的爱好呢！我记住了你的喜好，以后可以和你聊这些话题~",
+          action: "memory_update"
+        }
       }
-    }
+    ],
+    [
+      {
+        user: "{{user1}}",
+        content: { text: "我们昨天一起看的那部电影真的很感人" }
+      },
+      {
+        user: "{{agentName}}",
+        content: {
+          text: "是的！那份共同的回忆我会珍藏在心里的～我们有了新的美好经历呢！",
+          action: "memory_update"
+        }
+      }
+    ]
   ];
 };
 

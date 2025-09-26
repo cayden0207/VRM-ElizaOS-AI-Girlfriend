@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { AgentRuntime, ModelProviderName, elizaLogger } from '@ai16z/eliza';
+import { AgentRuntime, ModelProviderName, elizaLogger, generateMessageResponse } from '@ai16z/eliza';
 import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
 import path from 'path';
@@ -401,7 +401,52 @@ class ElizaAgentBridge {
           });
         }
 
-        console.log(`💬 Chat request: ${userId} → ${normalizedCharacterId}: "${message.substring(0, 50)}..."`);
+        // ElizaOS兼容：userId (TEXT) → accountId (UUID) 映射
+        let accountId = body.accountId;
+        if (!accountId && userId) {
+          // 通过userId查找对应的accountId
+          try {
+            if (this.databaseAdapter?.supabase) {
+              // 方法1：直接在accounts表中查找（如果userId存储在username字段）
+              let result = await this.databaseAdapter.supabase
+                .from('accounts')
+                .select('id')
+                .eq('username', userId)
+                .maybeSingle();
+
+              if (result.data?.id) {
+                accountId = result.data.id;
+              } else {
+                // 方法2：在account_identities表中查找
+                result = await this.databaseAdapter.supabase
+                  .from('account_identities')
+                  .select('account_id')
+                  .eq('identifier', userId)
+                  .maybeSingle();
+
+                if (result.data?.account_id) {
+                  accountId = result.data.account_id;
+                } else {
+                  // 创建新账户（兼容模式）
+                  const newAccount = await this.databaseAdapter.supabase
+                    .from('accounts')
+                    .insert({ username: userId, details: { createdFrom: 'chat-api' } })
+                    .select('id')
+                    .single();
+                  accountId = newAccount.data?.id || userId; // fallback to userId
+                }
+              }
+            } else {
+              // 无数据库时，直接使用userId
+              accountId = userId;
+            }
+          } catch (lookupError) {
+            console.warn('⚠️ AccountId lookup failed:', lookupError.message);
+            accountId = userId; // fallback
+          }
+        }
+
+        console.log(`💬 Chat request: ${userId} (account: ${accountId}) → ${normalizedCharacterId}: "${message.substring(0, 50)}..."`);
 
         // 获取或创建Agent (with retry)
         let agent;
@@ -420,12 +465,12 @@ class ElizaAgentBridge {
           }
         }
 
-        // 创建会话房间ID
+        // 创建会话房间ID（使用accountId for UUID兼容）
         const roomId = `${accountId}-${normalizedCharacterId}`;
 
-        // 使用ElizaOS Agent处理消息
+        // 使用ElizaOS Agent处理消息（保持userId为TEXT类型，符合ElizaOS标准）
         const messageObj = {
-          userId: accountId,
+          userId: userId, // ElizaOS需要TEXT类型的userId
           roomId,
           content: { text: message },
           createdAt: new Date().toISOString()
@@ -441,7 +486,11 @@ class ElizaAgentBridge {
           );
           const processMessage = async () => {
             const response = await agent.composeState(messageObj);
-            const result = await agent.generateMessage(response);
+            const result = await generateMessageResponse({
+              runtime: agent,
+              context: response,
+              modelClass: agent.getModel()
+            });
             return { response, result };
           };
           return Promise.race([processMessage(), timeoutPromise]);
@@ -467,11 +516,10 @@ class ElizaAgentBridge {
         // 持久化对话到 conversations（便于后续回忆）
         try {
           if (this.databaseAdapter?.supabase) {
-            const roomId = `${accountId}-${normalizedCharacterId}`;
             const emotion = result.action || 'neutral';
             await this.databaseAdapter.supabase.from('conversations').insert([
-              { room_id: roomId, user_id: userId, character_id: normalizedCharacterId, role: 'user', content: message, metadata: { timestamp: Date.now(), via: 'bridge' } },
-              { room_id: roomId, user_id: userId, character_id: normalizedCharacterId, role: 'assistant', content: (result.text || result.content?.text || ''), metadata: { timestamp: Date.now(), emotion, via: 'bridge' } }
+              { room_id: roomId, account_id: accountId, character_id: normalizedCharacterId, role: 'user', content: message, metadata: { timestamp: Date.now(), via: 'bridge', userId } },
+              { room_id: roomId, account_id: accountId, character_id: normalizedCharacterId, role: 'assistant', content: (result.text || result.content?.text || ''), metadata: { timestamp: Date.now(), emotion, via: 'bridge', userId } }
             ]);
           }
         } catch (persistErr) {

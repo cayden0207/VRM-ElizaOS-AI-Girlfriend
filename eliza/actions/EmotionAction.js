@@ -164,22 +164,32 @@ const generateEmotionExpression = (emotion, intensity) => {
  */
 const getExamples = () => {
   return [
-    {
-      user: "我今天超级开心！",
-      action: {
-        type: 'emotion',
-        emotion: 'happy',
-        intensity: 'high'
+    [
+      {
+        user: "{{user1}}",
+        content: { text: "我今天超级开心！" }
+      },
+      {
+        user: "{{agentName}}",
+        content: {
+          text: "看到你这么开心，我也很开心呢！😊",
+          action: "emotion"
+        }
       }
-    },
-    {
-      user: "我爱你",
-      action: {
-        type: 'emotion',
-        emotion: 'love',
-        intensity: 'medium'
+    ],
+    [
+      {
+        user: "{{user1}}",
+        content: { text: "我爱你" }
+      },
+      {
+        user: "{{agentName}}",
+        content: {
+          text: "我的心跳都加速了呢...♡",
+          action: "emotion"
+        }
       }
-    }
+    ]
   ];
 };
 

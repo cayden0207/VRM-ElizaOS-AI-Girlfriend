@@ -577,23 +577,45 @@ const generateLevelUpCelebration = (level) => {
  */
 const getExamples = () => {
     return [
-      {
-        user: "我爱你",
-        action: {
-          type: 'relationship',
-          points_change: 15,
-          interaction_quality: 'excellent',
-          milestones: [{ type: 'first_confession', description: '情感表达' }]
+      [
+        {
+          user: "{{user1}}",
+          content: { text: "我爱你" }
+        },
+        {
+          user: "{{agentName}}",
+          content: {
+            text: "我也爱你...♡ 我们的关系变得更亲密了呢~",
+            action: "relationship"
+          }
         }
-      },
-      {
-        user: "今天天气不错",
-        action: {
-          type: 'relationship',
-          points_change: 5,
-          interaction_quality: 'normal'
+      ],
+      [
+        {
+          user: "{{user1}}",
+          content: { text: "今天天气不错呢" }
+        },
+        {
+          user: "{{agentName}}",
+          content: {
+            text: "是啊，和你一起聊天让这美好的天气更加温暖了~",
+            action: "relationship"
+          }
         }
-      }
+      ],
+      [
+        {
+          user: "{{user1}}",
+          content: { text: "我们第一次见面还记得吗？" }
+        },
+        {
+          user: "{{agentName}}",
+          content: {
+            text: "当然记得！那是我们关系开始的重要时刻呢~💕",
+            action: "relationship"
+          }
+        }
+      ]
     ];
 };
 

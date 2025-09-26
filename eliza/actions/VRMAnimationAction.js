@@ -140,39 +140,58 @@ const analyzeAnimation = (content) => {
  */
 const getExamples = () => {
   return [
-    {
-      user: "我爱你！",
-      action: {
-        type: 'vrm_animation',
-        animation_plan: {
-          emotion: 'love',
-          action: 'lean',
-          gesture: 'heart'
+    [
+      {
+        user: "{{user1}}",
+        content: { text: "我爱你！" }
+      },
+      {
+        user: "{{agentName}}",
+        content: {
+          text: "我也爱你～♡ *害羞地比心*",
+          action: "vrm_animation"
         }
       }
-    },
-    {
-      user: "你好呀~",
-      action: {
-        type: 'vrm_animation',
-        animation_plan: {
-          emotion: 'happy',
-          action: 'idle',
-          gesture: 'wave'
+    ],
+    [
+      {
+        user: "{{user1}}",
+        content: { text: "你好呀~" }
+      },
+      {
+        user: "{{agentName}}",
+        content: {
+          text: "你好！很高兴见到你~ *开心地挥手*",
+          action: "vrm_animation"
         }
       }
-    },
-    {
-      user: "太棒了！！！",
-      action: {
-        type: 'vrm_animation',
-        animation_plan: {
-          emotion: 'excited',
-          action: 'jump',
-          gesture: 'clap'
+    ],
+    [
+      {
+        user: "{{user1}}",
+        content: { text: "太棒了！！！" }
+      },
+      {
+        user: "{{agentName}}",
+        content: {
+          text: "哇！真的吗？好兴奋啊～ *开心地跳跃*",
+          action: "vrm_animation"
         }
       }
-    }
+    ],
+    [
+      {
+        user: "{{user1}}",
+        content: { text: "我今天有点伤心..." }
+      },
+      {
+        user: "{{agentName}}",
+        content: {
+          text: "怎么了？来，我陪着你... *关切地坐在身边*",
+          action: "vrm_animation"
+        }
+      }
+    ]
   ];
 };
 
