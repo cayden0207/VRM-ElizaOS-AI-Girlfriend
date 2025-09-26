@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "node bridge/phase2-bridge.js",
     "build": "echo 'Build complete'",
-    "start": "PORT=3001 node bridge/eliza-agent-bridge.js",
+    "start": "node bridge/eliza-agent-bridge.js",
     "production": "NODE_ENV=production node bridge/eliza-agent-bridge.js",
     "test": "jest",
     "test:watch": "jest --watch",
