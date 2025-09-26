@@ -29,7 +29,7 @@
   "author": "VRM AI Girlfriend Team",
   "license": "MIT",
   "dependencies": {
-    "@ai16z/eliza": "^0.1.5",
+    "@ai16z/eliza": "0.1.6",
     "@supabase/supabase-js": "^2.56.1",
     "compression": "^1.8.1",
     "cors": "^2.8.5",
