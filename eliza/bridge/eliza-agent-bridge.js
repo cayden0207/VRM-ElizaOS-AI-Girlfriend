@@ -489,7 +489,7 @@ class ElizaAgentBridge {
             const result = await generateMessageResponse({
               runtime: agent,
               context: response,
-              modelClass: agent.getModel()
+              modelClass: agent.character.settings?.model || 'gpt-4o-mini'
             });
             return { response, result };
           };
